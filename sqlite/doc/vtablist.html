@@ -217,38 +217,41 @@ implementations.
 <td>This experimental <a href="vtab.html#tabfunc2">table-valued function</a> provides information about
     a single <a href="fileformat2.html#btree">B-tree</a> in a database file, such as the depth, and estimated
     number of pages and number of entries, and so forth.</td></tr>
-<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="https://sqlite.org/src/file/src/dbpage.c">sqlite_dbpage</a></b></td>
+<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="dbpage.html">sqlite_dbpage</a></b></td>
 <td>Key/value store for the raw database file content.  The key is the
     page number and the value is binary page content.</td></tr>
-<tr style="text-align:left;"><td><b><a href="stmt.html">sqlite_stmt</a></b></td>
+<tr style="text-align:left;"><td><b><a href="memstat.html">sqlite_memstat</a></b></td>
+<td>Provides SQL access to the <a href="c3ref/status.html">sqlite3_status64()</a> and
+    <a href="c3ref/db_status.html">sqlite3_db_status()</a> interfaces.</td></tr>
+<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="stmt.html">sqlite_stmt</a></b></td>
 <td>A <a href="vtab.html#tabfunc2">table-valued function</a> containing one row for each
     <a href="c3ref/stmt.html">prepared statement</a> associated with an open <a href="c3ref/sqlite3.html">database connection</a>.</td></tr>
-<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="swarmvtab.html#overview">swarmvtab</a></b></td>
+<tr style="text-align:left;"><td><b><a href="swarmvtab.html#overview">swarmvtab</a></b></td>
 <td>An experimental module providing on-demand read-only access to
     multiple tables spread across multiple databases, via a single
     virtual table abstraction.</td></tr>
-<tr style="text-align:left;"><td><b><a href="https://sqlite.org/src/file/src/test_tclvar.c">tclvar</a></b></td>
+<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="https://sqlite.org/src/file/src/test_tclvar.c">tclvar</a></b></td>
 <td>Represents the global variables of a 
     <a href="https://en.wikipedia.org/wiki/Tcl">TCL Interpreter</a> as an SQL
     table. Used as part of the SQLite test suite.</td></tr>
-<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="https://sqlite.org/src/file/ext/misc/templatevtab.c">templatevtab</a></b></td>
+<tr style="text-align:left;"><td><b><a href="https://sqlite.org/src/file/ext/misc/templatevtab.c">templatevtab</a></b></td>
 <td>A template virtual table implementation useful as a starting point
     for developers who want to write their own virtual tables</td></tr>
-<tr style="text-align:left;"><td><b><a href="unionvtab.html">unionvtab</a></b></td>
+<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="unionvtab.html">unionvtab</a></b></td>
 <td>An experimental module providing on-demand read-only access to
     multiple tables spread across multiple databases, via a single
     virtual table abstraction.</td></tr>
-<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="https://sqlite.org/src/file/ext/misc/vfsstat.c">vfsstat</a></b></td>
+<tr style="text-align:left;"><td><b><a href="https://sqlite.org/src/file/ext/misc/vfsstat.c">vfsstat</a></b></td>
 <td>A <a href="vtab.html#tabfunc2">table-valued function</a> which, in combination with a
     co-packaged <a href="vfs.html#shim">VFS shim</a> provides information on the number of
     system calls performed by SQLite.</td></tr>
-<tr style="text-align:left;"><td><b><a href="https://sqlite.org/src/file/ext/misc/vtablog.c">vtablog</a></b></td>
+<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="https://sqlite.org/src/file/ext/misc/vtablog.c">vtablog</a></b></td>
 <td>A virtual table that prints diagnostic information
     on stdout when its key methods are invoked.  Intended for
     interactive analysis and debugging of virtual table interfaces.</td></tr>
-<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="https://sqlite.org/src/file/ext/misc/wholenumber.c">wholenumber</a></b></td>
+<tr style="text-align:left;"><td><b><a href="https://sqlite.org/src/file/ext/misc/wholenumber.c">wholenumber</a></b></td>
 <td>A virtual table returns all integers between 1 and 4294967295.</td></tr>
-<tr style="text-align:left;"><td><b><a href="zipfile.html">zipfile</a></b></td>
+<tr style="text-align:left;background-color:#DDDDDD;"><td><b><a href="zipfile.html">zipfile</a></b></td>
 <td>Represent a
     <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">ZIP Archive</a>
     as an SQL table.  Works for both reading and writing.  Used by

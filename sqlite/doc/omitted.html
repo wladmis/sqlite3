@@ -101,13 +101,17 @@ Rather than try to list all the features of SQL that SQLite does
 support, it is much easier to list those that it does not.
 Unsupported features of SQL are shown below.</p>
 
+<p>
+See also the
+<a href="quirks.html">Quirks, Caveats, and Gotchas</a> of SQLite.
+
 <table cellpadding="10">
 
 <tr><td valign="top"><b><nobr>RIGHT and FULL OUTER JOIN</nobr></b></td><td width="10">&nbsp;</th><td valign="top">
   LEFT OUTER JOIN is implemented, but not RIGHT OUTER JOIN or
   FULL OUTER JOIN.
 </td></tr><tr><td valign="top"><b><nobr>Complete ALTER TABLE support</nobr></b></td><td width="10">&nbsp;</th><td valign="top">
-  Only the RENAME TABLE and ADD COLUMN variants of the 
+  Only the RENAME TABLE, ADD COLUMN, and RENAME COLUMN variants of the 
   ALTER TABLE command are supported.  Other kinds of ALTER TABLE operations
   such as
   DROP COLUMN, ALTER COLUMN, ADD CONSTRAINT, and so forth are omitted.

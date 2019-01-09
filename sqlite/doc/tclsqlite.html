@@ -604,6 +604,10 @@ the callback will do some other useful work for a short while
 so that the lock can be tried again.  The callback procedure should
 return "0" if it wants SQLite to try again to open the database and
 should return "1" if it wants SQLite to abandon the current operation.
+<p>
+If the busy method is invoked without an argument, the name of the callback
+procedure last set by the busy method is returned.  If no callback procedure
+has been set, an empty string is returned.
 <a name="enable_load_extension"></a>
 <h3>The "enable_load_extension" method</h3>
 

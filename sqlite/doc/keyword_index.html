@@ -142,6 +142,7 @@ Other Documentation Indexes:
 <li> <a href="syntax/attach-stmt.html">attach-stmt</a> </li>
 <li> <a href="syntax/attach-stmt.html">attach-stmt syntax diagram</a> </li>
 <li> <a href="lang_attach.html">attached</a> </li>
+<li> <a href="security.html">attack resistance</a> </li>
 <li> <a href="c3ref/set_authorizer.html">authorizer callback</a> </li>
 <li> <a href="tclsqlite.html#authorizer">authorizer method</a> </li>
 <li> <a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a> </li>
@@ -555,6 +556,8 @@ Other Documentation Indexes:
 <li> <a href="compile.html#omit_xfer_opt">-DSQLITE_OMIT_XFER_OPT</a> </li>
 <li> <a href="compile.html#os_other">-DSQLITE_OS_OTHER</a> </li>
 <li> <a href="compile.html#powersafe_overwrite">-DSQLITE_POWERSAFE_OVERWRITE</a> </li>
+<li> <a href="compile.html#query_planner_limit">-DSQLITE_QUERY_PLANNER_LIMIT</a> </li>
+<li> <a href="compile.html#query_planner_limit_incr">-DSQLITE_QUERY_PLANNER_LIMIT_INCR</a> </li>
 <li> <a href="compile.html#reverse_unordered_selects">-DSQLITE_REVERSE_UNORDERED_SELECTS</a> </li>
 <li> <a href="compile.html#rtree_int_only">-DSQLITE_RTREE_INT_ONLY</a> </li>
 <li> <a href="compile.html#secure_delete">-DSQLITE_SECURE_DELETE</a> </li>
@@ -721,10 +724,12 @@ Other Documentation Indexes:
 <li> <a href="geopoly.html#garea">geopoly_area</a> </li>
 <li> <a href="geopoly.html#gbbox">geopoly_bbox</a> </li>
 <li> <a href="geopoly.html#gblob">geopoly_blob</a> </li>
+<li> <a href="geopoly.html#ccw">geopoly_ccw</a> </li>
 <li> <a href="geopoly.html#gpoint">geopoly_constains_point</a> </li>
 <li> <a href="geopoly.html#gbbox">geopoly_group_bbox</a> </li>
 <li> <a href="geopoly.html#gjson">geopoly_json</a> </li>
 <li> <a href="geopoly.html#goverlap">geopoly_overlap</a> </li>
+<li> <a href="geopoly.html#regpoly">geopoly_regular</a> </li>
 <li> <a href="geopoly.html#gsvg">geopoly_svg</a> </li>
 <li> <a href="geopoly.html#gwithin">geopoly_within</a> </li>
 <li> <a href="geopoly.html#xform">geopoly_xform</a> </li>
@@ -1048,6 +1053,7 @@ Other Documentation Indexes:
 <li> <a href="pragma.html#pragma_stats">PRAGMA stats</a> </li>
 <li> <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> </li>
 <li> <a href="pragma.html#pragma_table_info">PRAGMA table_info</a> </li>
+<li> <a href="pragma.html#pragma_table_xinfo">PRAGMA table_xinfo</a> </li>
 <li> <a href="pragma.html#pragma_temp_store">PRAGMA temp_store</a> </li>
 <li> <a href="pragma.html#pragma_temp_store_directory">PRAGMA temp_store_directory</a> </li>
 <li> <a href="pragma.html#pragma_threads">PRAGMA threads</a> </li>
@@ -1155,6 +1161,7 @@ Other Documentation Indexes:
 <li> <a href="lang_createtable.html#rowid">ROWID</a> </li>
 <li> <a href="rowidtable.html">rowid table</a> </li>
 <li> <a href="rowvalue.html">rowvalue</a> </li>
+<li> <a href="rtree.html#xshadow">rtree shadow tables</a> </li>
 <li> <a href="rtree.html#rtreecheck">rtreecheck()</a> </li>
 <li> <a href="datatype3.html#collation">RTRIM collating function</a> </li>
 <li> <a href="lang_corefunc.html#rtrim">rtrim() SQL function</a> </li>
@@ -1172,6 +1179,7 @@ Other Documentation Indexes:
 <li> <a href="fts3.html#appendix_a">search application tips</a> </li>
 <li> <a href="fileformat2.html">second edition file format document</a> </li>
 <li> <a href="pragma.html#pragma_secure_delete">secure_delete pragma</a> </li>
+<li> <a href="security.html">security</a> </li>
 <li> <a href="fts3.html#data_structures">segment btree</a> </li>
 <li> <a href="lang_select.html">SELECT</a> </li>
 <li> <a href="syntax/select-core.html">select-core</a> </li>
@@ -1191,7 +1199,7 @@ Other Documentation Indexes:
 <li> <a href="session/intro.html">Session Extension C-language Interface</a> </li>
 <li> <a href="session/funclist.html">Session Module C-API function list</a> </li>
 <li> <a href="cli.html#sha3sum">.sha3sum dot-command</a> </li>
-<li> <a href="fts3.html#*shadowtab">shadow tables</a> </li>
+<li> <a href="vtab.html#xshadowname">shadow tables</a> </li>
 <li> <a href="fts3.html#shadow_tables">shadowtabs</a> </li>
 <li> <a href="sharedcache.html">shared cache</a> </li>
 <li> <a href="sharedcache.html">shared cache mode</a> </li>
@@ -1397,6 +1405,7 @@ Other Documentation Indexes:
 <li> <a href="vtab.html#xrollback">sqlite3_module.xRollback</a> </li>
 <li> <a href="vtab.html#xrowid">sqlite3_module.xRowid</a> </li>
 <li> <a href="vtab.html#xsavepoint">sqlite3_module.xSavepoint</a> </li>
+<li> <a href="vtab.html#xshadowname">sqlite3_module.xShadowName</a> </li>
 <li> <a href="vtab.html#xsync">sqlite3_module.xSync</a> </li>
 <li> <a href="vtab.html#xupdate">sqlite3_module.xUpdate</a> </li>
 <li> <a href="c3ref/mprintf.html">sqlite3_mprintf</a> </li>
@@ -1411,6 +1420,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/mutex_held.html">sqlite3_mutex_notheld</a> </li>
 <li> <a href="c3ref/mutex_alloc.html">sqlite3_mutex_try</a> </li>
 <li> <a href="c3ref/next_stmt.html">sqlite3_next_stmt</a> </li>
+<li> <a href="c3ref/expanded_sql.html">sqlite3_normalized_sql</a> </li>
 <li> <a href="c3ref/open.html">sqlite3_open</a> </li>
 <li> <a href="c3ref/open.html">sqlite3_open16</a> </li>
 <li> <a href="c3ref/open.html">sqlite3_open_v2</a> </li>
@@ -1587,6 +1597,8 @@ Other Documentation Indexes:
 <li> <a href="session/sqlite3changeset_pk.html">sqlite3changeset_pk</a> </li>
 <li> <a href="session/sqlite3changeset_start.html">sqlite3changeset_start</a> </li>
 <li> <a href="session/sqlite3changegroup_add_strm.html">sqlite3changeset_start_strm</a> </li>
+<li> <a href="session/sqlite3changeset_start.html">sqlite3changeset_start_v2</a> </li>
+<li> <a href="session/sqlite3changegroup_add_strm.html">sqlite3changeset_start_v2_strm</a> </li>
 <li> <a href="session/sqlite3rebaser_configure.html">sqlite3rebaser_configure</a> </li>
 <li> <a href="session/sqlite3rebaser_create.html">sqlite3rebaser_create</a> </li>
 <li> <a href="session/sqlite3rebaser_delete.html">sqlite3rebaser_delete</a> </li>
@@ -1595,6 +1607,7 @@ Other Documentation Indexes:
 <li> <a href="session/sqlite3session_attach.html">sqlite3session_attach</a> </li>
 <li> <a href="session/sqlite3session_changeset.html">sqlite3session_changeset</a> </li>
 <li> <a href="session/sqlite3changegroup_add_strm.html">sqlite3session_changeset_strm</a> </li>
+<li> <a href="session/sqlite3session_config.html">sqlite3session_config</a> </li>
 <li> <a href="session/sqlite3session_create.html">sqlite3session_create</a> </li>
 <li> <a href="session/sqlite3session_delete.html">sqlite3session_delete</a> </li>
 <li> <a href="session/sqlite3session_diff.html">sqlite3session_diff</a> </li>
@@ -1642,7 +1655,9 @@ Other Documentation Indexes:
 <li> <a href="session/c_changeset_conflict.html">SQLITE_CHANGESET_NOTFOUND</a> </li>
 <li> <a href="session/c_changeset_abort.html">SQLITE_CHANGESET_OMIT</a> </li>
 <li> <a href="session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a> </li>
-<li> <a href="session/c_changesetapply_nosavepoint.html">SQLITE_CHANGESETAPPLY_NOSAVEPOINT</a> </li>
+<li> <a href="session/c_changesetapply_invert.html">SQLITE_CHANGESETAPPLY_INVERT</a> </li>
+<li> <a href="session/c_changesetapply_invert.html">SQLITE_CHANGESETAPPLY_NOSAVEPOINT</a> </li>
+<li> <a href="session/c_changesetstart_invert.html">SQLITE_CHANGESETSTART_INVERT</a> </li>
 <li> <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_FULL</a> </li>
 <li> <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_PASSIVE</a> </li>
 <li> <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_RESTART</a> </li>
@@ -1700,17 +1715,20 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_TRIGGER</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_VIEW</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_VTABLE</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FKEY</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_TRIGGER</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAINDBNAME</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAX</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_RESET_DATABASE</a> </li>
-<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_TRIGGER_EQP</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefkey">SQLITE_DBCONFIG_ENABLE_FKEY</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableqpsg">SQLITE_DBCONFIG_ENABLE_QPSG</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenabletrigger">SQLITE_DBCONFIG_ENABLE_TRIGGER</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglookaside">SQLITE_DBCONFIG_LOOKASIDE</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigmaindbname">SQLITE_DBCONFIG_MAINDBNAME</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html">SQLITE_DBCONFIG_MAX</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfignockptonclose">SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigresetdatabase">SQLITE_DBCONFIG_RESET_DATABASE</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigtriggereqp">SQLITE_DBCONFIG_TRIGGER_EQP</a> </li>
+<li> <a href="dbpage.html">sqlite_dbpage</a> </li>
+<li> <a href="dbpage.html">SQLITE_DBPAGE virtual table</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html">SQLITE_DBSTATUS options</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit">SQLITE_DBSTATUS_CACHE_HIT</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss">SQLITE_DBSTATUS_CACHE_MISS</a> </li>
@@ -1964,6 +1982,8 @@ Other Documentation Indexes:
 <li> <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a> </li>
 <li> <a href="compile.html#max_worker_threads">SQLITE_MAX_WORKER_THREADS</a> </li>
 <li> <a href="compile.html#memdebug">SQLITE_MEMDEBUG</a> </li>
+<li> <a href="memstat.html">sqlite_memstat</a> </li>
+<li> <a href="memstat.html">SQLITE_MEMSTAT virtual table</a> </li>
 <li> <a href="compile.html#minimum_file_descriptor">SQLITE_MINIMUM_FILE_DESCRIPTOR</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_MISMATCH</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_MISUSE</a> </li>
@@ -2075,8 +2095,11 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_abort.html">SQLITE_PERM</a> </li>
 <li> <a href="compile.html#powersafe_overwrite">SQLITE_POWERSAFE_OVERWRITE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_PRAGMA</a> </li>
-<li> <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> </li>
+<li> <a href="c3ref/c_prepare_normalize.html#sqlitepreparenormalize">SQLITE_PREPARE_NORMALIZE</a> </li>
+<li> <a href="c3ref/c_prepare_normalize.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_PROTOCOL</a> </li>
+<li> <a href="compile.html#query_planner_limit">SQLITE_QUERY_PLANNER_LIMIT</a> </li>
+<li> <a href="compile.html#query_planner_limit_incr">SQLITE_QUERY_PLANNER_LIMIT_INCR</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_RANGE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_READ</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_READONLY</a> </li>
@@ -2105,6 +2128,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_alter_table.html">SQLITE_SELECT</a> </li>
 <li> <a href="fileformat2.html#seqtab">sqlite_sequence</a> </li>
 <li> <a href="c3ref/c_serialize_nocopy.html">SQLITE_SERIALIZE_NOCOPY</a> </li>
+<li> <a href="session/c_session_config_strmsize.html">SQLITE_SESSION_CONFIG_STRMSIZE</a> </li>
 <li> <a href="c3ref/c_shm_exclusive.html">SQLITE_SHM_EXCLUSIVE</a> </li>
 <li> <a href="c3ref/c_shm_exclusive.html">SQLITE_SHM_LOCK</a> </li>
 <li> <a href="c3ref/c_shm_nlock.html">SQLITE_SHM_NLOCK</a> </li>
@@ -2155,6 +2179,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_FAULT_INSTALL</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_FIRST</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_IMPOSTER</a> </li>
+<li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_INTERNAL_FUNCTIONS</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_ISINIT</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_ISKEYWORD</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_LAST</a> </li>
@@ -2197,7 +2222,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_source_id.html">SQLITE_VERSION</a> </li>
 <li> <a href="lang_corefunc.html#sqlite_version">sqlite_version() SQL function</a> </li>
 <li> <a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> </li>
-<li> <a href="c3ref/c_vtab_constraint_support.html">SQLITE_VTAB_CONSTRAINT_SUPPORT</a> </li>
+<li> <a href="c3ref/c_vtab_constraint_support.html#sqlitevtabconstraintsupport">SQLITE_VTAB_CONSTRAINT_SUPPORT</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_WARNING</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a> </li>
 <li> <a href="c3ref/c_win32_data_directory_type.html">SQLITE_WIN32_DATA_DIRECTORY_TYPE</a> </li>
@@ -2231,6 +2256,7 @@ Other Documentation Indexes:
 <li> <a href="vtab.html#tabfunc2">table-valued function</a> </li>
 <li> <a href="lang_select.html#tabfunc1">table-valued functions in the FROM clause</a> </li>
 <li> <a href="pragma.html#pragma_table_info">table_info pragma</a> </li>
+<li> <a href="pragma.html#pragma_table_xinfo">table_xinfo pragma</a> </li>
 <li> <a href="cli.html#dtables">.tables</a> </li>
 <li> <a href="tclsqlite.html">Tcl extension</a> </li>
 <li> <a href="tclsqlite.html">TCL Interface</a> </li>
@@ -2293,6 +2319,8 @@ Other Documentation Indexes:
 <li> <a href="lockingv3.html#ext3-barrier-problem">the ext3 barrier problem</a> </li>
 <li> <a href="queryplanner-ng.html#fossilcasestudy">The Fossil NGQP Upgrade Case Study</a> </li>
 <li> <a href="json1.html">the json1 extension</a> </li>
+<li> <a href="dbpage.html">the SQLITE_DBPAGE extension</a> </li>
+<li> <a href="memstat.html">the SQLITE_MEMSTAT extension</a> </li>
 <li> <a href="stmt.html">the SQLITE_STMT extension</a> </li>
 <li> <a href="assert.html">The Use Of assert() In SQLite</a> </li>
 <li> <a href="c3ref/pcache_methods2.html#thexcachesizepagecachemethod">the xCachesize() page cache method</a> </li>
@@ -2447,6 +2475,7 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_25_1.html">Version 3.25.1</a> </li>
 <li> <a href="releaselog/3_25_2.html">Version 3.25.2</a> </li>
 <li> <a href="releaselog/3_25_3.html">Version 3.25.3</a> </li>
+<li> <a href="releaselog/3_26_0.html">Version 3.26.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0.0</a> </li>
 <li> <a href="releaselog/3_3_1.html">Version 3.3.1</a> </li>
@@ -2661,6 +2690,7 @@ Other Documentation Indexes:
 <li> <a href="vtab.html#xsavepoint">xRollbackTo</a> </li>
 <li> <a href="vtab.html#xrowid">xRowid</a> </li>
 <li> <a href="vtab.html#xsavepoint">xSavepoint</a> </li>
+<li> <a href="vtab.html#xshadowname">xShadowName</a> </li>
 <li> <a href="vtab.html#xupdate">xUpdate</a> </li>
 <li> <a href="compile.html#yystackdepth">YYSTACKDEPTH</a> </li>
 <li> <a href="compile.html#yytrackmaxstackdepth">YYTRACKMAXSTACKDEPTH</a> </li>

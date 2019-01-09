@@ -659,6 +659,12 @@ in numeric order.
   about the failed constraint can be found by consulting the
   accompanying error message (returned via <a href="c3ref/errcode.html">sqlite3_errmsg()</a> or
   <a href="c3ref/errcode.html">sqlite3_errmsg16()</a>) or by looking at the <a href="rescode.html#extrc">extended error code</a>.
+  <p>
+  The SQLITE_CONSTRAINT code can also be used as the return value from
+  the <a href="vtab.html#xbestindex">xBestIndex()</a> method of a <a href="vtab.html">virtual table</a> implementation.  When
+  xBestIndex() returns SQLITE_CONSTRAINT, that indicates that the particular
+  combination of inputs submitted to xBestIndex() cannot result in a
+  usable query plan and should not be given further consideration.
 
 
 <!--------------------------------------------------------------->

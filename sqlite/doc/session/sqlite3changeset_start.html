@@ -96,6 +96,12 @@ return false;
   int nChangeset,                 /* Size of changeset blob in bytes */
   void *pChangeset                /* Pointer to blob containing changeset */
 );
+int sqlite3changeset_start_v2(
+  sqlite3_changeset_iter **pp,    /* OUT: New changeset iterator handle */
+  int nChangeset,                 /* Size of changeset blob in bytes */
+  void *pChangeset,               /* Pointer to blob containing changeset */
+  int flags                       /* SESSION_CHANGESETSTART_* flags */
+);
 </pre></blockquote><p>
 Create an iterator used to iterate through the contents of a changeset.
 If successful, *pp is set to point to the iterator handle and SQLITE_OK
@@ -125,7 +131,14 @@ an application iterates through a changeset using an iterator created by
 this function, all changes that relate to a single table are visited 
 consecutively. There is no chance that the iterator will visit a change 
 the applies to table X, then one for table Y, and then later on visit 
-another change for table X.
+another change for table X.</p>
+
+<p>The behavior of sqlite3changeset_start_v2() and its streaming equivalent
+may be modified by passing a combination of
+<a href="../session/c_changesetstart_invert.html">supported flags</a> as the 4th parameter.</p>
+
+<p>Note that the sqlite3changeset_start_v2() API is still <b>experimental</b>
+and therefore subject to change.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

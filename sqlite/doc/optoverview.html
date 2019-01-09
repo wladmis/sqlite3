@@ -168,7 +168,8 @@ mk.innerHTML = "&#x25ba;";
 
 
 </p><p>
-  With release 3.8.0, the SQLite query planner was reimplemented as the
+  With release 3.8.0 (2013-08-26),
+  the SQLite query planner was reimplemented as the
   <a href="queryplanner-ng.html">Next Generation Query Planner</a> or "NGQP".  All of the features, techniques,
   and algorithms described in this document are applicable to both the
   pre-3.8.0 legacy query planner and to the NGQP.  For further information on
@@ -1381,7 +1382,7 @@ SELECT * FROM t1, t2 WHERE a=c;
 <p>
   In the query above, if both t1 and t2 have approximately N rows, then
   without any indices the query will require O(N*N) time.  On the other
-  hand, creating an index on table t2 requires O(NlogN) time and then using 
+  hand, creating an index on table t2 requires O(NlogN) time and then use
   that index to evaluate the query requires an additional O(NlogN) time.
   In the absence of <a href="lang_analyze.html">ANALYZE</a> information, SQLite guesses that N is one
   million and hence it believes that constructing the automatic index will
@@ -1399,7 +1400,7 @@ SELECT a, (SELECT d FROM t2 WHERE c=b) FROM t1;
   In this example, the t2 table is used in a subquery to translate values
   of the t1.b column.  If each table contains N rows, SQLite expects that
   the subquery will run N times, and hence it will believe it is faster
-  to construct an automatic, transient index on t2 first and then using
+  to construct an automatic, transient index on t2 first and then use
   that index to satisfy the N instances of the subquery.
 
 </p><p>

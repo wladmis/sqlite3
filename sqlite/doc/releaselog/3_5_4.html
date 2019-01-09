@@ -94,18 +94,18 @@ return false;
 <h2>SQLite Release 3.5.4 On 2007-12-14</h2><p><ol class='lessindent'>
 <li>Fix a critical bug in UPDATE or DELETE that occurs when an
 OR REPLACE clause or a trigger causes rows in the same table to
-be deleted as side effects.  (See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2832">ticket #2832</a>.)  The most likely
+be deleted as side effects.  (See ticket #2832.)  The most likely
 result of this bug is a segmentation fault, though database
 corruption is a possibility.</li>
 <li>Bring the processing of ORDER BY into compliance with the 
 SQL standard for case where a result alias and a table column name
 are in conflict.  Correct behavior is to prefer the result alias.
 Older versions of SQLite incorrectly picked the table column.
-(See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2822">ticket #2822</a>.)</li>
+(See ticket #2822.)</li>
 <li>The <a href="../lang_vacuum.html">VACUUM</a> command preserves
 the setting of the 
 <a href="../pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a>.
-(<a href="http://www.sqlite.org/cvstrac/tktview?tn=2804">Ticket #2804</a>.)</li>
+(Ticket #2804.)</li>
 <li>Productize and officially support the group_concat() SQL function.</li>
 <li>Better optimization of some IN operator expressions.</li>
 <li>Add the ability to change the 

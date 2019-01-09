@@ -163,7 +163,7 @@ virtual table can be used.  One can use the CSV virtual table inside subqueries,
 or <a href="lang_with.html">common table expressions</a> or add WHERE, GROUP BY, HAVING, ORDER BY,
 and LIMIT clauses as required.
 
-</p><h1 id="recognized_arguments"><span>2. </span>Recognized Arguments</h1>
+</p><h1 id="arguments"><span>2. </span>Arguments</h1>
 
 <p>
 The example above showed a single <b>filename='thefile.csv'</b> argument
@@ -182,17 +182,34 @@ content of the CSV file.
 </p></li><li><p><b>schema=</b><i>SCHEMA</i>
 </p><p> The <b>schema=</b> argument specifies a <a href="lang_createtable.html">CREATE TABLE</a> statement that
 the CSV virtual table passes to the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> interface in
-order to define the number and names of the columns in the virtual table.
-If both the <b>schema=</b> and the <b>columns=</b> arguments are omitted,
-then the CSV virtual table reads the first row of the input content in order
-to determine the number of columns and names the columns <b>cNNN</b> where
-<b>NNN</b> values are consecutive integers.  It is not allowed to have
-both <b>schema=</b> and <b>columns=</b> arguments.
+order to define the names of the columns in the virtual table.
 
 </p></li><li><p><b>columns=</b><i>N</i>
-</p><p>The <b>columns=</b><i>N</i> argument causes the virtual table to have
-exactly <i>N</i> columns.  If the input data contains more columns than this,
+</p><p>The <b>columns=</b><i>N</i> argument specifies the number of columns
+in the CSV file.
+If the input data contains more columns than this,
 then the excess columns are ignored.  If the input data contains fewer columns,
 then extra columns are filled with NULL.
+If the <b>columns=</b><i>N</i> argument is omitted, the first line of the
+CSV file is read to determine the number of columns.
 
+</p></li><li><p><b>header=</b><i>BOOLEAN</i><br>
+or just<br>
+<b>header</b>
+</p><p>If the <b>header</b> argument is true then the first row of the CSV file
+to be treated as a header rather than as data.  The second line of the CSV
+file becomes the first row of content.
+If the <b>schema=</b> options is omitted, then the first line of the CSV
+file determines the names of the columns.
 </p></li></ul>
+
+<h1 id="column_names"><span>3. </span>Column Names</h1>
+
+<p>
+The column names of the virtual table are determined primarily by the
+<b>schema=</b> argument.
+If the <b>schema=</b> argument is omitted, but <b>header</b> is true, then
+the values found in the first line of the CSV file become the column names.
+If the <b>schema=</b> argument is omitted and <b>header</b> is false, then
+the columns are named "c0", "c1", "c2", and so forth.
+</p>

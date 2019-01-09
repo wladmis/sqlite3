@@ -704,7 +704,7 @@ such as sqlite_master.  There is one index b-tree
 in the database file for each index in the schema, including implied indexes
 created by uniqueness constraints.  There are no b-trees associated with
 <a href="vtab.html">virtual tables</a>.  Specific virtual table implementations might make use
-of <a href="fts3.html#*shadowtab">shadow tables</a> for storage, but those shadow tables will have separate
+of <a href="vtab.html#xshadowname">shadow tables</a> for storage, but those shadow tables will have separate
 entries in the database schema.  <a href="withoutrowid.html">WITHOUT ROWID</a> tables use index b-trees
 rather than a table b-trees, so there is one
 index b-tree in the database file for each <a href="withoutrowid.html">WITHOUT ROWID</a> table.

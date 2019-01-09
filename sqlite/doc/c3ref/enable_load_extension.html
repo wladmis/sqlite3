@@ -112,11 +112,11 @@ it back off again.</p>
 
 <p>This interface enables or disables both the C-API
 <a href="../c3ref/load_extension.html">sqlite3_load_extension()</a> and the SQL function <a href="../lang_corefunc.html#load_extension">load_extension()</a>.
-Use <a href="../c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,..)
+Use <a href="../c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="../c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,..)
 to enable or disable only the C-API.</p>
 
 <p><b>Security warning:</b> It is recommended that extension loading
-be disabled using the <a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method
+be disabled using the <a href="../c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method
 rather than this interface, so the <a href="../lang_corefunc.html#load_extension">load_extension()</a> SQL function
 remains disabled. This will prevent SQL injections from giving attackers
 access to extension loading capabilities.

@@ -186,7 +186,7 @@ would be "sqlite3_mathfunc_init".  Or if the filename is
 </p><p>For security reasons, extension loading is turned off by default.
 In order to use either the C-language or SQL extension loading functions,
 one must first enable extension loading using the
-<a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
 C-language API in your application.</p>
 
 <p>From the <a href="cli.html">command-line shell</a>, extensions can be loaded using the

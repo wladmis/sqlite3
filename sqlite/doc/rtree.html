@@ -227,7 +227,7 @@ A new R*Tree index is created as follows:
 The <em>&lt;name&gt;</em> is the name your application chooses for the
 R*Tree index and <em>&lt;column-names&gt;</em> is a comma separated list
 of between 3 and 11 columns.
-The virtual &lt;name&gt; table creates three "shadow" tables to actually
+The virtual &lt;name&gt; table creates three <a href="vtab.html#xshadowname">shadow tables</a> to actually
 store its content.  The names of these shadow tables are:
 </p>
 
@@ -739,11 +739,13 @@ of the MATCH operators.
 The following sections describe some low-level details of the R*Tree implementation,
 that might be useful for trouble-shooting or performance analysis.
 
+<a name="xshadow"></a>
+
 </p><h2 id="shadow_tables"><span>7.1. </span>Shadow Tables</h2>
 
 <p>The content of an R*Tree index is actually stored in three ordinary
 SQLite tables with names derived from the name of the R*Tree.  These
-three tables are called "shadow tables".  This is their schema:
+three tables are called "<a href="vtab.html#xshadowname">shadow tables</a>".  This is their schema:
 
 </p><div class="codeblock"><pre>CREATE TABLE %_node(nodeno INTEGER PRIMARY KEY, data BLOB)
 CREATE TABLE %_parent(nodeno INTEGER PRIMARY KEY, parentnode INTEGER)

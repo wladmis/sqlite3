@@ -116,7 +116,7 @@ return false;
      'utc' keywords.  <a href="../deterministic.html#dtexception">More information</a>.
 <li> Added the <a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a> and <a href="../c3ref/prepare.html">sqlite3_prepare16_v3()</a> interfaces
      with the extra "prepFlags" parameters.
-<li> Provide the <a href="../c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> flag for <a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a> and
+<li> Provide the <a href="../c3ref/c_prepare_normalize.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> flag for <a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a> and
      use it to limit <a href="../malloc.html#lookaside">lookaside memory</a> misuse by <a href="../fts3.html">FTS3</a>, <a href="../fts5.html">FTS5</a>, and the
      <a href="../rtree.html">R-Tree extension</a>.
 <li> Added the <a href="../pragma.html#pragma_secure_delete">PRAGMA secure_delete=FAST</a> command.  When secure_delete is
@@ -162,7 +162,7 @@ return false;
 <li> Add the -withoutnulls option to the <a href="../tclsqlite.html#eval">TCL interface eval method</a>.
 <li> Enhance the <a href="../sqlanalyze.html">sqlite3_analyzer.exe</a> utility program so that it shows
      the number of bytes of metadata on btree pages.
-<li> The <a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> run-time option and the
+<li> The <a href="../c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableqpsg">SQLITE_DBCONFIG_ENABLE_QPSG</a> run-time option and the
      <a href="../compile.html#enable_qpsg">SQLITE_ENABLE_QPSG</a> compile-time option enable the
      <a href="../queryplanner-ng.html#qpstab">query planner stability guarantee</a>.  See also ticket
      <a href="https://www.sqlite.org/src/info/892fc34f173e99d8">892fc34f173e99d8</a>

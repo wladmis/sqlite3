@@ -421,7 +421,7 @@ some design situations, every little bit helps.
   to N entries of SZ bytes each.  This setting can be modified at
   start-time using <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a>) and/or
   as each <a href="c3ref/sqlite3.html">database connection</a> is opened using
-  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a>).
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglookaside">SQLITE_DBCONFIG_LOOKASIDE</a>).
 </p></blockquote><a name="default_memstatus"></a>
 <p><b>SQLITE_DEFAULT_MEMSTATUS=<i>&lt;1 or 0&gt;</i></b></p><blockquote><p>
   This macro is used to determine whether or not the features enabled and
@@ -591,6 +591,32 @@ some design situations, every little bit helps.
   With SQLITE_POWERSAFE_OVERWRITE set to 0, SQLite assumes that other
   bytes in the same sector with a written byte might be changed or 
   damaged by a power loss.
+</p></blockquote><a name="query_planner_limit"></a>
+<p><b>SQLITE_QUERY_PLANNER_LIMIT=<i>N</i></b></p><blockquote><p>
+  As part of the query planning process, SQLite enumerates all usable
+  combinations of indexes and WHERE-clause constraints.  For certain
+  pathological queries, the number of these index-and-constraint combinations
+  can be very large, resulting in slow performance by the query planner.
+  The SQLITE_QUERY_PLANNER_LIMIT value (in conjunction with the
+  related <a href="compile.html#query_planner_limit_incr">SQLITE_QUERY_PLANNER_LIMIT_INCR</a> setting) limits the number 
+  of index-and-constraint combinations that the query planner will 
+  consider, in order to prevent the query planner from using excess
+  CPU time.  The default value for SQLITE_QUERY_PLANNER_LIMIT is set
+  high enough so that is never reached for real-world queries.  The
+  query planner search limit only applies to queries that are deliberately
+  crafted to use excess planning time.
+</p></blockquote><a name="query_planner_limit_incr"></a>
+<p><b>SQLITE_QUERY_PLANNER_LIMIT_INCR=<i>N</i></b></p><blockquote><p>
+  The <a href="compile.html#query_planner_limit">SQLITE_QUERY_PLANNER_LIMIT</a> option sets an initial baseline value
+  for the maximum number of index-and-constraint combinations that the
+  query planner consider.  The baseline query planner limit is increased
+  by SQLITE_QUERY_PLANNER_LIMIT_INCR prior to processing each table of a
+  join so that each table is guaranteed to be able to propose at least
+  some index-and-constraint combinations to the optimizer even if prior
+  tables of the join have exhausted the baseline limit.  The default
+  value for both this compile-time option and the
+  <a href="compile.html#query_planner_limit">SQLITE_QUERY_PLANNER_LIMIT</a> option are set high enough so that they should
+  never be reached for real-world queries.
 </p></blockquote><a name="reverse_unordered_selects"></a>
 <p><b>SQLITE_REVERSE_UNORDERED_SELECTS</b></p><blockquote><p>
   This option causes the <a href="pragma.html#pragma_reverse_unordered_selects">PRAGMA reverse_unordered_selects</a> setting to be
@@ -867,8 +893,7 @@ the available settings:</p>
   </ul>
 </p></blockquote><a name="enable_dbpage_vtab"></a>
 <p><b>SQLITE_ENABLE_DBPAGE_VTAB</b></p><blockquote><p>
-  This option enables the 
-  <a href="https://sqlite.org/src/file/src/dbpage.c">sqlite_dbpage virtual table</a>.
+  This option enables the <a href="dbpage.html">SQLITE_DBPAGE virtual table</a>.
 </p></blockquote><a name="enable_dbstat_vtab"></a>
 <p><b>SQLITE_ENABLE_DBSTAT_VTAB</b></p><blockquote><p>
   This option enables the <a href="dbstat.html">dbstat virtual table</a>.
@@ -911,7 +936,7 @@ the available settings:</p>
   was disabled beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a> (2016-02-15)
   unless this compile-time option is used.
   <a href="releaselog/3_12_0.html">Version 3.12.0</a> (2016-03-29) added the 
-  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0) interface
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0) interface
   that activates the two-argument version of <a href="fts3.html#f3tknzr">fts3_tokenizer()</a>
   for a specific <a href="c3ref/sqlite3.html">database connection</a> at run-time.
 </p></blockquote><a name="enable_fts4"></a>
@@ -1048,7 +1073,7 @@ the available settings:</p>
 <p><b>SQLITE_ENABLE_QPSG</b></p><blockquote><p>
   This option causes the <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a> (QPSG) to
   be on by default.  Normally the QPSG is off and must be activated
-  at run-time using the <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> option to the
+  at run-time using the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableqpsg">SQLITE_DBCONFIG_ENABLE_QPSG</a> option to the
   <a href="c3ref/db_config.html">sqlite3_db_config()</a> interface.
 </p></blockquote><a name="enable_rbu"></a>
 <p><b>SQLITE_ENABLE_RBU</b></p><blockquote><p>

@@ -132,12 +132,12 @@ should free this memory by calling <a href="../c3ref/free.html">sqlite3_free()</
 
 <p>Extension loading must be enabled using
 <a href="../c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a> or
-<a href="../c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
+<a href="../c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="../c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
 prior to calling this API,
 otherwise an error will be returned.</p>
 
 <p><b>Security warning:</b> It is recommended that the
-<a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method be used to enable only this
+<a href="../c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method be used to enable only this
 interface.  The use of the <a href="../c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a> interface
 should be avoided.  This will keep the SQL function <a href="../lang_corefunc.html#load_extension">load_extension()</a>
 disabled and prevent SQL injections from giving attackers

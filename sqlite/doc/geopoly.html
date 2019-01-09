@@ -116,6 +116,8 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#the_geopoly_bbox_p_and_geopoly_group_bbox_p_functions">3.7. The geopoly_bbox(P) and geopoly_group_bbox(P) Functions</a></div>
 <div class="fancy-toc2"><a href="#the_geopoly_contains_point_p_x_y_function">3.8. The geopoly_contains_point(P,X,Y) Function</a></div>
 <div class="fancy-toc2"><a href="#the_geopoly_xform_p_a_b_c_d_e_f_function">3.9. The geopoly_xform(P,A,B,C,D,E,F) Function</a></div>
+<div class="fancy-toc2"><a href="#the_geopoly_regular_x_y_r_n_function">3.10. The geopoly_regular(X,Y,R,N) Function</a></div>
+<div class="fancy-toc2"><a href="#the_geopoly_ccw_j_function">3.11. The geopoly_ccw(J) Function</a></div>
 <div class="fancy-toc1"><a href="#implementation_details">4. Implementation Details</a></div>
 <div class="fancy-toc2"><a href="#binary_encoding_of_polygons">4.1. Binary Encoding of Polygons</a></div>
 <div class="fancy-toc2"><a href="#shadow_tables">4.2. Shadow Tables</a></div>
@@ -259,7 +261,7 @@ which the _shape is completely contained within $query_polygon.
 </p><p>
 Queries (and also DELETE and UPDATE statements) in which the WHERE
 clause contains a bare geopoly_overlap() or geopoly_within() function
-make use of the underly R*Tree data structures for a fast lookup that
+make use of the underlying R*Tree data structures for a fast lookup that
 only has to examine a subset of the rows in the table.  The number of
 rows examines depends, of course, on the size of the $query_polygon.
 Large $query_polygons will normally need to look at more rows than small
@@ -417,7 +419,85 @@ To rotate a polygon by R radians around the point 0, 0:
 </p><div class="codeblock"><pre>geopoly_xform($polygon, cos($R), sin($R), -sin($R), cos($R), 0, 0)
 </pre></div>
 
-<h1 id="implementation_details"><span>4. </span>Implementation Details</h1>
+<p>
+Note that a transformation that flips the polygon might cause the
+order of vertexes to be reversed.  In other words, the transformation
+might cause the vertexes to circulate in clockwise order instead of
+counter-clockwise.  This can be corrected by sending the result
+through the <a href="geopoly.html#ccw">geopoly_ccw()</a> function after transformation.
+
+
+<a name="regpoly"></a>
+
+</p><h2 id="the_geopoly_regular_x_y_r_n_function"><span>3.10. </span>The geopoly_regular(X,Y,R,N) Function</h2>
+
+<p>
+The geopoly_regular(X,Y,R,N) function returns a convex, simple, regular,
+equilateral, equiangular polygon with N sides, centered at X,Y, and with
+a circumradius of R.  Or, if R is negative or if N is less than 3, the
+function returns NULL.  The N value is capped at 1000 so that the routine
+will never render a polygon with more than 1000 sides even if the N value
+is larger than 1000.
+
+</p><p>
+As an example, the following graphic:
+
+</p><blockquote>
+<svg width="600" height="300" style="border:1px solid black">
+<polyline points="140.003,100 80.0019,134.644 80.0019,65.3565 140.003,100" style="fill:none;stroke:red;stroke-width:2"></polyline> <text x="100" y="106" alignment-baseline="central" text-anchor="middle">3</text>
+<polyline points="240.003,100 200,140.003 159.997,100 200,59.9973 240.003,100" style="fill:none;stroke:orange;stroke-width:2"></polyline> <text x="200" y="106" alignment-baseline="central" text-anchor="middle">4</text>
+<polyline points="340.003,100 312.358,138.042 267.637,123.511 267.637,76.4893 312.358,61.9583 340.003,100" style="fill:none;stroke:green;stroke-width:2"></polyline> <text x="300" y="106" alignment-baseline="central" text-anchor="middle">5</text>
+<polyline points="440.003,100 419.998,134.644 380.002,134.644 359.997,100 380.002,65.3565 419.998,65.3565 440.003,100" style="fill:none;stroke:blue;stroke-width:2"></polyline> <text x="400" y="106" alignment-baseline="central" text-anchor="middle">6</text>
+<polyline points="540.003,100 524.94,131.276 491.101,138.995 463.959,117.353 463.959,82.6471 491.101,61.005 524.94,68.7243 540.003,100" style="fill:none;stroke:purple;stroke-width:2"></polyline> <text x="500" y="106" alignment-baseline="central" text-anchor="middle">7</text>
+<polyline points="140.003,200 128.286,228.286 100,240.003 71.7143,228.286 59.9973,200 71.7143,171.714 100,159.997 128.286,171.714 140.003,200" style="fill:none;stroke:red;stroke-width:2"></polyline> <text x="100" y="206" alignment-baseline="central" text-anchor="middle">8</text>
+<polyline points="240.003,200 232.363,223.511 212.358,238.042 187.642,238.042 167.637,223.511 159.997,200 167.637,176.489 187.642,161.958 212.358,161.958 232.363,176.489 240.003,200" style="fill:none;stroke:orange;stroke-width:2"></polyline> <text x="200" y="206" alignment-baseline="central" text-anchor="middle">10</text>
+<polyline points="340.003,200 334.644,219.998 319.998,234.644 300,240.003 280.002,234.644 265.356,219.998 259.997,200 265.356,180.002 280.002,165.356 300,159.997 319.998,165.356 334.644,180.002 340.003,200" style="fill:none;stroke:green;stroke-width:2"></polyline> <text x="300" y="206" alignment-baseline="central" text-anchor="middle">12</text>
+<polyline points="440.003,200 436.956,215.305 428.286,228.286 415.305,236.956 400,240.003 384.695,236.956 371.714,228.286 363.044,215.305 359.997,200 363.044,184.695 371.714,171.714 384.695,163.044 400,159.997 415.305,163.044 428.286,171.714 436.956,184.695 440.003,200" style="fill:none;stroke:blue;stroke-width:2"></polyline> <text x="400" y="206" alignment-baseline="central" text-anchor="middle">16</text>
+<polyline points="540.003,200 538.042,212.358 532.363,223.511 523.511,232.363 512.358,238.042 500,240.003 487.642,238.042 476.489,232.363 467.637,223.511 461.958,212.358 459.997,200 461.958,187.642 467.637,176.489 476.489,167.637 487.642,161.958 500,159.997 512.358,161.958 523.511,167.637 532.363,176.489 538.042,187.642 540.003,200" style="fill:none;stroke:purple;stroke-width:2"></polyline> <text x="500" y="206" alignment-baseline="central" text-anchor="middle">20</text>
+</svg>
+</blockquote>
+
+<p>Was generated by this script:
+
+</p><div class="codeblock"><pre>SELECT '&lt;svg width="600" height="300">';
+WITH t1(x,y,n,color) AS (VALUES
+   (100,100,3,'red'),
+   (200,100,4,'orange'),
+   (300,100,5,'green'),
+   (400,100,6,'blue'),
+   (500,100,7,'purple'),
+   (100,200,8,'red'),
+   (200,200,10,'orange'),
+   (300,200,12,'green'),
+   (400,200,16,'blue'),
+   (500,200,20,'purple')
+)
+SELECT
+   geopoly_svg(geopoly_regular(x,y,40,n),
+        printf('style="fill:none;stroke:%s;stroke-width:2"',color))
+   || printf(' &lt;text x="%d" y="%d" alignment-baseline="central" text-anchor="middle">%d&lt;/text>',x,y+6,n)
+  FROM t1;
+SELECT '&lt;/svg>';
+</pre></div>
+
+<a name="ccw"></a>
+
+<h2 id="the_geopoly_ccw_j_function"><span>3.11. </span>The geopoly_ccw(J) Function</h2>
+
+<p>The geopoly_ccw(J) function returns the polygon J with counter-clockwise (CCW) rotation.
+
+</p><p>
+<a href="https://tools.ietf.org/html/rfc7946">RFC-7946</a> requires that polygons use CCW rotation.
+But the spec also observes that many legacy GeoJSON files do not following the spec and
+contain polygons with clockwise (CW) rotation.  The geopoly_ccw() function is useful for
+applications that are reading legacy GeoJSON scripts.  If the input to geopoly_ccw() is
+a correctly-formatted polygon, then no changes are made.  However, if the circulation of
+the input polygon is backwards, then geopoly_ccw() reverses the circulation order so that
+it conforms to the spec and so that it will work correctly with the Geopoly module.
+
+
+
+</p><h1 id="implementation_details"><span>4. </span>Implementation Details</h1>
 
 <p>The geopoly module is an extension to the <a href="rtree.html">R-Tree extension</a>.  Geopoly
 uses the same underlying logic and shadow tables as the <a href="rtree.html">R-Tree extension</a>.

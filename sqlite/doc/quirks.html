@@ -138,11 +138,6 @@ mk.innerHTML = "&#x25ba;";
 
 <h1 id="overview"><span>1. </span>Overview</h1>
 
-<center><font color="red" size="6"><b>
-This document is a work in progress.
-</b></font>
-</center>
-
 <p>
 The SQL language is a "standard".
 Even so, no two SQL database engines work exactly alike.
@@ -295,7 +290,7 @@ be activated at compile-time using the
 </p><h1 id="primary_keys_can_sometimes_contain_nulls"><span>5. </span>PRIMARY KEYs Can Sometimes Contain NULLs</h1>
 
 <p>
-Usually (the exceptions are <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> tables 
+Usually (the exceptions are <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> tables and
 <a href="withoutrowid.html">WITHOUT ROWID</a> tables) a PRIMARY KEY in an SQLite table is really
 the same as a UNIQUE constraint.  Due to an historical oversight,
 the column values of such a PRIMARY KEY are allowed to be NULL.
@@ -427,6 +422,14 @@ be strict in what you accept, so as to more easily find errors in the
 input.
 </p><p>
 
-
 </p><h1 id="autoincrement_does_not_work_the_same_as_mysql"><span>11. </span>AUTOINCREMENT Does Not Work The Same As MySQL</h1>
 
+<p>The <a href="autoinc.html">AUTOINCREMENT</a> feature in SQLite works differently than
+it does in MySQL.  This often causes confusion for people who
+initially learned SQL on MySQL and then start using SQLite, and
+expect the two systems to work identically.
+
+</p><p>See the <a href="autoinc.html">SQLite AUTOINCREMENT documentation</a> for
+detailed instructions on what AUTOINCREMENT does and does not do
+in SQLite.
+</p>

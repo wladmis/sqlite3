@@ -121,7 +121,7 @@ int sqlite3changeset_apply_v2(
   ),
   void *pCtx,                     /* First argument passed to xConflict */
   void **ppRebase, int *pnRebase, /* OUT: Rebase data */
-  int flags                       /* Combination of SESSION_APPLY_* flags */
+  int flags                       /* SESSION_CHANGESETAPPLY_* flags */
 );
 </pre></blockquote><p>
 Apply a changeset or patchset to a database. These functions attempt to
@@ -274,7 +274,7 @@ APIs for further details.</p>
 
 <p>The behavior of sqlite3changeset_apply_v2() and its streaming equivalent
 may be modified by passing a combination of
-<a href="../session/c_changesetapply_nosavepoint.html">supported flags</a> as the 9th parameter.</p>
+<a href="../session/c_changesetapply_invert.html">supported flags</a> as the 9th parameter.</p>
 
 <p>Note that the sqlite3changeset_apply_v2() API is still <b>experimental</b>
 and therefore subject to change.

@@ -96,16 +96,16 @@ return false;
     support for the <a href="../pragma.html#pragma_journal_mode">journal_mode</a> PRAGMA and persistent journal.</li>
 <li><a href="../pragma.html#pragma_journal_mode">Journal mode PERSIST</a> is the default behavior in
     <a href="../pragma.html#pragma_locking_mode">exclusive locking mode</a>.</li>
-<li>Fix a performance regression on LEFT JOIN (see <a href="http://www.sqlite.org/cvstrac/tktview?tn=3015">ticket #3015</a>)
+<li>Fix a performance regression on LEFT JOIN (see ticket #3015)
     that was mistakenly introduced in <a href="../releaselog/3_5_8.html">version 3.5.8</a>.</li>
 <li>Performance enhancement: Reengineer the internal routines used
     to interpret and render variable-length integers.</li>
 <li>Fix a buffer-overrun problem in <a href="../c3ref/mprintf.html">sqlite3_mprintf()</a> which occurs
     when a string without a zero-terminator is passed to "%.*s".</li>
 <li>Always convert IEEE floating point NaN values into NULL during
-    processing.  (<a href="http://www.sqlite.org/cvstrac/tktview?tn=3060">Ticket #3060</a>)</li>
+    processing.  (Ticket #3060)</li>
 <li>Make sure that when a connection blocks on a RESERVED lock that
-    it is able to continue after the lock is released.  (<a href="http://www.sqlite.org/cvstrac/tktview?tn=3093">Ticket #3093</a>)</li>
+    it is able to continue after the lock is released.  (Ticket #3093)</li>
 <li>The "configure" scripts should now automatically configure Unix
     systems for large file support.  Improved error messages for
     when large files are encountered and large file support is disabled.</li>

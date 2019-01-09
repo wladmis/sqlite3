@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: sqlite3_expanded_sql sqlite3_sql -->
+<!-- keywords: sqlite3_expanded_sql sqlite3_normalized_sql sqlite3_sql -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Retrieving Statement SQL</h2>
@@ -99,6 +99,7 @@ return false;
 <blockquote><pre>
 const char *sqlite3_sql(sqlite3_stmt *pStmt);
 char *sqlite3_expanded_sql(sqlite3_stmt *pStmt);
+const char *sqlite3_normalized_sql(sqlite3_stmt *pStmt);
 </pre></blockquote>
 <p>
 The sqlite3_sql(P) interface returns a pointer to a copy of the UTF-8
@@ -107,7 +108,12 @@ created by <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>, <a href="..
 <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a>, or <a href="../c3ref/prepare.html">sqlite3_prepare16_v3()</a>.
 The sqlite3_expanded_sql(P) interface returns a pointer to a UTF-8
 string containing the SQL text of prepared statement P with
-<a href="../lang_expr.html#varparam">bound parameters</a> expanded.</p>
+<a href="../lang_expr.html#varparam">bound parameters</a> expanded.
+The sqlite3_normalized_sql(P) interface returns a pointer to a UTF-8
+string containing the normalized SQL text of prepared statement P.  The
+semantics used to normalize a SQL statement are unspecified and subject
+to change.  At a minimum, literal values will be replaced with suitable
+placeholders.</p>
 
 <p>For example, if a prepared statement is created using the SQL
 text "SELECT $abc,:xyz" and if parameter $abc is bound to integer 2345
@@ -123,8 +129,9 @@ the maximum string length determined by the <a href="../c3ref/c_limit_attached.h
 bound parameter expansions.  The <a href="../compile.html#omit_trace">SQLITE_OMIT_TRACE</a> compile-time
 option causes sqlite3_expanded_sql() to always return NULL.</p>
 
-<p>The string returned by sqlite3_sql(P) is managed by SQLite and is
-automatically freed when the prepared statement is finalized.
+<p>The strings returned by sqlite3_sql(P) and sqlite3_normalized_sql(P)
+are managed by SQLite and are automatically freed when the prepared
+statement is finalized.
 The string returned by sqlite3_expanded_sql(P), on the other hand,
 is obtained from <a href="../c3ref/free.html">sqlite3_malloc()</a> and must be free by the application
 by passing it to <a href="../c3ref/free.html">sqlite3_free()</a>.

@@ -118,6 +118,7 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#the_xbestindex_method">2.3. The xBestIndex Method</a></div>
 <div class="fancy-toc3"><a href="#inputs">2.3.1. Inputs</a></div>
 <div class="fancy-toc3"><a href="#outputs">2.3.2. Outputs</a></div>
+<div class="fancy-toc3"><a href="#return_value">2.3.3. Return Value</a></div>
 <div class="fancy-toc2"><a href="#the_xdisconnect_method">2.4. The xDisconnect Method</a></div>
 <div class="fancy-toc2"><a href="#the_xdestroy_method">2.5. The xDestroy Method</a></div>
 <div class="fancy-toc2"><a href="#the_xopen_method">2.6. The xOpen Method</a></div>
@@ -135,6 +136,7 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#the_xrollback_method">2.18. The xRollback Method</a></div>
 <div class="fancy-toc2"><a href="#the_xrename_method">2.19. The xRename Method</a></div>
 <div class="fancy-toc2"><a href="#the_xsavepoint_xrelease_and_xrollbackto_methods">2.20. The xSavepoint, xRelease, and xRollbackTo Methods</a></div>
+<div class="fancy-toc2"><a href="#the_xshadowname_method">2.21. The xShadowName Method</a></div>
 </div>
 </div>
 <script>
@@ -446,15 +448,18 @@ struct sqlite3_module {
   int (*xSavepoint)(sqlite3_vtab *pVTab, int);
   int (*xRelease)(sqlite3_vtab *pVTab, int);
   int (*xRollbackTo)(sqlite3_vtab *pVTab, int);
+  /* The methods above are in versions 1 and 2 of the sqlite_module object.
+  ** Those below are for version 3 and greater. */
+  int (*xShadowName)(const char*);
 };
 </pre></div>
 
 <p>The module structure defines all of the methods for each virtual 
 table object. The module structure also contains the iVersion field which
 defines the particular edition of the module table structure. Currently, 
-iVersion is always 1, but in future releases of SQLite the module structure 
-definition might be extended with additional methods and in that case 
-the iVersion value will be increased.
+iVersion is always 3 or less, but in future releases of SQLite the module
+structure definition might be extended with additional methods and in 
+that case the maximum iVersion value will be increased.
 
 </p><p>The rest of the module structure consists of methods used to implement
 various features of the virtual table. Details on what each of these 
@@ -861,7 +866,7 @@ as in the idxStr field with needToFreeIdxStr set to 1.
 </p><p>Note that xBestIndex will always be called before <a href="vtab.html#xfilter">xFilter</a>, since
 the idxNum and idxStr outputs from xBestIndex are required inputs to
 xFilter.  However, there is no guarantee that xFilter will be called
-following a successful xBestIndex.  
+following a successful xBestIndex.
 
 </p><p>The xBestIndex method is required for every virtual table implementation.
 
@@ -905,7 +910,7 @@ x &lt;= 100
 y &lt; 999
 </pre></div>
 
-<p>For such each constraint, the aConstraint[].iColumn field indicates which 
+<p>For each such constraint, the aConstraint[].iColumn field indicates which 
 column appears on the left-hand side of the constraint.
 The first column of the virtual table is column 0. 
 The rowid of the virtual table is column -1. 
@@ -974,6 +979,8 @@ memory allocation function such as <a href="c3ref/mprintf.html">sqlite3_mprintf(
 If this is the case, then the needToFreeIdxStr flag must be set to 
 true so that the SQLite core will know to call <a href="c3ref/free.html">sqlite3_free()</a> on 
 that string when it has finished with it, and thus avoid a memory leak.
+The idxStr value may also be a static constant string, in which case
+the needToFreeIdxStr boolean should remain false.
 
 </p><p>If the virtual table will output rows in the order specified by 
 the ORDER BY clause, then the orderByConsumed flag may be set to 
@@ -987,6 +994,10 @@ of disk access operations required to execute this query against
 the virtual table. The SQLite core will often call xBestIndex 
 multiple times with different constraints, obtain multiple cost
 estimates, then choose the query plan that gives the lowest estimate.
+The SQLite core initializes estimatedCost to a very large value
+prior to invoking xBestIndex, so if xBestIndex determines that the
+current combination of parameters is undesirable, it can leave the
+estimatedCost field unchanged to discourage its use.
 
 </p><p>If the current version of SQLite is 3.8.2 or greater, the estimatedRows
 field may be set to an estimate of the number of rows returned by the
@@ -1019,6 +1030,57 @@ the EXPR value of the aConstraint[3] constraint.
 each row of the virtual table that it receives. If such a check 
 is redundant, the xBestFilter method can suppress that double-check by 
 setting aConstraintUsage[].omit.
+
+</p><h3 id="return_value"><span>2.3.3. </span>Return Value</h3>
+
+<p>The xBestIndex method should return SQLITE_OK on success.  If any
+kind of fatal error occurs, an appropriate error code (ex: <a href="rescode.html#nomem">SQLITE_NOMEM</a>)
+should be returned instead.
+
+</p><p>If xBestIndex returns <a href="rescode.html#constraint">SQLITE_CONSTRAINT</a>, that does not indicate an
+error.  Rather, SQLITE_CONSTRAINT indicates that the particular combination
+of input parameters specified should not be used in the query plan.
+The SQLITE_CONSTRAINT return is useful for <a href="vtab.html#tabfunc2">table-valued functions</a> that
+have required parameters.  If the aConstraint[].usable field is false
+for one of the required parameter, then the xBestIndex method should
+return SQLITE_CONSTRAINT.
+
+</p><p>The following example will better illustrate the use of SQLITE_CONSTRAINT
+as a return value from xBestIndex:
+
+</p><div class="codeblock"><pre>SELECT * FROM realtab, tablevaluedfunc(realtab.x);
+</pre></div>
+
+<p>Assuming that the first hidden column of "tablevaluedfunc" is "param1",
+the query above is semantically equivalent to this:
+
+</p><div class="codeblock"><pre>SELECT * FROM realtab, tablevaluedfunc
+ WHERE tablevaluedfunc.param1 = realtab.x;
+</pre></div>
+
+<p>The query planner must decide between many possible implementations
+of this query, but two plans in particular are of note:
+
+</p><ol>
+<li><p>Scan all
+rows of realtab and for each row, find rows in tablevaluedfunc where
+param1 is equal to realtab.x
+
+</p></li><li><p>Scan all rows of tablevalued func and for each row find rows
+in realtab where x is equal to tablevaluedfunc.param1.
+</p></li></ol>
+
+<p>The xBestIndex method will be invoked once for each of the potential
+plans above.  For plan 1, the aConstraint[].usable flag for for the
+SQLITE_CONSTRAINT_EQ constraint on the param1 column will be true because
+the right-hand side value for the "param1 = ?" constraint will be known,
+since it is determined by the outer realtab loop.
+But for plan 2, the aConstraint[].usable flag for "param1 = ?" will be false
+because the right-hand side value is determined by an inner loop and is thus
+an unknown quantity.  Because param1 is a required input to the table-valued
+functions, the xBestIndex method should return SQLITE_CONSTRAINT when presented 
+with plan 2, indicating that a required input is missing.  This forces the
+query planner to select plan 1.
 
 <a name="xdisconnect"></a>
 
@@ -1506,7 +1568,7 @@ table may not be renamed using the ALTER TABLE RENAME command.
 </p><p>The <a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table</a> setting is enabled prior to invoking this
 method, and the value for legacy_alter_table is restored after this
 method finishes.  This is necessary for the correct operation of virtual
-tables that make use of <a href="fts3.html#*shadowtab">shadow tables</a> where the shadow tables must be
+tables that make use of <a href="vtab.html#xshadowname">shadow tables</a> where the shadow tables must be
 renamed to match the new virtual table name.  If the legacy_alter_format is
 off, then the xConnect method will be invoked for the virtual table every
 time the xRename method tries to change the name of the shadow table.
@@ -1545,3 +1607,61 @@ be called except in between calls to xBegin() and
 either xCommit() or xRollback().
 </p>
 
+<a name="xshadowname"></a>
+
+<h2 id="the_xshadowname_method"><span>2.21. </span>The xShadowName Method</h2>
+
+<p>Some virtual table implementations (ex: <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, and <a href="rtree.html">RTREE</a>) make
+use of real (non-virtual) database tables to store content.  For example,
+when content is inserted into the FTS3 virtual table, the data is ultimately
+stored in real tables named "%_content", "%_segdir", "%_segments", "%_stat",
+and "%_docsize" where "%" is the name of the original virtual table.  This
+auxiliary real tables that store content for a virtual table are called
+"shadow tables".  See
+(<a href="fts3.html#*shadowtab">1</a>),
+(<a href="fts5.html#appendix_b">2</a>), and
+(<a href="rtree.html#xshadow">3</a>) for additional information.
+
+</p><p>The xShadowName method exists to allow SQLite to determine whether a
+certain real table is in fact a shadow table for a virtual table.
+
+</p><p>SQLite understands a real table to be a shadow table if all of
+the following are true:
+</p><p>
+</p><ul>
+<li> The name of the table contains one or more "_" characters.
+</li><li> The part of the name prior to the last "_" exactly matches
+     the name of a virtual table that was created using <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a>.
+     (Shadow tables are not recognized for <a href="vtab.html#epovtab">eponymous virtual tables</a>
+     and <a href="vtab.html#tabfunc2">table-valued functions</a>.)
+</li><li> The virtual table contains an xShadowName method.
+</li><li> The xShadowName method returns true when its input is the part
+     of the table name past the last "_" character.
+</li></ul>
+
+<p>
+If SQLite recognizes a table as a shadow table, and if the
+<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> flag is set, then the shadow table is read-only
+for ordinary SQL statements.  The shadow table can still be written, but
+only by SQL that is invoked from within one of the methods of
+some virtual table implementation.
+
+</p><p>
+The whole point of the xShadowName method is to protect the content of
+shadow tables from being corrupted by hostile SQL.  Every virtual table
+implementation that uses shadow tables should be able to detect and cope
+with corrupted shadow table content.  However, bugs in particular virtual 
+table implementation might allow a deliberately corrupted shadow table to
+cause a crash or other malfunction.  The xShadowName mechanism seeks to 
+avoid zero-day exploits by preventing ordinary SQL statements from
+deliberately corrupting shadow tables.
+
+</p><p>
+Shadow tables are read/write by default.
+Shadow tables only become read-only when the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a>
+flag is set using <a href="c3ref/db_config.html">sqlite3_db_config()</a>.
+Shadow tables need to be read/write by default in order to maintain
+backwards compatibility.
+For example, the SQL text generated by the <a href="cli.html#dump">.dump</a> command of the <a href="cli.html">CLI</a>
+writes directly into shadow tables.
+</p>

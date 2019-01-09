@@ -6300,7 +6300,7 @@ comments in the source code.
 
 <dt><b>R-31820-22006-44575-45426-57001-50586-37778-41806</b></dt>
 <dd><p>If the final parameter to sqlite3_create_function_v2() or sqlite3_create_window_function() is not NULL, then it is destructor for the application data pointer. The destructor is invoked when the function is deleted, either by being overloaded or when the database connection closes.
-<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-31820-22006-44575-45426-57001-50586-37778-41806'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-31820-22006-44575-45426-57001-50586-37778-41806'>detail</a>)</i></p></dd>
+<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, checked-by: th3/req1/createfunc07.test, matrix: <a href='matrix/c3ref/create_function.html#R-31820-22006-44575-45426-57001-50586-37778-41806'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-31820-22006-44575-45426-57001-50586-37778-41806'>detail</a>)</i></p></dd>
 
 <dt><b>R-31826-01813-36062-43919-63231-47318-45635-11887</b></dt>
 <dd><p>An error is raised if more than one PRIMARY KEY clause appears in a CREATE TABLE statement.
@@ -6768,7 +6768,7 @@ comments in the source code.
 
 <dt><b>R-34467-36570-51008-00703-20331-24944-30267-61623</b></dt>
 <dd><p>When the destructor callback is invoked, it is passed a single argument which is a copy of the application data pointer which was the fifth parameter to sqlite3_create_function_v2().
-<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-34467-36570-51008-00703-20331-24944-30267-61623'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-34467-36570-51008-00703-20331-24944-30267-61623'>detail</a>)</i></p></dd>
+<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, checked-by: th3/req1/createfunc07.test, matrix: <a href='matrix/c3ref/create_function.html#R-34467-36570-51008-00703-20331-24944-30267-61623'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-34467-36570-51008-00703-20331-24944-30267-61623'>detail</a>)</i></p></dd>
 
 <dt><b>R-34472-09915-38123-43434-43436-60925-14387-37410</b></dt>
 <dd><p>Note that if a non-deterministic function is tagged with SQLITE_DETERMINISTIC and if that function ends up being used in the WHERE clause of a partial index or in an expression index, then when the function begins to return different answers, the associated index may become corrupt.
@@ -6916,7 +6916,7 @@ comments in the source code.
 
 <dt><b>R-35036-33960-30076-49697-10834-60924-14728-15122</b></dt>
 <dd><p>The sixth, seventh and eighth parameters passed to the three "sqlite3_create_function*" functions, xFunc, xStep and xFinal, are pointers to C-language functions that implement the SQL function or aggregate.
-<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-35036-33960-30076-49697-10834-60924-14728-15122'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-35036-33960-30076-49697-10834-60924-14728-15122'>detail</a>)</i></p></dd>
+<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, checked-by: th3/req1/createfunc03.test, matrix: <a href='matrix/c3ref/create_function.html#R-35036-33960-30076-49697-10834-60924-14728-15122'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-35036-33960-30076-49697-10834-60924-14728-15122'>detail</a>)</i></p></dd>
 
 <dt><b>R-35036-36587-25670-53930-46391-17517-28623-46452</b></dt>
 <dd><p>For a WITHOUT ROWID table, N will be the number of columns in the primary key.
@@ -11932,7 +11932,7 @@ comments in the source code.
 
 <dt><b>R-60755-45226-57184-35002-64218-27799-00922-32350</b></dt>
 <dd><p>The application_id PRAGMA is used to query or set the 32-bit signed big-endian "Application ID" integer located at offset 68 into the database header.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-60755-45226-57184-35002-64218-27799-00922-32350'>context</a>, <a href='matrix/matrix_dpragma.html#R-60755-45226-57184-35002-64218-27799-00922-32350'>detail</a>)</i></p></dd>
+<i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/cov1/pragma20.test, matrix: <a href='matrix/pragma.html#R-60755-45226-57184-35002-64218-27799-00922-32350'>context</a>, <a href='matrix/matrix_dpragma.html#R-60755-45226-57184-35002-64218-27799-00922-32350'>detail</a>)</i></p></dd>
 
 <dt><b>R-60758-29241-24503-58415-42517-14147-34293-65020</b></dt>
 <dd><p>The RELEASE command causes all savepoints back to and including the most recent savepoint with a matching name to be removed from the transaction stack.

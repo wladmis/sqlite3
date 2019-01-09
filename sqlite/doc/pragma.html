@@ -311,6 +311,7 @@ var listitems34 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_stats","x":"stats","s":5},
 {"u":"pragma.html#pragma_synchronous","x":"synchronous","s":0},
 {"u":"pragma.html#pragma_table_info","x":"table_info","s":0},
+{"u":"pragma.html#pragma_table_xinfo","x":"table_xinfo","s":0},
 {"u":"pragma.html#pragma_temp_store","x":"temp_store","s":0},
 {"u":"pragma.html#pragma_temp_store_directory","x":"temp_store_directory","s":3},
 {"u":"pragma.html#pragma_threads","x":"threads","s":0},
@@ -1114,7 +1115,7 @@ for use in application programs.</ol></p>
     contain code that expect the incomplete behavior
     of ALTER TABLE RENAME found in older versions of SQLite.
     New applications should leave this flag turned off.
-    <p>For compability with older <a href="vtab.html">virtual table</a> implementations,
+    <p>For compatibility with older <a href="vtab.html">virtual table</a> implementations,
     this flag is turned on temporarily while the <a href="vtab.html#xrename">sqlite3_module.xRename</a>
     method is being run.  The value of this flag is restore after the 
     <a href="vtab.html#xrename">sqlite3_module.xRename</a> method finishes.
@@ -1665,6 +1666,14 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     the column in the primary key for columns that are part of the primary
     key.</p>
     <p>The table named in the table_info pragma can also be a view.</p>
+    <p>See also: <a href="pragma.html#pragma_table_xinfo">PRAGMA table_xinfo</a>
+<a name="pragma_table_xinfo"></a>
+<h _id=pragma_table_xinfo style="display:none"> PRAGMA table_xinfo</h><hr>
+    <p><b>PRAGMA </b><i>schema.</i><b>table_xinfo(</b><i>table-name</i><b>);</b></p>
+    <p>This pragma returns one row for each column in the named table,
+    including <a href="vtab.html#hiddencol">hidden columns</a> in virtual tables.
+    The output is the same as for <a href="pragma.html#pragma_table_info">PRAGMA table_info</a> except that
+    hidden columns are shown rather than being omitted.
 <a name="pragma_temp_store"></a>
 <h _id=pragma_temp_store style="display:none"> PRAGMA temp_store</h><hr>
     <p><b>PRAGMA temp_store;
@@ -1962,11 +1971,12 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <h _id=pragma_writable_schema style="display:none"> PRAGMA writable_schema</h><hr>
     <p><b>PRAGMA writable_schema  = </b><i>boolean</i><b>;</b></p>
 
-    <p>When this pragma is on, the SQLITE_MASTER tables in which database
+    <p>When this pragma is on, and the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> flag
+    is off, then the <a href="fileformat2.html#sqlite_master">sqlite_master</a> table
     can be changed using ordinary <a href="lang_update.html">UPDATE</a>, <a href="lang_insert.html">INSERT</a>, and <a href="lang_delete.html">DELETE</a>
     statements.  <span style='background-color: #ffff60;'><b>Warning:</b>
     misuse of this pragma can easily result in
-    a <a href="howtocorrupt.html#cfgerr">corrupt database file</a>.</span></p>
+    a <a href="howtocorrupt.html#cfgerr">corrupt database file</a>.</span>
 
 <hr>
 

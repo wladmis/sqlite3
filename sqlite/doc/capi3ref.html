@@ -304,17 +304,18 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_CREATE_TRIGGER","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_CREATE_VIEW","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_CREATE_VTABLE","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_FKEY","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_QPSG","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAX","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_RESET_DATABASE","s":0},
-{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_TRIGGER_EQP","s":0},
+{"u":"#sqlitedbconfigdefensive","x":"SQLITE_DBCONFIG_DEFENSIVE","s":0},
+{"u":"#sqlitedbconfigenablefkey","x":"SQLITE_DBCONFIG_ENABLE_FKEY","s":0},
+{"u":"#sqlitedbconfigenablefts3tokenizer","x":"SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER","s":0},
+{"u":"#sqlitedbconfigenableloadextension","x":"SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION","s":0},
+{"u":"#sqlitedbconfigenableqpsg","x":"SQLITE_DBCONFIG_ENABLE_QPSG","s":0},
+{"u":"#sqlitedbconfigenabletrigger","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
+{"u":"#sqlitedbconfiglookaside","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
+{"u":"#sqlitedbconfigmaindbname","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
+{"u":"#SQLITE_DBCONFIG_DEFENSIVE","x":"SQLITE_DBCONFIG_MAX","s":0},
+{"u":"#sqlitedbconfignockptonclose","x":"SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE","s":0},
+{"u":"#sqlitedbconfigresetdatabase","x":"SQLITE_DBCONFIG_RESET_DATABASE","s":0},
+{"u":"#sqlitedbconfigtriggereqp","x":"SQLITE_DBCONFIG_TRIGGER_EQP","s":0},
 {"u":"#sqlitedbstatuscachehit","x":"SQLITE_DBSTATUS_CACHE_HIT","s":0},
 {"u":"#sqlitedbstatuscachemiss","x":"SQLITE_DBSTATUS_CACHE_MISS","s":0},
 {"u":"#sqlitedbstatuscachespill","x":"SQLITE_DBSTATUS_CACHE_SPILL","s":0},
@@ -528,6 +529,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_OPEN_AUTOPROXY","x":"SQLITE_OPEN_WAL","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_PERM","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_PRAGMA","s":0},
+{"u":"#sqlitepreparenormalize","x":"SQLITE_PREPARE_NORMALIZE","s":0},
 {"u":"#sqlitepreparepersistent","x":"SQLITE_PREPARE_PERSISTENT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_PROTOCOL","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_RANGE","s":0},
@@ -590,6 +592,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_FAULT_INSTALL","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_FIRST","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_IMPOSTER","s":0},
+{"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_INTERNAL_FUNCTIONS","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_ISINIT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_ISKEYWORD","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_LAST","s":0},
@@ -623,7 +626,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ANY","x":"SQLITE_UTF8","s":0},
 {"u":"#SQLITE_SOURCE_ID","x":"SQLITE_VERSION","s":0},
 {"u":"#SQLITE_SOURCE_ID","x":"SQLITE_VERSION_NUMBER","s":0},
-{"u":"#SQLITE_VTAB_CONSTRAINT_SUPPORT","x":"SQLITE_VTAB_CONSTRAINT_SUPPORT","s":0},
+{"u":"#sqlitevtabconstraintsupport","x":"SQLITE_VTAB_CONSTRAINT_SUPPORT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_WARNING","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_WARNING_AUTOINDEX","s":0},
 {"u":"#SQLITE_WIN32_DATA_DIRECTORY_TYPE","x":"SQLITE_WIN32_DATA_DIRECTORY_TYPE","s":0},
@@ -666,7 +669,7 @@ document.getElementById("listtab23").innerHTML = h;
 <p>Note: Functions marked with "<small><i>(exp)</i></small>"
 are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
-<!-- number of functions: 260 -->
+<!-- number of functions: 261 -->
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 0 -->
 <style>
@@ -806,6 +809,7 @@ var listitems24 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_mutex_held","x":"sqlite3_mutex_notheld","s":0},
 {"u":"#sqlite3_mutex_alloc","x":"sqlite3_mutex_try","s":0},
 {"u":"#sqlite3_next_stmt","x":"sqlite3_next_stmt","s":0},
+{"u":"#sqlite3_expanded_sql","x":"sqlite3_normalized_sql","s":0},
 {"u":"#sqlite3_open","x":"sqlite3_open","s":0},
 {"u":"#sqlite3_open","x":"sqlite3_open16","s":0},
 {"u":"#sqlite3_open","x":"sqlite3_open_v2","s":0},
@@ -995,32 +999,6 @@ to <a href="#sqlite3_create_function">sqlite3_create_function()</a>, <a href="#s
 Virtual table implementations are allowed to set the
 <a href="#sqlite3_index_info">sqlite3_index_info</a>.idxFlags field to some combination of
 these bits.
-</p><hr><a name="SQLITE_PREPARE_PERSISTENT"></a>
-<h2>Prepare Flags</h2>
-</div>
-<blockquote><pre>
-#define SQLITE_PREPARE_PERSISTENT              0x01
-</pre></blockquote>
-<p>
-These constants define various flags that can be passed into
-"prepFlags" parameter of the <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a> and
-<a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> interfaces.</p>
-
-<p>New flags may be added in future releases of SQLite.</p>
-
-<p><dl>
-<a name="sqlitepreparepersistent"></a>
- <dt>SQLITE_PREPARE_PERSISTENT</dt>
-<dd>The SQLITE_PREPARE_PERSISTENT flag is a hint to the query planner
-that the prepared statement will be retained for a long time and
-probably reused many times. Without this flag, <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>
-and <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> assume that the prepared statement will
-be used just once or at most a few times and then destroyed using
-<a href="#sqlite3_finalize">sqlite3_finalize()</a> relatively soon. The current implementation acts
-on this hint by avoiding the use of <a href="malloc.html#lookaside">lookaside memory</a> so as not to
-deplete the limited store of lookaside memory. Future versions of
-SQLite may act on this hint differently.
-</dl>
 </p><hr><a name="SQLITE_SERIALIZE_NOCOPY"></a>
 <h2>Flags for sqlite3_serialize</h2>
 </div>
@@ -1061,6 +1039,8 @@ These macros define the various options to the
 can use to customize and optimize their behavior.</p>
 
 <p><dl>
+<a name="sqlitevtabconstraintsupport"></a>
+
 <dt>SQLITE_VTAB_CONSTRAINT_SUPPORT
 <dd>Calls of the form
 <a href="#sqlite3_vtab_config">sqlite3_vtab_config</a>(db,SQLITE_VTAB_CONSTRAINT_SUPPORT,X) are supported,
@@ -2601,7 +2581,7 @@ changes to a <a href="#sqlite3">database connection</a>.  The interface is simil
 <a href="#sqlite3">database connection</a> (specified in the first argument).</p>
 
 <p>The second argument to sqlite3_db_config(D,V,...)  is the
-<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">configuration verb</a> - an integer code
+<a href="#sqlitedbconfiglookaside">configuration verb</a> - an integer code
 that indicates what aspect of the <a href="#sqlite3">database connection</a> is being configured.
 Subsequent arguments vary depending on the configuration verb.</p>
 
@@ -2767,11 +2747,11 @@ it back off again.</p>
 
 <p>This interface enables or disables both the C-API
 <a href="#sqlite3_load_extension">sqlite3_load_extension()</a> and the SQL function <a href="lang_corefunc.html#load_extension">load_extension()</a>.
-Use <a href="#sqlite3_db_config">sqlite3_db_config</a>(db,<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,..)
+Use <a href="#sqlite3_db_config">sqlite3_db_config</a>(db,<a href="#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,..)
 to enable or disable only the C-API.</p>
 
 <p><b>Security warning:</b> It is recommended that extension loading
-be disabled using the <a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method
+be disabled using the <a href="#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method
 rather than this interface, so the <a href="lang_corefunc.html#load_extension">load_extension()</a> SQL function
 remains disabled. This will prevent SQL injections from giving attackers
 access to extension loading capabilities.
@@ -3101,12 +3081,12 @@ should free this memory by calling <a href="#sqlite3_free">sqlite3_free()</a>.</
 
 <p>Extension loading must be enabled using
 <a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> or
-<a href="#sqlite3_db_config">sqlite3_db_config</a>(db,<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
+<a href="#sqlite3_db_config">sqlite3_db_config</a>(db,<a href="#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
 prior to calling this API,
 otherwise an error will be returned.</p>
 
 <p><b>Security warning:</b> It is recommended that the
-<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method be used to enable only this
+<a href="#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method be used to enable only this
 interface.  The use of the <a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> interface
 should be avoided.  This will keep the SQL function <a href="lang_corefunc.html#load_extension">load_extension()</a>
 disabled and prevent SQL injections from giving attackers
@@ -4360,7 +4340,7 @@ various facets of the virtual table interface.</p>
 xCreate virtual table method then the behavior is undefined.</p>
 
 <p>At present, there is only one option that may be configured using
-this function. (See <a href="#SQLITE_VTAB_CONSTRAINT_SUPPORT">SQLITE_VTAB_CONSTRAINT_SUPPORT</a>.)  Further options
+this function. (See <a href="#sqlitevtabconstraintsupport">SQLITE_VTAB_CONSTRAINT_SUPPORT</a>.)  Further options
 may be added in the future.
 </p><hr><a name="sqlite3_vtab_nochange"></a>
 <h2>Determine If Virtual Table Column Access Is For UPDATE</h2>
@@ -5117,7 +5097,7 @@ the default size of lookaside memory on each <a href="#sqlite3">database connect
 The first argument is the
 size of each lookaside buffer slot and the second is the number of
 slots allocated to each database connection.  SQLITE_CONFIG_LOOKASIDE
-sets the <i>default</i> lookaside size. The <a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_LOOKASIDE</a>
+sets the <i>default</i> lookaside size. The <a href="#sqlitedbconfiglookaside">SQLITE_DBCONFIG_LOOKASIDE</a>
 option to <a href="#sqlite3_db_config">sqlite3_db_config()</a> can be used to change the lookaside
 configuration on individual connections. </dd></p>
 
@@ -5286,7 +5266,7 @@ negative value for this option restores the default behaviour.
 This option is only available if SQLite is compiled with the
 <a href="compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> compile-time option.
 </dl>
-</p><hr><a name="SQLITE_DBCONFIG_ENABLE_FKEY"></a>
+</p><hr><a name="SQLITE_DBCONFIG_DEFENSIVE"></a>
 <h2>Database Connection Configuration Options</h2>
 </div>
 <blockquote><pre>
@@ -5300,7 +5280,8 @@ This option is only available if SQLite is compiled with the
 #define SQLITE_DBCONFIG_ENABLE_QPSG           1007 /* int int* */
 #define SQLITE_DBCONFIG_TRIGGER_EQP           1008 /* int int* */
 #define SQLITE_DBCONFIG_RESET_DATABASE        1009 /* int int* */
-#define SQLITE_DBCONFIG_MAX                   1009 /* Largest DBCONFIG */
+#define SQLITE_DBCONFIG_DEFENSIVE             1010 /* int int* */
+#define SQLITE_DBCONFIG_MAX                   1010 /* Largest DBCONFIG */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5314,6 +5295,8 @@ non-zero <a href="rescode.html">error code</a> if a discontinued or unsupported 
 is invoked.</p>
 
 <p><dl>
+<a name="sqlitedbconfiglookaside"></a>
+
 <dt>SQLITE_DBCONFIG_LOOKASIDE</dt>
 <dd> This option takes three additional arguments that determine the
 <a href="malloc.html#lookaside">lookaside memory allocator</a> configuration for the <a href="#sqlite3">database connection</a>.
@@ -5336,7 +5319,9 @@ Any attempt to change the lookaside memory configuration when lookaside
 memory is in use leaves the configuration unchanged and returns
 <a href="#SQLITE_ABORT">SQLITE_BUSY</a>.</dd></p>
 
-<p><dt>SQLITE_DBCONFIG_ENABLE_FKEY</dt>
+<p><a name="sqlitedbconfigenablefkey"></a>
+
+<dt>SQLITE_DBCONFIG_ENABLE_FKEY</dt>
 <dd> This option is used to enable or disable the enforcement of
 <a href="foreignkeys.html">foreign key constraints</a>.  There should be two additional arguments.
 The first argument is an integer which is 0 to disable FK enforcement,
@@ -5346,7 +5331,9 @@ is written 0 or 1 to indicate whether FK enforcement is off or on
 following this call.  The second parameter may be a NULL pointer, in
 which case the FK enforcement setting is not reported back. </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_ENABLE_TRIGGER</dt>
+<p><a name="sqlitedbconfigenabletrigger"></a>
+
+<dt>SQLITE_DBCONFIG_ENABLE_TRIGGER</dt>
 <dd> This option is used to enable or disable <a href="lang_createtrigger.html">triggers</a>.
 There should be two additional arguments.
 The first argument is an integer which is 0 to disable triggers,
@@ -5356,7 +5343,9 @@ is written 0 or 1 to indicate whether triggers are disabled or enabled
 following this call.  The second parameter may be a NULL pointer, in
 which case the trigger setting is not reported back. </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</dt>
+<p><a name="sqlitedbconfigenablefts3tokenizer"></a>
+
+<dt>SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</dt>
 <dd> This option is used to enable or disable the two-argument
 version of the <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function which is part of the
 <a href="fts3.html">FTS3</a> full-text search engine extension.
@@ -5369,7 +5358,9 @@ is written 0 or 1 to indicate whether fts3_tokenizer is disabled or enabled
 following this call.  The second parameter may be a NULL pointer, in
 which case the new setting is not reported back. </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</dt>
+<p><a name="sqlitedbconfigenableloadextension"></a>
+
+<dt>SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</dt>
 <dd> This option is used to enable or disable the <a href="#sqlite3_load_extension">sqlite3_load_extension()</a>
 interface independently of the <a href="lang_corefunc.html#load_extension">load_extension()</a> SQL function.
 The <a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> API enables or disables both the
@@ -5386,7 +5377,8 @@ is disabled or enabled following this call.  The second parameter may
 be a NULL pointer, in which case the new setting is not reported back.
 </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_MAINDBNAME</dt>
+<p><a name="sqlitedbconfigmaindbname"></a>
+ <dt>SQLITE_DBCONFIG_MAINDBNAME</dt>
 <dd> This option is used to change the name of the "main" database
 schema.  The sole argument is a pointer to a constant UTF8 string
 which will become the new schema name in place of "main".  SQLite
@@ -5395,7 +5387,9 @@ must ensure that the argument passed into this DBCONFIG option is unchanged
 until after the database connection closes.
 </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</dt>
+<p><a name="sqlitedbconfignockptonclose"></a>
+
+<dt>SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</dt>
 <dd> Usually, when a database in wal mode is closed or detached from a
 database handle, SQLite checks if this will mean that there are now no
 connections at all to the database. If so, it performs a checkpoint
@@ -5408,7 +5402,8 @@ into which is written 0 or 1 to indicate whether checkpoints-on-close
 have been disabled - 0 if they are not disabled, 1 if they are.
 </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
+<p><a name="sqlitedbconfigenableqpsg"></a>
+ <dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
 <dd>The SQLITE_DBCONFIG_ENABLE_QPSG option activates or deactivates
 the <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a> (QPSG).  When the QPSG is active,
 a single SQL query statement will always use the same algorithm regardless
@@ -5424,7 +5419,8 @@ is written 0 or 1 to indicate whether the QPSG is disabled or enabled
 following this call.
 </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_TRIGGER_EQP</dt>
+<p><a name="sqlitedbconfigtriggereqp"></a>
+ <dt>SQLITE_DBCONFIG_TRIGGER_EQP</dt>
 <dd> By default, the output of EXPLAIN QUERY PLAN commands does not
 include output for any operations performed by trigger programs. This
 option is used to set or clear (the default) a flag that governs this
@@ -5436,7 +5432,8 @@ The second parameter is a pointer to an integer into which is written
 it is not disabled, 1 if it is.
 </dd></p>
 
-<p><dt>SQLITE_DBCONFIG_RESET_DATABASE</dt>
+<p><a name="sqlitedbconfigresetdatabase"></a>
+ <dt>SQLITE_DBCONFIG_RESET_DATABASE</dt>
 <dd> Set the SQLITE_DBCONFIG_RESET_DATABASE flag and then run
 <a href="lang_vacuum.html">VACUUM</a> in order to reset a database back to an empty database
 with no schema and no content. The following process works even for
@@ -5454,7 +5451,20 @@ the reset.
 </ol>
 Because resetting a database is destructive and irreversible, the
 process requires the use of this obscure API and multiple steps to help
-ensure that it does not happen by accident.
+ensure that it does not happen by accident.</p>
+
+<p><a name="sqlitedbconfigdefensive"></a>
+ <dt>SQLITE_DBCONFIG_DEFENSIVE</dt>
+<dd>The SQLITE_DBCONFIG_DEFENSIVE option activates or deactivates the
+"defensive" flag for a database connection.  When the defensive
+flag is enabled, language features that allow ordinary SQL to
+deliberately corrupt the database file are disabled.  The disabled
+features include but are not limited to the following:
+<ul>
+<li> The <a href="pragma.html#pragma_writable_schema">PRAGMA writable_schema=ON</a> statement.
+<li> Writes to the <a href="dbpage.html">sqlite_dbpage</a> virtual table.
+<li> Direct writes to <a href="vtab.html#xshadowname">shadow tables</a>.
+</ul>
 </dd>
 </dl>
 </p><hr><a name="SQLITE_DENY"></a>
@@ -6028,6 +6038,43 @@ prepared to accommodate additional static mutexes.
 These bit values are intended for use in the
 3rd parameter to the <a href="#sqlite3_open">sqlite3_open_v2()</a> interface and
 in the 4th parameter to the <a href="#sqlite3vfsxopen">sqlite3_vfs.xOpen</a> method.
+</p><hr><a name="SQLITE_PREPARE_NORMALIZE"></a>
+<h2>Prepare Flags</h2>
+</div>
+<blockquote><pre>
+#define SQLITE_PREPARE_PERSISTENT              0x01
+#define SQLITE_PREPARE_NORMALIZE               0x02
+</pre></blockquote>
+<p>
+These constants define various flags that can be passed into
+"prepFlags" parameter of the <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a> and
+<a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> interfaces.</p>
+
+<p>New flags may be added in future releases of SQLite.</p>
+
+<p><dl>
+<a name="sqlitepreparepersistent"></a>
+ <dt>SQLITE_PREPARE_PERSISTENT</dt>
+<dd>The SQLITE_PREPARE_PERSISTENT flag is a hint to the query planner
+that the prepared statement will be retained for a long time and
+probably reused many times. Without this flag, <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>
+and <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> assume that the prepared statement will
+be used just once or at most a few times and then destroyed using
+<a href="#sqlite3_finalize">sqlite3_finalize()</a> relatively soon. The current implementation acts
+on this hint by avoiding the use of <a href="malloc.html#lookaside">lookaside memory</a> so as not to
+deplete the limited store of lookaside memory. Future versions of
+SQLite may act on this hint differently.</p>
+
+<p><a name="sqlitepreparenormalize"></a>
+ <dt>SQLITE_PREPARE_NORMALIZE</dt>
+<dd>The SQLITE_PREPARE_NORMALIZE flag indicates that a normalized
+representation of the SQL statement should be calculated and then
+associated with the prepared statement, which can be obtained via
+the <a href="#sqlite3_expanded_sql">sqlite3_normalized_sql()</a> interface.  The semantics used to
+normalize a SQL statement are unspecified and subject to change.
+At a minimum, literal values will be replaced with suitable
+placeholders.
+</dl>
 </p><hr><a name="SQLITE_SCANSTAT_EST"></a>
 <h2>Prepared Statement Scan Status Opcodes</h2>
 </div>
@@ -6120,9 +6167,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.25.3"
-#define SQLITE_VERSION_NUMBER 3025003
-#define SQLITE_SOURCE_ID      "2018-11-05 20:37:38 89e099fbe5e13c33e683bef07361231ca525b88f7907be7092058007b75036f2"
+#define SQLITE_VERSION        "3.26.0"
+#define SQLITE_VERSION_NUMBER 3026000
+#define SQLITE_SOURCE_ID      "2018-12-01 12:34:55 bf8c1b2b7a5960c282e543b9c293686dccff272512d08865f4600fb58238b4f9"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -6307,6 +6354,7 @@ cares about the difference.)
 #define SQLITE_TESTCTRL_OPTIMIZATIONS           15
 #define SQLITE_TESTCTRL_ISKEYWORD               16  /* NOT USED */
 #define SQLITE_TESTCTRL_SCRATCHMALLOC           17  /* NOT USED */
+#define SQLITE_TESTCTRL_INTERNAL_FUNCTIONS      17
 #define SQLITE_TESTCTRL_LOCALTIME_FAULT         18
 #define SQLITE_TESTCTRL_EXPLAIN_STMT            19  /* NOT USED */
 #define SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD    19
@@ -6758,6 +6806,9 @@ struct sqlite3_module {
   int (*xSavepoint)(sqlite3_vtab *pVTab, int);
   int (*xRelease)(sqlite3_vtab *pVTab, int);
   int (*xRollbackTo)(sqlite3_vtab *pVTab, int);
+  /* The methods above are in versions 1 and 2 of the sqlite_module object.
+  ** Those below are for version 3 and greater. */
+  int (*xShadowName)(const char*);
 };
 </pre></blockquote>
 <p>
@@ -7311,6 +7362,7 @@ var listitems29 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
 {"u":"#sqlite3_data_count","x":"sqlite3_data_count","s":0},
 {"u":"#sqlite3_db_handle","x":"sqlite3_db_handle","s":0},
 {"u":"#sqlite3_expanded_sql","x":"sqlite3_expanded_sql","s":0},
+{"u":"#sqlite3_expanded_sql","x":"sqlite3_normalized_sql","s":0},
 {"u":"#sqlite3_reset","x":"sqlite3_reset","s":0},
 {"u":"#sqlite3_expanded_sql","x":"sqlite3_sql","s":0},
 {"u":"#sqlite3_step","x":"sqlite3_step","s":0},
@@ -8195,6 +8247,7 @@ error code and message may or may not be set.
 <blockquote><pre>
 const char *sqlite3_sql(sqlite3_stmt *pStmt);
 char *sqlite3_expanded_sql(sqlite3_stmt *pStmt);
+const char *sqlite3_normalized_sql(sqlite3_stmt *pStmt);
 </pre></blockquote>
 <p>
 The sqlite3_sql(P) interface returns a pointer to a copy of the UTF-8
@@ -8203,7 +8256,12 @@ created by <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>, <a href="#sqlite
 <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>, or <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a>.
 The sqlite3_expanded_sql(P) interface returns a pointer to a UTF-8
 string containing the SQL text of prepared statement P with
-<a href="lang_expr.html#varparam">bound parameters</a> expanded.</p>
+<a href="lang_expr.html#varparam">bound parameters</a> expanded.
+The sqlite3_normalized_sql(P) interface returns a pointer to a UTF-8
+string containing the normalized SQL text of prepared statement P.  The
+semantics used to normalize a SQL statement are unspecified and subject
+to change.  At a minimum, literal values will be replaced with suitable
+placeholders.</p>
 
 <p>For example, if a prepared statement is created using the SQL
 text "SELECT $abc,:xyz" and if parameter $abc is bound to integer 2345
@@ -8219,8 +8277,9 @@ the maximum string length determined by the <a href="#sqlitelimitlength">SQLITE_
 bound parameter expansions.  The <a href="compile.html#omit_trace">SQLITE_OMIT_TRACE</a> compile-time
 option causes sqlite3_expanded_sql() to always return NULL.</p>
 
-<p>The string returned by sqlite3_sql(P) is managed by SQLite and is
-automatically freed when the prepared statement is finalized.
+<p>The strings returned by sqlite3_sql(P) and sqlite3_normalized_sql(P)
+are managed by SQLite and are automatically freed when the prepared
+statement is finalized.
 The string returned by sqlite3_expanded_sql(P), on the other hand,
 is obtained from <a href="#sqlite3_free">sqlite3_malloc()</a> and must be free by the application
 by passing it to <a href="#sqlite3_free">sqlite3_free()</a>.

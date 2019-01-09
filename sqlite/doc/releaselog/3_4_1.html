@@ -93,8 +93,7 @@ return false;
 </div>
 <h2>SQLite Release 3.4.1 On 2007-07-20</h2><p><ol class='lessindent'>
 <li>Fix a bug in <a href="../lang_vacuum.html">VACUUM</a> that can lead to
-    <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
-    database corruption</a> if two
+    database corruptio if two
     processes are connected to the database at the same time and one
     VACUUMs then the other then modifies the database.</li>
 <li>The expression "+column" is now considered the same as "column"

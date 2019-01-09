@@ -105,6 +105,62 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_26_0"></a>
+<h3>2018-12-01 (3.26.0)</h3><p><ol class='lessindent'>
+<li>Optimization: When doing an <a href="lang_update.html">UPDATE</a> on a table with <a href="expridx.html">indexes on expressions</a>,
+    do not update the expression indexes if they do not refer to any of the columns
+    of the table being updated.
+<li>Allow the <a href="vtab.html#xbestindex">xBestIndex()</a> method of <a href="vtab.html">virtual table</a> implementations to return
+    <a href="rescode.html#constraint">SQLITE_CONSTRAINT</a> to indicate that the proposed query plan is unusable and
+    should not be given further consideration.
+<li>Added the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> option which disables the ability to 
+    create corrupt database files using ordinary SQL.
+<li>Added support for read-only <a href="vtab.html#xshadowname">shadow tables</a> when the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a>
+    option is enabled.
+<li>Added the <a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table</a> command, which if enabled causes the
+    <a href="lang_altertable.html">ALTER TABLE</a> command to behave like older version of SQLite (prior to
+    version 3.25.0) for compatibility.
+<li>Added <a href="pragma.html#pragma_table_xinfo">PRAGMA table_xinfo</a> that works just like <a href="pragma.html#pragma_table_info">PRAGMA table_info</a>
+    except that it also shows <a href="vtab.html#hiddencol">hidden columns</a> in virtual tables.
+<li>Added the <a href="https://sqlite.org/src/file/ext/misc/explain.c">explain virtual table</a>
+    as a run-time loadable extension.
+<li>Add a limit counter to the query planner to prevent excessive
+    <a href="c3ref/prepare.html">sqlite3_prepare()</a> times for certain pathological SQL inputs.
+<li>Added support for the <a href="c3ref/expanded_sql.html">sqlite3_normalized_sql()</a> interface, when compiling
+    with SQLITE_ENABLE_NORMALIZE.
+<li>Enhanced triggers so that they can use <a href="vtab.html#tabfunc2">table-valued functions</a> that
+    exist in schemas other than the schema where the trigger is defined.
+<li>Enhancements to the <a href="cli.html">CLI</a>:
+<ol type="a">
+<li>Improvements to the ".help" command.
+<li>The SQLITE_HISTORY environment variable, if it exists,
+    specifies the name of the command-line editing history file
+<li>The --deserialize option associated with opening a new database cause the
+    database file to be read into memory and accessed using the
+    <a href="c3ref/deserialize.html">sqlite3_deserialize()</a> API. This simplifies running tests on a database
+    without modifying the file on disk.
+</ol>
+<li>Enhancements to the <a href="geopoly.html">geopoly</a> extension:
+<ol type="a">
+<li>Aways stores polygons
+    using the binary format, which is faster and uses less space.
+<li>Added the <a href="geopoly.html#regpoly">geopoly_regular()</a> function.
+<li>Added the <a href="geopoly.html#ccw">geopoly_ccw()</a> function.
+</ol>
+<li>Enhancements to the <a href="sessionintro.html">session</a> extension:
+<ol type="a">
+<li>Added the <a href="session/c_changesetapply_invert.html">SQLITE_CHANGESETAPPLY_INVERT</a> flag
+<li>Added the <a href="session/sqlite3changeset_start.html">sqlite3changeset_start_v2()</a> interface and the
+    <a href="session/c_changesetstart_invert.html">SQLITE_CHANGESETSTART_INVERT</a> flag.
+<li>Added the 
+    <a href="https://sqlite.org/src/file/ext/session/changesetfuzz.c">changesetfuzz.c</a>
+    test-case generator utility.
+</ol>
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2018-12-01 12:34:55 bf8c1b2b7a5960c282e543b9c293686dccff272512d08865f4600fb58238b4f9"
+<li>SHA3-256 for sqlite3.c: 72c08830da9b5d1cb397c612c0e870d7f5eb41a323b41aa3d8aa5ae9ccedb2c4
+
+</ol></p>
 <a name="version_3_25_3"></a>
 <h3>2018-11-05 (3.25.3)</h3><p><ol class='lessindent'>
 <li> Disallow the use of <a href="windowfunctions.html">window functions</a> in the recursive part of
@@ -234,7 +290,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li> Improve the format of the <a href="eqp.html">EXPLAIN QUERY PLAN</a> raw output, so that
      it gives better information about the query plan and about the
      relationships between the various components of the plan.
-<li> Added the <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_RESET_DATABASE</a> option to the
+<li> Added the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigresetdatabase">SQLITE_DBCONFIG_RESET_DATABASE</a> option to the
      <a href="c3ref/db_config.html">sqlite3_db_config()</a> API.
 <p><b><a href="cli.html">CLI</a> Enhancements:</b>
 <li> Automatically intercepts the raw <a href="eqp.html">EXPLAIN QUERY PLAN</a> 
@@ -630,7 +686,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
      'utc' keywords.  <a href="deterministic.html#dtexception">More information</a>.
 <li> Added the <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and <a href="c3ref/prepare.html">sqlite3_prepare16_v3()</a> interfaces
      with the extra "prepFlags" parameters.
-<li> Provide the <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> flag for <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and
+<li> Provide the <a href="c3ref/c_prepare_normalize.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> flag for <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and
      use it to limit <a href="malloc.html#lookaside">lookaside memory</a> misuse by <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, and the
      <a href="rtree.html">R-Tree extension</a>.
 <li> Added the <a href="pragma.html#pragma_secure_delete">PRAGMA secure_delete=FAST</a> command.  When secure_delete is
@@ -676,7 +732,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li> Add the -withoutnulls option to the <a href="tclsqlite.html#eval">TCL interface eval method</a>.
 <li> Enhance the <a href="sqlanalyze.html">sqlite3_analyzer.exe</a> utility program so that it shows
      the number of bytes of metadata on btree pages.
-<li> The <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> run-time option and the
+<li> The <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableqpsg">SQLITE_DBCONFIG_ENABLE_QPSG</a> run-time option and the
      <a href="compile.html#enable_qpsg">SQLITE_ENABLE_QPSG</a> compile-time option enable the
      <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a>.  See also ticket
      <a href="https://www.sqlite.org/src/info/892fc34f173e99d8">892fc34f173e99d8</a>
@@ -961,7 +1017,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>Uses 9% fewer CPU cycles. (See the <a href="cpu.html">CPU performance measurement</a> report for
     details on how this performance increase was computed.)
 <li>Added experimental support for <a href="pragma.html#pragfunc">PRAGMA functions</a>.
-<li>Added the <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</a> option to <a href="c3ref/db_config.html">sqlite3_db_config()</a>.
+<li>Added the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfignockptonclose">SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</a> option to <a href="c3ref/db_config.html">sqlite3_db_config()</a>.
 <li>Enhance the <a href="lang_datefunc.html">date and time functions</a> so that the 'unixepoch' modifier works
     for the full span of supported dates.
 <li>Changed the default configuration of the <a href="malloc.html#lookaside">lookaside memory allocator</a> from
@@ -1030,7 +1086,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li> Added support for <a href="rowvalue.html">row values</a>.
 <li> Allow <a href="deterministic.html">deterministic SQL functions</a> in the WHERE clause of a <a href="partialindex.html">partial index</a>.
 <li> Added the "<a href="uri.html#urimodeof">modeof=<i>filename</i></a>" URI parameter on the unix VFS
-<li> Added support for <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAINDBNAME</a>.
+<li> Added support for <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigmaindbname">SQLITE_DBCONFIG_MAINDBNAME</a>.
 <li> Added the ability to <a href="lang_vacuum.html">VACUUM</a> an <a href="lang_attach.html">ATTACH-ed</a> database.
 <li> Enhancements to the <a href="cli.html">command-line shell</a>:
      <ol type='a'>
@@ -1173,7 +1229,7 @@ with a home-baked pie.</center>
 <li>Improved resistance against goofy query planner decisions caused by
     incomplete or incorrect modifications to the <a href="fileformat2.html#stat1tab">sqlite_stat1</a> 
     table by the application.
-<li>Added the <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>) interface
+<li>Added the <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>) interface
     which allows the <a href="c3ref/load_extension.html">sqlite3_load_extension()</a> C-API to be enabled while keeping the
     <a href="lang_corefunc.html#load_extension">load_extension()</a> SQL function disabled for security.
 <li>Change the <a href="tempfiles.html#tempdir">temporary directory search algorithm</a> on Unix to allow directories with
@@ -1198,62 +1254,6 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.5 (2014-06-04):</b></p>
-
-<li>Added support for <a href="queryplanner.html#partialsort">partial sorting by index</a>.
-<li>Enhance the query planner so that it always prefers an index that uses a superset of
-    WHERE clause terms relative to some other index.
-<li>Improvements to the <a href="fts3.html#*fts4automergecmd">automerge command</a> of <a href="fts3.html#fts4">FTS4</a> to better control the index size
-    for a full-text index that is subject to a large number of updates.
-<li>Added the <a href="rtree.html#xquery">sqlite3_rtree_query_callback()</a> interface to <a href="rtree.html">R-Tree extension</a>
-<li>Added new <a href="uri.html#coreqp">URI query parameters</a> "nolock" and "immutable".
-<li>Use less memory by not remembering CHECK constraints on read-only
-    database connections.
-<li>Enable the <a href="queryplanner.html#or_in_where">OR optimization</a> for <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
-<li>Render expressions of the form "x IN (?)" (with a single value in
-    the list on the right-hand side of the IN operator) as if they where "x==?",
-    Similarly optimize "x NOT IN (?)"
-<li>Add the ".system" and ".once" commands to the <a href="cli.html">command-line shell</a>.
-<li>Added the <a href="c3ref/c_iocap_atomic.html">SQLITE_IOCAP_IMMUTABLE</a> bit to the set of bits that can be returned by
-    the xDeviceCharacteristics method of a <a href="vfs.html">VFS</a>.
-<li>Added the <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_BYTEORDER</a> test control.
-<p><b>Bug Fixes:</b>
-<li>OFFSET clause ignored on queries without a FROM clause.
-    Ticket <a href="http://www.sqlite.org/src/info/07d6a0453d">07d6a0453d</a>
-<li>Assertion fault on queries involving expressions of the form
-    "x IN (?)".  Ticket <a href="http://www.sqlite.org/src/info/e39d032577">e39d032577</a>.
-<li>Incorrect column datatype reported.
-    Ticket <a href="http://www.sqlite.org/src/info/a8a0d2996a">a8a0d2996a</a>
-<li>Duplicate row returned on a query against a table with more than
-    16 indices, each on a separate column, and all used via OR-connected constraints.
-    Ticket <a href="http://www.sqlite.org/src/info/10fb063b11">10fb063b11</a>
-<li>Partial index causes assertion fault on UPDATE OR REPLACE.
-    Ticket <a href="http://www.sqlite.org/src/info/2ea3e9fe63">2ea3e9fe63</a>
-<li>Crash when calling undocumented SQL function sqlite_rename_parent()
-    with NULL parameters.
-    Ticket <a href="http://www.sqlite.org/src/info/264b970c4379fd">264b970c43</a>
-<li>ORDER BY ignored if the query has an identical GROUP BY.
-    Ticket <a href="http://www.sqlite.org/src/info/b75a9ca6b0499">b75a9ca6b0</a>
-<li>The group_concat(x,'') SQL function returns NULL instead of an empty string
-    when all inputs are empty strings.  
-    Ticket <a href="http://www.sqlite.org/src/info/55746f9e65f85">55746f9e65</a>
-<li>Fix a bug in the VDBE code generator that caused crashes when
-    doing an INSERT INTO ... SELECT statement where the number of columns
-    being inserted is larger than the number of columns in the destination
-    table.
-    Ticket <a href="http://www.sqlite.org/src/info/e9654505cfda9">e9654505cfd</a>
-<li>Fix a problem in CSV import in the <a href="cli.html">command-line shell</a>
-    where if the leftmost field of the first row
-    in the CSV file was both zero bytes in size and unquoted no data would
-    be imported.
-<li>Fix a problem in FTS4 where the left-most column that contained
-    the <a href="fts3.html#fts4notindexed">notindexed column</a> name as a prefix
-    was not indexed rather than the column whose name matched exactly.
-<li>Fix the <a href="c3ref/db_readonly.html">sqlite3_db_readonly()</a> interface so that it returns true if
-    the database is read-only due to the file format write version number
-    being too large.
-
-
 <p><b>Bug fixes backported into patch release 3.8.4.3 (2014-04-03):</b></p>
 
 <li>Add a 
@@ -1261,6 +1261,11 @@ with a home-baked pie.</center>
     for a problem that might cause incorrect query results on a query that mixes
     DISTINCT, GROUP BY in a subquery, and ORDER BY.
     <a href="http://www.sqlite.org/src/info/98825a79ce1456863">Ticket 98825a79ce14</a>.
+
+<p><b>Bug fixes backported into patch release 3.8.4.2 (2014-03-26):</b></p>
+
+<li>Fix a potential buffer overread that could result when trying to search a
+    corrupt database file.
 
 </ol></p>
 <a name="version_3_12_2"></a>
@@ -1343,7 +1348,7 @@ with a home-baked pie.</center>
 <li>Other miscellaneous micro-optimizations for improved performance and reduced
     memory usage.
 <p><b>New Features:</b>
-<li>Added the <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> option to <a href="c3ref/db_config.html">sqlite3_db_config()</a>
+<li>Added the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> option to <a href="c3ref/db_config.html">sqlite3_db_config()</a>
     which allows the two-argument version of the <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> SQL function to
     be enabled or disabled at run-time.
 <li>Added the <a href="https://www.sqlite.org/src/artifact/d7cc99350?ln=403-443">sqlite3rbu_bp_progress()</a>
@@ -3245,15 +3250,15 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <h3>2009-05-25 (3.6.14.2)</h3><p><ol class='lessindent'>
 <li>Fix a code generator bug introduced in <a href="#version_3_6_14">version 3.6.14</a>.  This bug
     can cause incorrect query results under obscure circumstances.
-    <a href="http://www.sqlite.org/cvstrac/tktview?tn=3879">Ticket #3879</a>.
+    Ticket #3879.
 
 </ol></p>
 <a name="version_3_6_14_1"></a>
 <h3>2009-05-19 (3.6.14.1)</h3><p><ol class='lessindent'>
-<li>Fix a bug in <a href="lang_aggfunc.html#groupconcat">group_concat()</a>, <a href="http://www.sqlite.org/cvstrac/tktview?tn=3841">ticket #3841</a>
-<li>Fix a performance bug in the pager cache, <a href="http://www.sqlite.org/cvstrac/tktview?tn=3844">ticket #3844</a>
+<li>Fix a bug in <a href="lang_aggfunc.html#groupconcat">group_concat()</a>, ticket #3841
+<li>Fix a performance bug in the pager cache, ticket #3844
 <li>Fix a bug in the <a href="c3ref/backup.html">sqlite3_backup</a> implementation that can lead
-    to a corrupt backup database.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=3858">Ticket #3858</a>.
+    to a corrupt backup database.  Ticket #3858.
 
 </ol></p>
 <a name="version_3_6_14"></a>
@@ -3309,14 +3314,14 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <a name="version_3_6_10"></a>
 <h3>2009-01-15 (3.6.10)</h3><p><ol class='lessindent'>
 <li>Fix a cache coherency problem that could lead to database corruption.
-    <a href="http://www.sqlite.org/cvstrac/tktview?tn=3584">Ticket #3584</a>.
+    Ticket #3584.
 
 </ol></p>
 <a name="version_3_6_9"></a>
 <h3>2009-01-14 (3.6.9)</h3><p><ol class='lessindent'>
 <li>Fix two bugs, which when combined might result in incorrect
     query results.  Both bugs were harmless by themselves; only when
-    they team up do they cause problems.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=3581">Ticket #3581</a>.
+    they team up do they cause problems.  Ticket #3581.
 
 </ol></p>
 <a name="version_3_6_8"></a>
@@ -3364,7 +3369,7 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <h3>2008-11-19 (3.6.6)</h3><p><ol class='lessindent'>
 <li>Fix a #define that prevented <a href="malloc.html#memsys5">memsys5</a> from compiling</li>
 <li>Fix a problem in the virtual table commit mechanism that was causing
-    a crash in FTS3.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=3497">Ticket #3497</a>.</li>
+    a crash in FTS3.  Ticket #3497.</li>
 <li>Add the <a href="c3ref/pcache_methods2.html">application-defined page cache</a></li>
 <li>Added built-in support for VxWorks</li>
 
@@ -3482,16 +3487,16 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
     support for the <a href="pragma.html#pragma_journal_mode">journal_mode</a> PRAGMA and persistent journal.</li>
 <li><a href="pragma.html#pragma_journal_mode">Journal mode PERSIST</a> is the default behavior in
     <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a>.</li>
-<li>Fix a performance regression on LEFT JOIN (see <a href="http://www.sqlite.org/cvstrac/tktview?tn=3015">ticket #3015</a>)
+<li>Fix a performance regression on LEFT JOIN (see ticket #3015)
     that was mistakenly introduced in <a href="#version_3_5_8">version 3.5.8</a>.</li>
 <li>Performance enhancement: Reengineer the internal routines used
     to interpret and render variable-length integers.</li>
 <li>Fix a buffer-overrun problem in <a href="c3ref/mprintf.html">sqlite3_mprintf()</a> which occurs
     when a string without a zero-terminator is passed to "%.*s".</li>
 <li>Always convert IEEE floating point NaN values into NULL during
-    processing.  (<a href="http://www.sqlite.org/cvstrac/tktview?tn=3060">Ticket #3060</a>)</li>
+    processing.  (Ticket #3060)</li>
 <li>Make sure that when a connection blocks on a RESERVED lock that
-    it is able to continue after the lock is released.  (<a href="http://www.sqlite.org/cvstrac/tktview?tn=3093">Ticket #3093</a>)</li>
+    it is able to continue after the lock is released.  (Ticket #3093)</li>
 <li>The "configure" scripts should now automatically configure Unix
     systems for large file support.  Improved error messages for
     when large files are encountered and large file support is disabled.</li>
@@ -3530,14 +3535,14 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 </ol></p>
 <a name="version_3_5_7"></a>
 <h3>2008-03-17 (3.5.7)</h3><p><ol class='lessindent'>
-<li>Fix a bug (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2927">ticket #2927</a>) in the register allocation for
+<li>Fix a bug (ticket #2927) in the register allocation for
 compound selects - introduced by the new VM code in version 3.5.5.</li>
 <li>ALTER TABLE uses double-quotes instead of single-quotes for quoting
 filenames.</li>
 <li>Use the WHERE clause to reduce the size of a materialized VIEW in
 an UPDATE or DELETE statement. (Optimization)</li>
 <li>Do not apply the flattening optimization if the outer query is an
-aggregate and the inner query contains ORDER BY.  (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2943">Ticket #2943</a>)</li>
+aggregate and the inner query contains ORDER BY.  (Ticket #2943)</li>
 <li>Additional OS/2 updates</li>
 <li>Added an experimental power-of-two, first-fit memory allocator.</li>
 <li>Remove all instances of sprintf() from the code</li>
@@ -3555,7 +3560,7 @@ collocated with the database file.</li>
 </ol></p>
 <a name="version_3_5_6"></a>
 <h3>2008-02-06 (3.5.6)</h3><p><ol class='lessindent'>
-<li>Fix a bug (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2913">ticket #2913</a>)
+<li>Fix a bug (ticket #2913)
 that prevented virtual tables from working in a LEFT JOIN.
 The problem was introduced into shortly before the 3.5.5 release.</li>
 <li>Bring the OS/2 porting layer up-to-date.</li>
@@ -3576,18 +3581,18 @@ is in the output of EXPLAIN.</li>
 <h3>2007-12-14 (3.5.4)</h3><p><ol class='lessindent'>
 <li>Fix a critical bug in UPDATE or DELETE that occurs when an
 OR REPLACE clause or a trigger causes rows in the same table to
-be deleted as side effects.  (See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2832">ticket #2832</a>.)  The most likely
+be deleted as side effects.  (See ticket #2832.)  The most likely
 result of this bug is a segmentation fault, though database
 corruption is a possibility.</li>
 <li>Bring the processing of ORDER BY into compliance with the 
 SQL standard for case where a result alias and a table column name
 are in conflict.  Correct behavior is to prefer the result alias.
 Older versions of SQLite incorrectly picked the table column.
-(See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2822">ticket #2822</a>.)</li>
+(See ticket #2822.)</li>
 <li>The <a href="lang_vacuum.html">VACUUM</a> command preserves
 the setting of the 
 <a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a>.
-(<a href="http://www.sqlite.org/cvstrac/tktview?tn=2804">Ticket #2804</a>.)</li>
+(Ticket #2804.)</li>
 <li>Productize and officially support the group_concat() SQL function.</li>
 <li>Better optimization of some IN operator expressions.</li>
 <li>Add the ability to change the 
@@ -3646,12 +3651,12 @@ in binary instead of text for a performance boost.
     incompatible changes to the new VFS interface in future releases.</i></li>
 
 <li>Fix a bug in the handling of <a href="rescode.html#full">SQLITE_FULL</a> errors that could lead
-    to database corruption.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2686">Ticket #2686</a>.
+    to database corruption.  Ticket #2686.
 <li>The test_async.c drive now does full file locking and works correctly
     when used simultaneously by multiple processes on the same database.
 <li>The CLI ignores whitespace (including comments) at the end of lines
 <li>Make sure the query optimizer checks dependencies on all terms of
-    a compound SELECT statement.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2640">Ticket #2640</a>.
+    a compound SELECT statement.  Ticket #2640.
 <li>Add demonstration code showing how to build a VFS for a raw
     mass storage without a filesystem.
 <li>Added an output buffer size parameter to the xGetTempname() method
@@ -3684,7 +3689,7 @@ in binary instead of text for a performance boost.
 <li>Fix a database corruption bug that might occur if a ROLLBACK command
 is executed in <a href="pragma.html#pragma_auto_vacuum">auto-vacuum mode</a>
 and a very small <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit</a> is set. 
-<a href="http://www.sqlite.org/cvstrac/tktview?tn=2565">Ticket #2565</a>.
+Ticket #2565.
 
 <li>Add the ability to run a full regression test with a small
 <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit</a>.
@@ -3703,8 +3708,7 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 <a name="version_3_4_1"></a>
 <h3>2007-07-20 (3.4.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in <a href="lang_vacuum.html">VACUUM</a> that can lead to
-    <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
-    database corruption</a> if two
+    database corruptio if two
     processes are connected to the database at the same time and one
     VACUUMs then the other then modifies the database.</li>
 <li>The expression "+column" is now considered the same as "column"
@@ -3735,14 +3739,11 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 <h3>2007-06-18 (3.4.0)</h3><p><ol class='lessindent'>
 <li>Fix a bug that can lead to database corruption if an <a href="rescode.html#busy">SQLITE_BUSY</a> error
     occurs in the middle of an explicit transaction and that transaction
-    is later committed.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2409">Ticket #2409</a>.
-    See the
-    <a href="http://www.sqlite.org/cvstrac/wiki?p=CorruptionFollowingBusyError">
-    CorruptionFollowingBusyError</a> wiki page for details.</i>
+    is later committed.  Ticket #2409.
 <li>Fix a bug that can lead to database corruption if autovacuum mode is
     on and a malloc() failure follows a CREATE TABLE or CREATE INDEX statement
     which itself follows a cache overflow inside a transaction.  See
-    <a href="http://www.sqlite.org/cvstrac/tktview?tn=2418">ticket #2418</a>. 
+    ticket #2418. 
     </li>
 <li>Added explicit <a href="limits.html">upper bounds</a> on the sizes and
     quantities of things SQLite can process.  This change might cause
@@ -3761,33 +3762,33 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
     <a href="http://www.icu-project.org/">International Components for Unicode (ICU)</a>
     to the full-text search extensions.
 <li>In the Windows OS driver, reacquire a SHARED lock if an attempt to
-    acquire an EXCLUSIVE lock fails.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2354">Ticket #2354</a></li>
+    acquire an EXCLUSIVE lock fails.  Ticket #2354</li>
 <li>Fix the REPLACE() function so that it returns NULL if the second argument
-    is an empty string.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2324">Ticket #2324</a>.</li>
+    is an empty string.  Ticket #2324.</li>
 <li>Document the hazards of type conversions in
     <a href="c3ref/column_blob.html">sqlite3_column_blob()</a>
-    and related APIs.  Fix unnecessary type conversions.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2321">Ticket #2321</a>.</li>
-<li>Internationalization of the TRIM() function.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2323">Ticket #2323</a></li>
+    and related APIs.  Fix unnecessary type conversions.  Ticket #2321.</li>
+<li>Internationalization of the TRIM() function.  Ticket #2323</li>
 <li>Use memmove() instead of memcpy() when moving between memory regions
-    that might overlap.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2334">Ticket #2334</a></li>
+    that might overlap.  Ticket #2334</li>
 <li>Fix an optimizer bug involving subqueries in a compound SELECT that has
-    both an ORDER BY and a LIMIT clause.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2339">Ticket #2339</a>.</li>
+    both an ORDER BY and a LIMIT clause.  Ticket #2339.</li>
 <li>Make sure the <a href="c3ref/mprintf.html">sqlite3_snprintf()</a>
     interface does not zero-terminate the buffer if the buffer size is
-    less than 1.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2341">Ticket #2341</a></li>
+    less than 1.  Ticket #2341</li>
 <li>Fix the built-in printf logic so that it prints "NaN" not "Inf" for
-    floating-point NaNs.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2345">Ticket #2345</a></li>
+    floating-point NaNs.  Ticket #2345</li>
 <li>When converting BLOB to TEXT, use the text encoding of the main database.
-    <a href="http://www.sqlite.org/cvstrac/tktview?tn=2349">Ticket #2349</a></li>
+    Ticket #2349</li>
 <li>Keep the full precision of integers (if possible) when casting to
-    NUMERIC.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2364">Ticket #2364</a></li>
+    NUMERIC.  Ticket #2364</li>
 <li>Fix a bug in the handling of UTF16 codepoint 0xE000</li>
 <li>Consider explicit collate clauses when matching WHERE constraints
-    to indices in the query optimizer.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2391">Ticket #2391</a></li>
+    to indices in the query optimizer.  Ticket #2391</li>
 <li>Fix the query optimizer to correctly handle constant expressions in 
-    the ON clause of a LEFT JOIN.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2403">Ticket #2403</a></li>
+    the ON clause of a LEFT JOIN.  Ticket #2403</li>
 <li>Fix the query optimizer to handle rowid comparisons to NULL
-    correctly.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2404">Ticket #2404</a></li>
+    correctly.  Ticket #2404</li>
 <li>Fix many potential segfaults that could be caused by malicious SQL
     statements.</li>
 
@@ -3829,7 +3830,7 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 </ol></p>
 <a name="version_3_3_14"></a>
 <h3>2007-04-02 (3.3.14)</h3><p><ol class='lessindent'>
-<li>Fix a bug (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2273">ticket #2273</a>)
+<li>Fix a bug (ticket #2273)
     that could cause a segfault when the IN operator
     is used one one term of a two-column index and the right-hand side of
     the IN operator contains a NULL.</li>
@@ -3922,8 +3923,7 @@ support this function.</li>
 <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> API
 that can lead to segfaults.</li>
 <li>Fix 1-second round-off errors in the 
-<a href="http://www.sqlite.org/cvstrac/wiki?p=DateAndTimeFunctions">
-strftime()</a> function</li>
+strftime() function</li>
 <li>Enhance the Windows OS layer to provide detailed error codes</li>
 <li>Work around a win2k problem so that SQLite can use single-character
 database file names</li>
@@ -3970,9 +3970,7 @@ to "etilqs".</li>
 </ol></p>
 <a name="version_3_3_8"></a>
 <h3>2006-10-09 (3.3.8)</h3><p><ol class='lessindent'>
-<li>Support for full text search using the
-<a href="http://www.sqlite.org/cvstrac/wiki?p=FullTextIndex">FTS1 module</a>
-(beta)</li>
+<li>Support for full text search using the FTS1 module (beta)</li>
 <li>Added Mac OS X locking patches (beta - disabled by default)</li>
 <li>Introduce extended error codes and add error codes for various
 kinds of I/O errors.</li>
@@ -3986,12 +3984,8 @@ kinds of I/O errors.</li>
 </ol></p>
 <a name="version_3_3_7"></a>
 <h3>2006-08-12 (3.3.7)</h3><p><ol class='lessindent'>
-<li>Added support for
-<a href="http://www.sqlite.org/cvstrac/wiki?p=VirtualTables">virtual tables</a>
-(beta)</li>
-<li>Added support for 
-<a href="http://www.sqlite.org/cvstrac/wiki?p=LoadableExtensions">
-dynamically loaded extensions</a> (beta)</li>
+<li>Added support for virtual tables (beta)</li>
+<li>Added support for dynamically loaded extensions (beta)</li>
 <li>The 
 <a href="c3ref/interrupt.html">sqlite3_interrupt()</a>
 routine can be called for a different thread</li>

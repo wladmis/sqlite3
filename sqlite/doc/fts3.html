@@ -2479,7 +2479,7 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
   always available.  Beginning with SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a>
   (2016-03-29), the second form of
   fts3_tokenizer() can also be activated at run-time by calling
-  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0).
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0).
 
 </p><p>
   <b>SECURITY WARNING</b>: 
@@ -2490,7 +2490,7 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
   This can be done using the <a href="c3ref/set_authorizer.html">authorization callback</a>, 
   or by disabling the two-argument fts3_tokenizer() interface using a
   call to
-  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,0,0).
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,0,0).
 
 </p><p>
   The following block contains an example of calling the fts3_tokenizer()

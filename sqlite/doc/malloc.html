@@ -725,7 +725,7 @@ sz*cnt bytes.
 <a href="c3ref/sqlite3.html">database connection</a> "db" using this call:</p>
 
 <blockquote><pre>
-<a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a>, pBuf, sz, cnt);
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglookaside">SQLITE_DBCONFIG_LOOKASIDE</a>, pBuf, sz, cnt);
 </pre></blockquote>
 
 <p>The "pBuf" parameter is a pointer to memory space that will be

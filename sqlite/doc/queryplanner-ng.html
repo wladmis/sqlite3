@@ -159,15 +159,16 @@ regressions.  This risk is considered and a checklist is provided
 for reducing the risk and for fixing any issues that do arise.</p>
 
 <p>This document focuses on the NGQP.  For a more general overview of the
-SQLite query planner that encompasses the entire history of SQLite, see
-"<a href="optoverview.html">The SQLite Query Optimizer Overview</a>".</p>
+SQLite query planner that encompasses the entire history of SQLite, see the
+"<a href="optoverview.html">The SQLite Query Optimizer Overview</a>" and
+"<a href="queryplanner.html">How Indexes Work</a>" documents.</p>
 
 <h1 id="_background"><span>2. </span> Background</h1>
 
-<p>For simple queries against a single table with few indices, there is usually
+<p>For simple queries against a single table with few indexes, there is usually
 an obvious choice for the best algorithm.
 But for larger and more complex queries, such as
-multi-way joins with many indices
+multi-way joins with many indexes
 and subqueries, there can be hundreds, thousands, or millions
 of reasonable algorithms for computing the result.
 The job of the query planner is to choose the single "best" query plan from
@@ -204,15 +205,15 @@ one loop for each table
 in the join.  (Additional loops might be inserted for IN
 and OR operators in the WHERE clause.  SQLite considers those too,
 but for simplicity we will ignore them in this essay.)
-One or more indices might be used on each loop to speed the search,
+One or more indexes might be used on each loop to speed the search,
 or a loop might be a "full table scan" that reads every row in the
 table.  Thus query planning decomposes into two subtasks:</p>
 <ol>
 <li> Picking the nested order of the various loops
-</li><li> Choosing good indices for each loop
+</li><li> Choosing good indexes for each loop
 </li></ol>
 <p>Picking the nesting order is generally the more challenging problem.
-Once the nesting order of the join is established, the choice of indices
+Once the nesting order of the join is established, the choice of indexes
 for each loop is normally obvious.</p>
 
 <a name="qpstab"></a>
@@ -225,14 +226,14 @@ given SQL statement as long as:
 
 </p><ol type="a">
 <li>the database schema does not change in significant ways such as 
-    adding or dropping indices,</li>
+    adding or dropping indexes,</li>
 <li>the ANALYZE command is not rerun, </li>
 <li>the same version of SQLite is used.</li>
 </ol>
 
 <p>The QPSG is disabled by default.  It can be enabled at compile-time
 using the <a href="compile.html#enable_qpsg">SQLITE_ENABLE_QPSG</a> compile-time option, or at run-time by
-invoking <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a>,1,0).
+invoking <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableqpsg">SQLITE_DBCONFIG_ENABLE_QPSG</a>,1,0).
 
 </p><p>The QPSG means that if all of your queries run efficiently
 during testing, and if your application does not change the schema,
@@ -244,7 +245,7 @@ will continue working the same way after deployment.</p>
 <p>Enterprise-class client/server SQL database engines do not normally 
 make this guarantee.
 In client/server SQL database engines, the server keeps track of
-statistics on the sizes of tables and on the quality of indices 
+statistics on the sizes of tables and on the quality of indexes 
 and the query planner uses those statistics to help select the best plans.
 As content is added, deleted, or changed in the database, the statistics 
 will evolve and may cause the query planner to begin using a different 
@@ -338,7 +339,7 @@ by the query planner in SQLite 3.7.16 and converted using a natural logarithm.)
 The costs are estimates.  We cannot
 know what the true cost of running a loop is until we actually run the loop.
 SQLite makes guesses for the cost of running a loop based on
-the availability of indices and constraints found in the WHERE
+the availability of indexes and constraints found in the WHERE
 clause.  These guesses are usually pretty good, but they can sometimes be
 off.  Using the <a href="lang_analyze.html">ANALYZE</a> command to collect additional statistical
 information about the database can sometimes enable SQLite to make better
@@ -475,7 +476,14 @@ formula for selecting N might change in subsequent releases.</p>
 
 <h1 id="_hazards_of_upgrading_to_ngqp"><span>4. </span> Hazards Of Upgrading To NGQP</h1>
 
-<p>For most applications, upgrading from the legacy query planner to the NGQP
+<p><i>Update on 2018-11-24: This section was important 
+when the NGQP was new.  But five years have elapsed, the NGQP has been
+deployed successfully to billions of devices, and everyone has upgraded.
+The upgrade hazard has vanished.
+This section is retained for historical reference only.
+Modern reads can skip ahead to the <a href="queryplanner-ng.html#howtofix">query planner checklist</a>.</i>
+
+</p><p>For most applications, upgrading from the legacy query planner to the NGQP
 requires little thought or effort.
 Simply replace the older SQLite version with the newer version of SQLite 
 and recompile and the application will run faster.  
@@ -485,15 +493,15 @@ to compilation procedures.</p>
 <p>But as with any query planner change, upgrading to the NGQP does carry
 a small risk of introducing performance regressions.  The problem here is
 not that the NGQP is incorrect or buggy or inferior to the legacy query
-planner.  Given reliable information about the selectivity of indices, 
+planner.  Given reliable information about the selectivity of indexes, 
 the NGQP should always pick a plan that is as good or better than before.
 The problem is that some applications may be using low-quality and
-low-selectivity indices without having run <a href="lang_analyze.html">ANALYZE</a>.  The older query
+low-selectivity indexes without having run <a href="lang_analyze.html">ANALYZE</a>.  The older query
 planners look at many fewer possible implementations for each query and 
 so they may have stumbled over a good plan by stupid luck.  The NGQP, on 
 the other hand, looks at many more query plan possibilities, and it may 
 choose a different query plan that
-works better in theory, assuming good indices, but which gives a performance
+works better in theory, assuming good indexes, but which gives a performance
 regression in practice, because of the shape of the data.</p>
 
 <p>Key points:</p>
@@ -503,7 +511,7 @@ regression in practice, because of the shape of the data.</p>
     prior query planners, as long as it
     has access to accurate <a href="lang_analyze.html">ANALYZE</a> data in the <a href="fileformat2.html#stat1tab">SQLITE_STAT1</a> file.</p>
 </li><li><p>The NGQP will always find a good query plan 
-    as long as the schema does not contain indices that have more than
+    as long as the schema does not contain indexes that have more than
     about 10 or 20 rows with the same value in the left-most column of the
     index.</p>
 </li></ul>
@@ -645,7 +653,7 @@ $trunk tag in logarithmic time.  Indeed, algorithm-1 is the
 faster choice in practice.  But the NGQP has no intuition.  The
 NGQP must use hard math, and algorithm-2 is slightly
 better mathematically.  This is because, in the absence of other information,
-the NGQP must assume that the indices PLINK_I1 and TAGXREF_I1 are of
+the NGQP must assume that the indexes PLINK_I1 and TAGXREF_I1 are of
 equal quality and are equally selective.  Algorithm-2 uses one field
 of the TAGXREF_I1 index and both fields of the PLINK_I1 index whereas
 algorithm-1 only uses the first field of each index.  Since 
@@ -661,7 +669,7 @@ this application.
 </p>
 
 <p>
-The problem is that the indices are not of equal quality.
+The problem is that the indexes are not of equal quality.
 A check-in is likely to only have one child.  So the first
 field of PLINK_I1 will usually narrow down the search to just a single
 row.  But there are thousands and thousands check-ins tagged with "trunk", 
@@ -672,7 +680,7 @@ of little help in narrowing down the search.
 <p>
 The NGQP has no way of knowing that TAGXREF_I1 is almost useless in this
 query, unless <a href="lang_analyze.html">ANALYZE</a> has been run on the database.  The <a href="lang_analyze.html">ANALYZE</a> command
-gathers statistics on the quality of the various indices and stores those
+gathers statistics on the quality of the various indexes and stores those
 statistics in <a href="fileformat2.html#stat1tab">SQLITE_STAT1</a> table.  
 Having access to this statistical information,
 the NGQP easily chooses algorithm-1 as the best algorithm, by a wide
@@ -749,18 +757,18 @@ rare.  You are unlikely to run across any problems in your application.
 If you are not having performance issues, you do not need to worry
 about any of this.</p>
 
-</li><li><p><b>Create appropriate indices.</b>
+</li><li><p><b>Create appropriate indexes.</b>
 Most SQL performance problems arise not because of query planner issues
-but rather due to lack of appropriate indices.  Make sure indices are
+but rather due to lack of appropriate indexes.  Make sure indexes are
 available to assist all large queries.  Most performance issues can be
 resolved by one or two CREATE INDEX commands and with no changes to
 application code.</p>
 
-</li><li><p><b>Avoid creating low-quality indices.</b>.
+</li><li><p><b>Avoid creating low-quality indexes.</b>.
 A low-quality index (for the purpose of this checklist) is one where
 there are more than 10 or 20 rows in the table that have the same value
 for the left-most column of the index.  In particular, avoid using
-boolean or "enum" columns as the left-most columns of your indices.</p>
+boolean or "enum" columns as the left-most columns of your indexes.</p>
 
 <p>The Fossil performance problem described in the previous section of
 this document arose because there were over
@@ -768,8 +776,8 @@ ten-thousand entries in the TAGXREF table with the same value for the
 left-most column (the TAGID column) of the TAGXREF_I1 index.</p>
 
 </li><li><p><b>If you must use a low-quality index, be sure to run <a href="lang_analyze.html">ANALYZE</a>.</b>
-Low-quality indices will not confuse the query planner as long as the
-query planner knows that the indices are of low quality.  And the way
+Low-quality indexes will not confuse the query planner as long as the
+query planner knows that the indexes are of low quality.  And the way
 the query planner knows this is by the content of the <a href="fileformat2.html#stat1tab">SQLITE_STAT1</a> table,
 which is computed by the ANALYZE command.</p>
 
@@ -788,7 +796,7 @@ too much time.  Then work on just those specific queries.</p>
 
 </li><li><p><b>Use <a href="lang_corefunc.html#unlikely">unlikely()</a> and <a href="lang_corefunc.html#likelihood">likelihood()</a> SQL functions.</b>
 SQLite normally assumes that terms in the WHERE clause that cannot be used
-by indices have a strong probability of being true.  If this assumption
+by indexes have a strong probability of being true.  If this assumption
 is incorrect, it could lead to a suboptimal query plan.  The
 <a href="lang_corefunc.html#unlikely">unlikely()</a> and <a href="lang_corefunc.html#likelihood">likelihood()</a> SQL functions can be used to provide
 hints to the query planner about WHERE clause terms that are probably
@@ -796,7 +804,7 @@ not true, and thus aid the query planner in selecting the best possible
 plan.
 
 </p></li><li><p><b>Use the <a href="optoverview.html#crossjoin">CROSS JOIN</a> syntax to enforce a particular
-loop nesting order on queries that might use low-quality indices in an
+loop nesting order on queries that might use low-quality indexes in an
 unanalyzed database.</b>
 SQLite <a href="lang_select.html#crossjoin">treats the CROSS JOIN operator specially</a>, forcing the table to 
 the left to be an outer loop relative to the table on the right.</p>
@@ -823,7 +831,7 @@ the result of that expression if
 <a href="datatype3.html#affinity">type affinity</a> is involved.</p>
 
 </li><li><p><b>Use the <a href="lang_indexedby.html">INDEXED BY</a> syntax to enforce the selection of
-particular indices on problem queries.</b>
+particular indexes on problem queries.</b>
 As with the previous two bullets, avoid this step if possible, and 
 especially avoid doing this early in development as it is clearly a
 premature optimization.</p>

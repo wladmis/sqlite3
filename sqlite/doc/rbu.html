@@ -327,6 +327,14 @@ with the "rbu_control" column set to contain integer value 0. The
 other columns should be set to the values that make up the new record 
 to insert. 
 
+</p><p>The "rbu_control" column may also be set to integer value 2 for 
+an INSERT. In this case, the new row silently replaces any existing row that
+has the same primary key values. This is equivalent to a DELETE followed by an
+INSERT with the same primary key values. It is not the same as an SQL REPLACE
+command, as in that case the new row may replace any conflicting rows (i.e.
+those that conflict due to UNIQUE constraints or indexes), not just those with
+conflicting primary keys.
+
 </p><p>If the target database table has an INTEGER PRIMARY KEY, it is not 
 possible to insert a NULL value into the IPK column. Attempting to 
 do so results in an SQLITE_MISMATCH error.

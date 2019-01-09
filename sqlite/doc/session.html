@@ -163,7 +163,9 @@ document.getElementById("listtab37").innerHTML = h;
 </style>
 <table id='listtab38' width='100%'></table>
 <script>
-var listitems38 = [{"u":"#SQLITE_CHANGESETAPPLY_NOSAVEPOINT","x":"SQLITE_CHANGESETAPPLY_NOSAVEPOINT","s":0},
+var listitems38 = [{"u":"#SQLITE_CHANGESETAPPLY_INVERT","x":"SQLITE_CHANGESETAPPLY_INVERT","s":0},
+{"u":"#SQLITE_CHANGESETAPPLY_INVERT","x":"SQLITE_CHANGESETAPPLY_NOSAVEPOINT","s":0},
+{"u":"#SQLITE_CHANGESETSTART_INVERT","x":"SQLITE_CHANGESETSTART_INVERT","s":0},
 {"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_ABORT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_CONFLICT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_CONSTRAINT","s":0},
@@ -171,7 +173,8 @@ var listitems38 = [{"u":"#SQLITE_CHANGESETAPPLY_NOSAVEPOINT","x":"SQLITE_CHANGES
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_FOREIGN_KEY","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_NOTFOUND","s":0},
 {"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_OMIT","s":0},
-{"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_REPLACE","s":0}];
+{"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_REPLACE","s":0},
+{"u":"#SQLITE_SESSION_CONFIG_STRMSIZE","x":"SQLITE_SESSION_CONFIG_STRMSIZE","s":0}];
 var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/400);
@@ -236,6 +239,8 @@ var listitems39 = [{"u":"#sqlite3changegroup_add","x":"sqlite3changegroup_add","
 {"u":"#sqlite3changeset_pk","x":"sqlite3changeset_pk","s":0},
 {"u":"#sqlite3changeset_start","x":"sqlite3changeset_start","s":0},
 {"u":"#sqlite3changegroup_add_strm","x":"sqlite3changeset_start_strm","s":0},
+{"u":"#sqlite3changeset_start","x":"sqlite3changeset_start_v2","s":0},
+{"u":"#sqlite3changegroup_add_strm","x":"sqlite3changeset_start_v2_strm","s":0},
 {"u":"#sqlite3rebaser_configure","x":"sqlite3rebaser_configure","s":1},
 {"u":"#sqlite3rebaser_create","x":"sqlite3rebaser_create","s":1},
 {"u":"#sqlite3rebaser_delete","x":"sqlite3rebaser_delete","s":1},
@@ -244,6 +249,7 @@ var listitems39 = [{"u":"#sqlite3changegroup_add","x":"sqlite3changegroup_add","
 {"u":"#sqlite3session_attach","x":"sqlite3session_attach","s":0},
 {"u":"#sqlite3session_changeset","x":"sqlite3session_changeset","s":0},
 {"u":"#sqlite3changegroup_add_strm","x":"sqlite3session_changeset_strm","s":0},
+{"u":"#sqlite3session_config","x":"sqlite3session_config","s":0},
 {"u":"#sqlite3session_create","x":"sqlite3session_create","s":0},
 {"u":"#sqlite3session_delete","x":"sqlite3session_delete","s":0},
 {"u":"#sqlite3session_diff","x":"sqlite3session_diff","s":0},
@@ -286,22 +292,19 @@ for(var i=0; i<listitems39.length; i++){
 document.getElementById("listtab39").innerHTML = h;
 </script>
 <hr>
-<a name="SQLITE_CHANGESETAPPLY_NOSAVEPOINT"></a>
-<h2>Flags for sqlite3changeset_apply_v2</h2><blockquote><pre>#define SQLITE_CHANGESETAPPLY_NOSAVEPOINT   0x0001
+<a name="SQLITE_CHANGESETSTART_INVERT"></a>
+<h2>Flags for sqlite3changeset_start_v2</h2><blockquote><pre>#define SQLITE_CHANGESETSTART_INVERT        0x0002
 </pre></blockquote><p>
-The following flags may passed via the 9th parameter to
-<a href="#sqlite3changeset_apply">sqlite3changeset_apply_v2</a> and <a href="#sqlite3changegroup_add_strm">sqlite3changeset_apply_v2_strm</a>:</p>
+The following flags may passed via the 4th parameter to
+<a href="#sqlite3changeset_start">sqlite3changeset_start_v2</a> and <a href="#sqlite3changegroup_add_strm">sqlite3changeset_start_v2_strm</a>:</p>
 
-<p><dl>
-<dt>SQLITE_CHANGESETAPPLY_NOSAVEPOINT <dd>
-  Usually, the sessions module encloses all operations performed by
-  a single call to apply_v2() or apply_v2_strm() in a <a href="lang_savepoint.html">SAVEPOINT</a>. The
-  SAVEPOINT is committed if the changeset or patchset is successfully
-  applied, or rolled back if an error occurs. Specifying this flag
-  causes the sessions module to omit this savepoint. In this case, if the
-  caller has an open transaction or savepoint when apply_v2() is called, 
-  it may revert the partially applied changeset by rolling it back.
-</p><hr><a name="sqlite3_changegroup"></a>
+<p><dt>SQLITE_CHANGESETAPPLY_INVERT <dd>
+  Invert the changeset while iterating through it. This is equivalent to
+  inverting a changeset using sqlite3changeset_invert() before applying it.
+  It is an error to specify this flag with a patchset.
+</p><hr><a name="SQLITE_SESSION_CONFIG_STRMSIZE"></a>
+<h2>Values for sqlite3session_config().</h2><blockquote><pre>#define SQLITE_SESSION_CONFIG_STRMSIZE 1
+</pre></blockquote><p></p><hr><a name="sqlite3_changegroup"></a>
 <h2>Changegroup Handle</h2><blockquote><pre>typedef struct sqlite3_changegroup sqlite3_changegroup;
 </pre></blockquote><p>
 A changegroup is an object used to combine two or more 
@@ -316,7 +319,9 @@ A changegroup is an object used to combine two or more
 </pre></blockquote><p>
 An instance of this object acts as a cursor for iterating
 over the elements of a <a href="sessionintro.html#changeset">changeset</a> or <a href="sessionintro.html#changeset">patchset</a>.
-</p><p>Constructor: <a href="#sqlite3changeset_start">sqlite3changeset_start()</a></p>
+</p><p>Constructors:
+ <a href="#sqlite3changeset_start">sqlite3changeset_start()</a>,
+<a href="#sqlite3changeset_start">sqlite3changeset_start_v2()</a></p>
 <style>
 #listtab40 tr td {vertical-align:top;}
 </style>
@@ -913,42 +918,6 @@ in the table.</p>
 entry, SQLITE_MISUSE is returned and the output variables zeroed. Otherwise,
 SQLITE_OK is returned and the output variables populated as described
 above.
-</p><hr><a name="sqlite3changeset_start"></a>
-<h2>Create An Iterator To Traverse A Changeset </h2><blockquote><pre>int sqlite3changeset_start(
-  sqlite3_changeset_iter **pp,    /* OUT: New changeset iterator handle */
-  int nChangeset,                 /* Size of changeset blob in bytes */
-  void *pChangeset                /* Pointer to blob containing changeset */
-);
-</pre></blockquote><p>
-Create an iterator used to iterate through the contents of a changeset.
-If successful, *pp is set to point to the iterator handle and SQLITE_OK
-is returned. Otherwise, if an error occurs, *pp is set to zero and an
-SQLite error code is returned.</p>
-
-<p>The following functions can be used to advance and query a changeset 
-iterator created by this function:</p>
-
-<p><ul>
-  <li> <a href="#sqlite3changeset_next">sqlite3changeset_next()</a>
-  <li> <a href="#sqlite3changeset_op">sqlite3changeset_op()</a>
-  <li> <a href="#sqlite3changeset_new">sqlite3changeset_new()</a>
-  <li> <a href="#sqlite3changeset_old">sqlite3changeset_old()</a>
-</ul></p>
-
-<p>It is the responsibility of the caller to eventually destroy the iterator
-by passing it to <a href="#sqlite3changeset_finalize">sqlite3changeset_finalize()</a>. The buffer containing the
-changeset (pChangeset) must remain valid until after the iterator is
-destroyed.</p>
-
-<p>Assuming the changeset blob was created by one of the
-<a href="#sqlite3session_changeset">sqlite3session_changeset()</a>, <a href="#sqlite3changeset_concat">sqlite3changeset_concat()</a> or
-<a href="#sqlite3changeset_invert">sqlite3changeset_invert()</a> functions, all changes within the changeset 
-that apply to a single table are grouped together. This means that when 
-an application iterates through a changeset using an iterator created by 
-this function, all changes that relate to a single table are visited 
-consecutively. There is no chance that the iterator will visit a change 
-the applies to table X, then one for table Y, and then later on visit 
-another change for table X.
 </p><hr><a name="sqlite3rebaser_configure"></a>
 <h2>Configure a changeset rebaser object.</h2><blockquote><pre>int sqlite3rebaser_configure(
   sqlite3_rebaser*, 
@@ -1154,6 +1123,38 @@ changeset, even though the delete took place while the session was disabled.
 Or, if one field of a row is updated while a session is disabled, and 
 another field of the same row is updated while the session is enabled, the
 resulting changeset will contain an UPDATE change that updates both fields.
+</p><hr><a name="sqlite3session_config"></a>
+<h2>Configure global parameters</h2><blockquote><pre>int sqlite3session_config(int op, void *pArg);
+</pre></blockquote><p>
+The sqlite3session_config() interface is used to make global configuration
+changes to the sessions module in order to tune it to the specific needs 
+of the application.</p>
+
+<p>The sqlite3session_config() interface is not threadsafe. If it is invoked
+while any other thread is inside any other sessions method then the
+results are undefined. Furthermore, if it is invoked after any sessions
+related objects have been created, the results are also undefined. </p>
+
+<p>The first argument to the sqlite3session_config() function must be one
+of the SQLITE_SESSION_CONFIG_XXX constants defined below. The 
+interpretation of the (void*) value passed as the second parameter and
+the effect of calling this function depends on the value of the first
+parameter.</p>
+
+<p><dl>
+<dt>SQLITE_SESSION_CONFIG_STRMSIZE<dd>
+   By default, the sessions module streaming interfaces attempt to input
+   and output data in approximately 1 KiB chunks. This operand may be used
+   to set and query the value of this configuration setting. The pointer
+   passed as the second argument must point to a value of type (int).
+   If this value is greater than 0, it is used as the new streaming data
+   chunk size for both input and output. Before returning, the (int) value
+   pointed to by pArg is set to the final value of the streaming interface
+   chunk size.
+</dl></p>
+
+<p>This function returns SQLITE_OK if successful, or an SQLite error code
+otherwise.
 </p><hr><a name="sqlite3session_create"></a>
 <h2>Create A New Session Object</h2><blockquote><pre>int sqlite3session_create(
   sqlite3 *db,                    /* Database handle */
@@ -1360,6 +1361,27 @@ in tables that are not attached to the Session object, the filter is called
 to determine whether changes to the table's rows should be tracked or not. 
 If xFilter returns 0, changes is not tracked. Note that once a table is 
 attached, xFilter will not be called again.
+</p><hr><a name="SQLITE_CHANGESETAPPLY_INVERT"></a>
+<h2>Flags for sqlite3changeset_apply_v2</h2><blockquote><pre>#define SQLITE_CHANGESETAPPLY_NOSAVEPOINT   0x0001
+#define SQLITE_CHANGESETAPPLY_INVERT        0x0002
+</pre></blockquote><p>
+The following flags may passed via the 9th parameter to
+<a href="#sqlite3changeset_apply">sqlite3changeset_apply_v2</a> and <a href="#sqlite3changegroup_add_strm">sqlite3changeset_apply_v2_strm</a>:</p>
+
+<p><dl>
+<dt>SQLITE_CHANGESETAPPLY_NOSAVEPOINT <dd>
+  Usually, the sessions module encloses all operations performed by
+  a single call to apply_v2() or apply_v2_strm() in a <a href="lang_savepoint.html">SAVEPOINT</a>. The
+  SAVEPOINT is committed if the changeset or patchset is successfully
+  applied, or rolled back if an error occurs. Specifying this flag
+  causes the sessions module to omit this savepoint. In this case, if the
+  caller has an open transaction or savepoint when apply_v2() is called, 
+  it may revert the partially applied changeset by rolling it back.</p>
+
+<p><dt>SQLITE_CHANGESETAPPLY_INVERT <dd>
+  Invert the changeset before applying it. This is equivalent to inverting
+  a changeset using sqlite3changeset_invert() before applying it. It is
+  an error to specify this flag with a patchset.
 </p><hr><a name="SQLITE_CHANGESET_ABORT"></a>
 <h2>Constants Returned By The Conflict Handler</h2><blockquote><pre>#define SQLITE_CHANGESET_OMIT       0
 #define SQLITE_CHANGESET_REPLACE    1
@@ -1501,6 +1523,12 @@ int sqlite3changeset_start_strm(
   sqlite3_changeset_iter **pp,
   int (*xInput)(void *pIn, void *pData, int *pnData),
   void *pIn
+);
+int sqlite3changeset_start_v2_strm(
+  sqlite3_changeset_iter **pp,
+  int (*xInput)(void *pIn, void *pData, int *pnData),
+  void *pIn,
+  int flags
 );
 int sqlite3session_changeset_strm(
   sqlite3_session *pSession,
@@ -1645,7 +1673,7 @@ int sqlite3changeset_apply_v2(
   ),
   void *pCtx,                     /* First argument passed to xConflict */
   void **ppRebase, int *pnRebase, /* OUT: Rebase data */
-  int flags                       /* Combination of SESSION_APPLY_* flags */
+  int flags                       /* SESSION_CHANGESETAPPLY_* flags */
 );
 </pre></blockquote><p>
 Apply a changeset or patchset to a database. These functions attempt to
@@ -1798,9 +1826,58 @@ APIs for further details.</p>
 
 <p>The behavior of sqlite3changeset_apply_v2() and its streaming equivalent
 may be modified by passing a combination of
-<a href="#SQLITE_CHANGESETAPPLY_NOSAVEPOINT">supported flags</a> as the 9th parameter.</p>
+<a href="#SQLITE_CHANGESETAPPLY_INVERT">supported flags</a> as the 9th parameter.</p>
 
 <p>Note that the sqlite3changeset_apply_v2() API is still <b>experimental</b>
+and therefore subject to change.
+</p><hr><a name="sqlite3changeset_start"></a>
+<h2>Create An Iterator To Traverse A Changeset </h2><blockquote><pre>int sqlite3changeset_start(
+  sqlite3_changeset_iter **pp,    /* OUT: New changeset iterator handle */
+  int nChangeset,                 /* Size of changeset blob in bytes */
+  void *pChangeset                /* Pointer to blob containing changeset */
+);
+int sqlite3changeset_start_v2(
+  sqlite3_changeset_iter **pp,    /* OUT: New changeset iterator handle */
+  int nChangeset,                 /* Size of changeset blob in bytes */
+  void *pChangeset,               /* Pointer to blob containing changeset */
+  int flags                       /* SESSION_CHANGESETSTART_* flags */
+);
+</pre></blockquote><p>
+Create an iterator used to iterate through the contents of a changeset.
+If successful, *pp is set to point to the iterator handle and SQLITE_OK
+is returned. Otherwise, if an error occurs, *pp is set to zero and an
+SQLite error code is returned.</p>
+
+<p>The following functions can be used to advance and query a changeset 
+iterator created by this function:</p>
+
+<p><ul>
+  <li> <a href="#sqlite3changeset_next">sqlite3changeset_next()</a>
+  <li> <a href="#sqlite3changeset_op">sqlite3changeset_op()</a>
+  <li> <a href="#sqlite3changeset_new">sqlite3changeset_new()</a>
+  <li> <a href="#sqlite3changeset_old">sqlite3changeset_old()</a>
+</ul></p>
+
+<p>It is the responsibility of the caller to eventually destroy the iterator
+by passing it to <a href="#sqlite3changeset_finalize">sqlite3changeset_finalize()</a>. The buffer containing the
+changeset (pChangeset) must remain valid until after the iterator is
+destroyed.</p>
+
+<p>Assuming the changeset blob was created by one of the
+<a href="#sqlite3session_changeset">sqlite3session_changeset()</a>, <a href="#sqlite3changeset_concat">sqlite3changeset_concat()</a> or
+<a href="#sqlite3changeset_invert">sqlite3changeset_invert()</a> functions, all changes within the changeset 
+that apply to a single table are grouped together. This means that when 
+an application iterates through a changeset using an iterator created by 
+this function, all changes that relate to a single table are visited 
+consecutively. There is no chance that the iterator will visit a change 
+the applies to table X, then one for table Y, and then later on visit 
+another change for table X.</p>
+
+<p>The behavior of sqlite3changeset_start_v2() and its streaming equivalent
+may be modified by passing a combination of
+<a href="#SQLITE_CHANGESETSTART_INVERT">supported flags</a> as the 4th parameter.</p>
+
+<p>Note that the sqlite3changeset_start_v2() API is still <b>experimental</b>
 and therefore subject to change.
 </p><hr>
 

@@ -133,8 +133,8 @@ mk.innerHTML = "&#x25ba;";
 <h1 id="overview"><span>1. </span>Overview</h1>
 
 <p>The graph below shows the number of CPU cycles used by SQLite on a
-standard workload, for all versions of SQLite going back about 9 years.
-Recent versions of SQLite use less than a third of the CPU cycles 
+standard workload, for versions of SQLite going back about 10 years.
+Recent versions of SQLite use about one third as many the CPU cycles
 compared to older versions.
 
 </p><p>
@@ -149,7 +149,6 @@ CPU usage of the SQLite library.
 <div class="imgcontainer">
 <img src="./images/cpu-usage.jpg"></div><br>
 Measured using cachegrind on Ubuntu 16.04 on x64 with gcc 5.4.0 and -Os.<br>
-Values normalized so that version 3.23.1 is 100%.
 <hr>
 </center>
 
@@ -250,24 +249,25 @@ script, then saves the results in a series of text files.
 Typical output from the speed-check.sh script looks like this:
 
 </p><blockquote><pre>
-==16429== I   refs:      <b><font color="red">1,291,005,499</font></b>
-==16429== I1  misses:       24,688,182
-==16429== LLi misses:            5,027
-==16429== I1  miss rate:          1.91%
-==16429== LLi miss rate:          0.00%
-==16429== 
-==16429== D   refs:        663,242,182  (418,445,823 rd   + 244,796,359 wr)
-==16429== D1  misses:        5,958,032  (  3,902,273 rd   +   2,055,759 wr)
-==16429== LLd misses:           45,636  (     14,803 rd   +      30,833 wr)
-==16429== D1  miss rate:           0.8% (        0.9%     +         0.8%  )
-==16429== LLd miss rate:           0.0% (        0.0%     +         0.0%  )
-==16429== 
-==16429== LL refs:          30,646,214  ( 28,590,455 rd   +   2,055,759 wr)
-==16429== LL misses:            50,663  (     19,830 rd   +      30,833 wr)
-==16429== LL miss rate:            0.0% (        0.0%     +         0.0%  )
+==8683== 
+==8683== I   refs:      <font color="red">1,060,925,768</font>
+==8683== I1  misses:       23,731,246
+==8683== LLi misses:            5,176
+==8683== I1  miss rate:          2.24%
+==8683== LLi miss rate:          0.00%
+==8683== 
+==8683== D   refs:        557,686,925  (361,828,925 rd   + 195,858,000 wr)
+==8683== D1  misses:        5,067,063  (  3,544,278 rd   +   1,522,785 wr)
+==8683== LLd misses:           57,958  (     16,067 rd   +      41,891 wr)
+==8683== D1  miss rate:           0.9% (        1.0%     +         0.8%  )
+==8683== LLd miss rate:           0.0% (        0.0%     +         0.0%  )
+==8683== 
+==8683== LL refs:          28,798,309  ( 27,275,524 rd   +   1,522,785 wr)
+==8683== LL misses:            63,134  (     21,243 rd   +      41,891 wr)
+==8683== LL miss rate:            0.0% (        0.0%     +         0.0%  )
    text	   data	    bss	    dec	    hex	filename
- 466711	   6256	   1864	 <b><font color="red">474831</font></b>	  73ecf	sqlite3.o
- 199979  914462 7026217 sqlite3.c
+ 523044	   8240	   1976	 <font color="red">533260</font>	  8230c	sqlite3.o
+ 220507 1007870 7769352 sqlite3.c
 </pre></blockquote>
 
 <p>The important parts of the output (the parts that the developers pay
@@ -281,8 +281,7 @@ shows the number of CPU cycles spent on each line of code.
 The report is approximately 80,000 lines long.  The following is a brief
 snippet taken from the middle of the report to show what it looks like:
 
-</p><hr>
-<blockquote><pre>
+</p><blockquote><pre>
          .  SQLITE_PRIVATE int sqlite3BtreeNext(BtCursor *pCur, int *pRes){
          .    MemPage *pPage;
          .    assert( cursorOwnsBtShared(pCur) );
@@ -305,7 +304,6 @@ snippet taken from the middle of the report to show what it looks like:
          .    }
    721,876  }
 </pre></blockquote>
-<hr>
 
 <p>
 The numbers on the left are the CPU cycle counts for that line of code,
