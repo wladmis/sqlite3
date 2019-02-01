@@ -1,0 +1,13 @@
+diff --git a/Makefile.in b/Makefile.in
+index d2f97100..c5ed8514 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -1131,7 +1131,7 @@ sqlite3session.lo:	$(TOP)/ext/userauth/userauth.c $(HDR) $(EXTHDR)
+ userauth.lo:	$(TOP)/ext/session/sqlite3session.c $(HDR) $(EXTHDR)
+ 	$(LTCOMPILE) -DSQLITE_CORE -c $(TOP)/ext/session/sqlite3session.c
+ 
+-json1.lo:	$(TOP)/ext/misc/json1.c
++json1.lo:	$(TOP)/ext/misc/json1.c $(HDR) $(EXTHDR)
+ 	$(LTCOMPILE) -DSQLITE_CORE -c $(TOP)/ext/misc/json1.c
+ 
+ stmt.lo:	$(TOP)/ext/misc/stmt.c
