@@ -150,6 +150,7 @@ return false;
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglog">c3ref/c_config_covering_index_scan.html#sqliteconfiglog</a> &rarr; SQLITE_CONFIG_LOG</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside</a> &rarr; SQLITE_CONFIG_LOOKASIDE</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc</a> &rarr; SQLITE_CONFIG_MALLOC</li>
+<li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemdbmaxsize">c3ref/c_config_covering_index_scan.html#sqliteconfigmemdbmaxsize</a> &rarr; SQLITE_CONFIG_MEMDB_MAXSIZE</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus</a> &rarr; SQLITE_CONFIG_MEMSTATUS</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize">c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize</a> &rarr; SQLITE_CONFIG_MMAP_SIZE</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread</a> &rarr; SQLITE_CONFIG_MULTITHREAD</li>
@@ -218,6 +219,7 @@ return false;
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrbu">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrbu</a> &rarr; SQLITE_FCNTL_RBU</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrollbackatomicwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrollbackatomicwrite</a> &rarr; SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizehint">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizehint</a> &rarr; SQLITE_FCNTL_SIZE_HINT</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizelimit">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizelimit</a> &rarr; SQLITE_FCNTL_SIZE_LIMIT</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsync">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsync</a> &rarr; SQLITE_FCNTL_SYNC</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsyncomitted">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsyncomitted</a> &rarr; SQLITE_FCNTL_SYNC_OMITTED</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltempfilename">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltempfilename</a> &rarr; SQLITE_FCNTL_TEMPFILENAME</li>
@@ -249,6 +251,7 @@ return false;
 <li><a href="c3ref/c_mutex_fast.html">c3ref/c_mutex_fast.html</a> &rarr; SQLITE_MUTEX_FAST SQLITE_MUTEX_RECURSIVE SQLITE_MUTEX_STATIC_APP1 SQLITE_MUTEX_STATIC_APP2 SQLITE_MUTEX_STATIC_APP3 SQLITE_MUTEX_STATIC_LRU SQLITE_MUTEX_STATIC_LRU2 SQLITE_MUTEX_STATIC_MASTER SQLITE_MUTEX_STATIC_MEM SQLITE_MUTEX_STATIC_MEM2 SQLITE_MUTEX_STATIC_OPEN SQLITE_MUTEX_STATIC_PMEM SQLITE_MUTEX_STATIC_PRNG SQLITE_MUTEX_STATIC_VFS1 SQLITE_MUTEX_STATIC_VFS2 SQLITE_MUTEX_STATIC_VFS3</li>
 <li><a href="c3ref/c_open_autoproxy.html">c3ref/c_open_autoproxy.html</a> &rarr; SQLITE_OPEN_AUTOPROXY SQLITE_OPEN_CREATE SQLITE_OPEN_DELETEONCLOSE SQLITE_OPEN_EXCLUSIVE SQLITE_OPEN_FULLMUTEX SQLITE_OPEN_MAIN_DB SQLITE_OPEN_MAIN_JOURNAL SQLITE_OPEN_MASTER_JOURNAL SQLITE_OPEN_MEMORY SQLITE_OPEN_NOMUTEX SQLITE_OPEN_PRIVATECACHE SQLITE_OPEN_READONLY SQLITE_OPEN_READWRITE SQLITE_OPEN_SHAREDCACHE SQLITE_OPEN_SUBJOURNAL SQLITE_OPEN_TEMP_DB SQLITE_OPEN_TEMP_JOURNAL SQLITE_OPEN_TRANSIENT_DB SQLITE_OPEN_URI SQLITE_OPEN_WAL</li>
 <li><a href="c3ref/c_prepare_normalize.html#sqlitepreparenormalize">c3ref/c_prepare_normalize.html#sqlitepreparenormalize</a> &rarr; SQLITE_PREPARE_NORMALIZE</li>
+<li><a href="c3ref/c_prepare_normalize.html#sqlitepreparenovtab">c3ref/c_prepare_normalize.html#sqlitepreparenovtab</a> &rarr; SQLITE_PREPARE_NO_VTAB</li>
 <li><a href="c3ref/c_prepare_normalize.html#sqlitepreparepersistent">c3ref/c_prepare_normalize.html#sqlitepreparepersistent</a> &rarr; SQLITE_PREPARE_PERSISTENT</li>
 <li><a href="c3ref/c_scanstat_est.html">c3ref/c_scanstat_est.html</a> &rarr; {scanstatus options}</li>
 <li><a href="c3ref/c_scanstat_est.html#sqlitescanstatest">c3ref/c_scanstat_est.html#sqlitescanstatest</a> &rarr; SQLITE_SCANSTAT_EST</li>
@@ -555,6 +558,7 @@ return false;
 <li><a href="compile.html#max_mmap_size">compile.html#max_mmap_size</a> &rarr; -DSQLITE_MAX_MMAP_SIZE SQLITE_MAX_MMAP_SIZE</li>
 <li><a href="compile.html#max_schema_retry">compile.html#max_schema_retry</a> &rarr; -DSQLITE_MAX_SCHEMA_RETRY SQLITE_MAX_SCHEMA_RETRY</li>
 <li><a href="compile.html#max_worker_threads">compile.html#max_worker_threads</a> &rarr; -DSQLITE_MAX_WORKER_THREADS SQLITE_MAX_WORKER_THREADS</li>
+<li><a href="compile.html#memdb_default_maxsize">compile.html#memdb_default_maxsize</a> &rarr; -DSQLITE_MEMDB_DEFAULT_MAXSIZE SQLITE_MEMDB_DEFAULT_MAXSIZE</li>
 <li><a href="compile.html#memdebug">compile.html#memdebug</a> &rarr; -DSQLITE_MEMDEBUG SQLITE_MEMDEBUG</li>
 <li><a href="compile.html#minimum_file_descriptor">compile.html#minimum_file_descriptor</a> &rarr; -DSQLITE_MINIMUM_FILE_DESCRIPTOR SQLITE_MINIMUM_FILE_DESCRIPTOR</li>
 <li><a href="compile.html#omit_altertable">compile.html#omit_altertable</a> &rarr; -DSQLITE_OMIT_ALTERTABLE SQLITE_OMIT_ALTERTABLE</li>
@@ -823,7 +827,7 @@ return false;
 <li><a href="geopoly.html#gblob">geopoly.html#gblob</a> &rarr; geopoly_blob</li>
 <li><a href="geopoly.html#gjson">geopoly.html#gjson</a> &rarr; geopoly_json</li>
 <li><a href="geopoly.html#goverlap">geopoly.html#goverlap</a> &rarr; geopoly_overlap</li>
-<li><a href="geopoly.html#gpoint">geopoly.html#gpoint</a> &rarr; geopoly_constains_point</li>
+<li><a href="geopoly.html#gpoint">geopoly.html#gpoint</a> &rarr; geopoly_contains_point</li>
 <li><a href="geopoly.html#gsvg">geopoly.html#gsvg</a> &rarr; geopoly_svg</li>
 <li><a href="geopoly.html#gwithin">geopoly.html#gwithin</a> &rarr; geopoly_within</li>
 <li><a href="geopoly.html#regpoly">geopoly.html#regpoly</a> &rarr; geopoly_regular</li>
@@ -878,6 +882,10 @@ return false;
 <li><a href="lang_aggfunc.html#minggunc">lang_aggfunc.html#minggunc</a> &rarr; agg_min {min aggregate function} minAggFunc</li>
 <li><a href="lang_aggfunc.html#sumunc">lang_aggfunc.html#sumunc</a> &rarr; sum {sum aggregate function} sumFunc total {total aggregate function}</li>
 <li><a href="lang_altertable.html">lang_altertable.html</a> &rarr; ALTER {ALTER TABLE}</li>
+<li><a href="lang_altertable.html#altertabaddcol">lang_altertable.html#altertabaddcol</a> &rarr; {ALTER TABLE ADD COLUMN} {add column}</li>
+<li><a href="lang_altertable.html#altertabmvcol">lang_altertable.html#altertabmvcol</a> &rarr; {ALTER TABLE RENAME COLUMN} {rename column}</li>
+<li><a href="lang_altertable.html#altertabrename">lang_altertable.html#altertabrename</a> &rarr; {ALTER TABLE RENAME} {rename table}</li>
+<li><a href="lang_altertable.html#otheralter">lang_altertable.html#otheralter</a> &rarr; {generalized ALTER TABLE procedure}</li>
 <li><a href="lang_analyze.html">lang_analyze.html</a> &rarr; ANALYZE</li>
 <li><a href="lang_analyze.html#autoanalyze">lang_analyze.html#autoanalyze</a> &rarr; {automatically running ANALYZE}</li>
 <li><a href="lang_attach.html">lang_attach.html</a> &rarr; ATTACH {ATTACH DATABASE} attached</li>
@@ -998,6 +1006,8 @@ return false;
 <li><a href="lang_transaction.html#immediate">lang_transaction.html#immediate</a> &rarr; {BEGIN EXCLUSIVE} {BEGIN IMMEDIATE}</li>
 <li><a href="lang_update.html">lang_update.html</a> &rarr; UPDATE UPDATEs</li>
 <li><a href="lang_vacuum.html">lang_vacuum.html</a> &rarr; VACUUM</li>
+<li><a href="lang_vacuum.html#howvacuumworks">lang_vacuum.html#howvacuumworks</a> &rarr; {how vacuum works}</li>
+<li><a href="lang_vacuum.html#vacuuminto">lang_vacuum.html#vacuuminto</a> &rarr; {VACUUM INTO}</li>
 <li><a href="lang_with.html">lang_with.html</a> &rarr; WITH {WITH clause} {common table expressions}</li>
 <li><a href="lang_with.html#mandelbrot">lang_with.html#mandelbrot</a> &rarr; {compute the Mandelbrot set}</li>
 <li><a href="lang_with.html#ordinarycte">lang_with.html#ordinarycte</a> &rarr; {ordinary common table expressions}</li>
@@ -1162,6 +1172,7 @@ return false;
 <li><a href="queryplanner.html#sorting">queryplanner.html#sorting</a> &rarr; sorting</li>
 <li><a href="quickstart.html">quickstart.html</a> &rarr; {Quick Start Guide} quickstart</li>
 <li><a href="quirks.html">quirks.html</a> &rarr; Quirks</li>
+<li><a href="quirks.html#dblquote">quirks.html#dblquote</a> &rarr; {double-quoted string literal}</li>
 <li><a href="rbu.html">rbu.html</a> &rarr; RBU {RBU extension}</li>
 <li><a href="rbu.html#database_contents">rbu.html#database_contents</a> &rarr; {RBU Database Contents}</li>
 <li><a href="rbu.html#database_tables">rbu.html#database_tables</a> &rarr; {RBU Database Tables}</li>
@@ -1223,6 +1234,7 @@ return false;
 <li><a href="releaselog/3_25_2.html">releaselog/3_25_2.html</a> &rarr; {Version 3.25.2} {version 3.25.2}</li>
 <li><a href="releaselog/3_25_3.html">releaselog/3_25_3.html</a> &rarr; {Version 3.25.3} {version 3.25.3}</li>
 <li><a href="releaselog/3_26_0.html">releaselog/3_26_0.html</a> &rarr; {Version 3.26.0} {version 3.26.0}</li>
+<li><a href="releaselog/3_27_0.html">releaselog/3_27_0.html</a> &rarr; {Version 3.27.0} {version 3.27.0}</li>
 <li><a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a> &rarr; {Version 3.2.0} {version 3.2.0}</li>
 <li><a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a> &rarr; {Version 3.2.1} {version 3.2.1}</li>
 <li><a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a> &rarr; {Version 3.2.2} {version 3.2.2}</li>
@@ -1459,7 +1471,7 @@ return false;
 <li><a href="rtree.html#rtreecheck">rtree.html#rtreecheck</a> &rarr; rtreecheck</li>
 <li><a href="rtree.html#xquery">rtree.html#xquery</a> &rarr; sqlite3_rtree_query_callback {xQueryFunc RTree callback}</li>
 <li><a href="rtree.html#xshadow">rtree.html#xshadow</a> &rarr; {rtree shadow tables}</li>
-<li><a href="security.html">security.html</a> &rarr; {attack resistance} security</li>
+<li><a href="security.html">security.html</a> &rarr; {attack resistance} {defense against dark arts} security</li>
 <li><a href="selfcontained.html">selfcontained.html</a> &rarr; low-dependency self-contained</li>
 <li><a href="series.html">series.html</a> &rarr; generate_series series</li>
 <li><a href="serverless.html">serverless.html</a> &rarr; embedded serverless</li>

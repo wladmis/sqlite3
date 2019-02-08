@@ -286,8 +286,8 @@ either the GeoJSON format or the internal binary format.
 
 <p>
 If P1 and P2 are both polygons, then the geopoly_overlap(P1,P2) function returns
-true if there is any overlap between P1 and P2, or it returns false if P1 and P2
-completely disjoint.
+a non-zero integer if there is any overlap between P1 and P2, or it returns
+zero if P1 and P2 completely disjoint.
 If either P1 or P2 is not a polygon, this routine returns NULL.
 
 </p><p>
@@ -303,8 +303,9 @@ capability.
 
 <p>
 If P1 and P2 are both polygons, then the geopoly_within(P1,P2) function returns
-true if P2 is completely contained within P1, or it returns false if any part of
-P2 is outside of P1.  If P1 and P2 are the same polygon, this routine returns true.
+a non-zero integer if P2 is completely contained within P1, or it returns zero
+if any part of P2 is outside of P1.  If P1 and P2 are the same polygon, this routine
+returns non-zero.
 If either P1 or P2 is not a polygon, this routine returns NULL.
 
 </p><p>
@@ -384,7 +385,8 @@ enclose all P values seen during aggregation.
 </p><h2 id="the_geopoly_contains_point_p_x_y_function"><span>3.8. </span>The geopoly_contains_point(P,X,Y) Function</h2>
 
 <p>
-If P is a polygon, then geopoly_contains_point(P,X,Y) returns true if and only
+If P is a polygon, then geopoly_contains_point(P,X,Y) returns a 
+non-zero integer if and only
 if the coordinate X,Y is inside or on the boundary of the polygon P.
 If P is not a polygon, geopoly_contains_point(P,X,Y) returns NULL.
 

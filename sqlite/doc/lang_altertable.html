@@ -217,16 +217,65 @@ return false;
 The ALTER TABLE command in SQLite allows the user to rename a table,
 to rename a column within a table, or to add a new column to an existing table.
 
+<a name="altertabrename"></a>
+
+<h3>ALTER TABLE RENAME</h3>
+
 <p> The RENAME TO syntax changes the name of <span class='yyterm'>table-name</span>
 to <span class='yyterm'>new-table-name</span>.
 This command 
 cannot be used to move a table between attached databases, only to rename 
 a table within the same database.
 If the table being renamed has triggers or indices, then these remain
-attached to the table after it has been renamed.  
+attached to the table after it has been renamed.
+
+<blockquote style='background-color: #ffd0d0;'>
+<b>Compatibility Note:</b>
+The behavior of ALTER TABLE when renaming a table was enhanced
+in versions 3.25.0 (2018-09-15) and 3.26.0 (2018-12-01)
+in order to carry the rename operation forward into triggers and
+views that reference the renamed table.  This is considered an
+improvement. Applications that depend on the older (and
+arguably buggy) behavior can use the
+<a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table=ON</a> statement to make ALTER TABLE RENAME
+behavior as it did prior to version 3.25.0.
+</blockquote>
+
+<p>
 Beginning with release 3.25.0 (2018-09-15), references to the table
 within trigger bodies and view definitions are also renamed.
 </p>
+
+<p> Prior to version 3.26.0 (2018-12-01), FOREIGN KEY references
+to a table that is renamed were only edited if the
+<a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys=ON</a>, or in other words if
+<a href="foreignkeys.html">foreign key constraints</a> were begin enforced.  With
+<a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys=OFF</a>, FOREIGN KEY constraints would not be changed
+when the table that the foreign key referred to (the "<a href="foreignkeys.html#parentchild">parent table</a>")
+was renamed.  Beginning with version 3.26.0, FOREIGN KEY constraints
+are always converted when a table is renamed, unless the
+<a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table=ON</a> setting is engaged.  The following
+table summaries the difference:</p>
+
+<blockquote>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+<th>PRAGMA foreign_keys
+<th>PRAGMA legacy_alter_table
+<th><a href="foreignkeys.html#parentchild">Parent Table</a>
+references are updated
+<th>SQLite version
+<tr><td align="center">Off<td align="center">Off<td align="center">No<td align="center">&lt; 3.26.0
+<tr><td align="center">Off<td align="center">Off<td align="center">Yes<td align="center">&gt;= 3.26.0
+<tr><td align="center">On<td align="center">Off<td align="center">Yes<td align="center">all
+<tr><td align="center">Off<td align="center">On<td align="center">No<td align="center">all
+<tr><td align="center">On<td align="center">On<td align="center">Yes<td align="center">all
+</table>
+</blockquote>
+
+<a name="altertabmvcol"></a>
+
+<h3>ALTER TABLE RENAME COLUMN</h3>
 
 <p> The RENAME COLUMN TO syntax changes the
 <span class='yyterm'>column-name</span> of table <span class='yyterm'>table-name</span>
@@ -235,6 +284,10 @@ within the table definition itself and also within all indexes, triggers,
 and views that reference the column.  If the column name change would
 result in a semantic ambiguity in a trigger or view, then the RENAME
 COLUMN fails with an error and no changes are applied.
+
+<a name="altertabaddcol"></a>
+
+<h3>ALTER TABLE ADD COLUMN</h3>
 
 <p> The ADD COLUMN syntax
 is used to add a new column to an existing table.
@@ -276,7 +329,7 @@ be readable by SQLite version 3.1.3 (2005-02-20) and earlier.</p>
 <h3>Making Other Kinds Of Table Schema Changes</h3>
 
 <p> The only schema altering commands directly supported by SQLite are the
-"rename table", "rename column", and "add column" commands shown above.  
+"<a href="lang_altertable.html#altertabrename">rename table</a>", "<a href="lang_altertable.html#altertabmvcol">rename column</a>", and "<a href="lang_altertable.html#altertabaddcol">add column</a>" commands shown above.  
 However, applications
 can make other arbitrary changes to the format of a table using a simple
 sequence of operations.
@@ -285,8 +338,7 @@ are as follows:
 
 <ol>
 <li><p>
-If foreign key constraints are enabled,
-disable them using <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys=OFF</a>.
+If foreign key constraints are enabled, disable them using <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys=OFF</a>.
 
 <li><p>
 Start a transaction.
@@ -336,9 +388,49 @@ Commit the transaction started in step 2.
 If foreign keys constraints were originally enabled, reenable them now.
 </ol>
 
-<p>The procedure above is completely general and will work even if the
+<a name="caution"></a>
+
+<p>
+<b>Caution:</b>
+Take care to follow the procedure above precisely.  The boxes below
+summarize two procedures for modifying a table definition.  At first
+glance, they both appear to accomplish the same thing.  However, the
+procedure on the right does not always work, especially with the
+enhanced <a href="lang_altertable.html#altertabrename">rename table</a> capabilities added by versions 3.25.0 and
+3.26.0.  In the procedure on the right, the initial rename of the
+table to a temporary name might corrupt references to that table in
+triggers, views, and foreign key constraints.  The safe procedure on
+the left constructs the revised table definition using a new temporary
+name, then renames the table into its final name, which does not break
+links.
+
+<center>
+<table border="1" cellpadding="10" cellspacing="0">
+<tr>
+<td valign="top">
+<ol>
+<li>Create new table
+<li>Copy data
+<li>Drop old table
+<li>Rename new into old
+</ol>
+<td valign="top">
+<ol>
+<li>Rename old table
+<li>Create new table
+<li>Copy data
+<li>Drop old table
+</ol>
+<tr>
+<th>&uarr;<br>Correct
+<th>&uarr;<br>Incorrect
+</table>
+</center>
+
+<p>The 12-step <a href="lang_altertable.html#otheralter">generalized ALTER TABLE procedure</a>
+above will work even if the
 schema change causes the information stored in the table to change.
-So the full procedure above is appropriate for dropping a column,
+So the full 12-step procedure above is appropriate for dropping a column,
 changing the order of columns, adding or removing a UNIQUE constraint
 or PRIMARY KEY, adding CHECK or FOREIGN KEY or NOT NULL constraints,
 or changing the datatype for a column, for example.  However, a simpler

@@ -129,18 +129,17 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.4.3 (2014-04-03):</b></p>
-
-<li>Add a 
-    <a href="http://www.sqlite.org/src/fdiff?sbs=1&v1=7d539cedb1c&v2=ebad891b7494d&smhdr">one-character fix</a>
-    for a problem that might cause incorrect query results on a query that mixes
-    DISTINCT, GROUP BY in a subquery, and ORDER BY.
-    <a href="http://www.sqlite.org/src/info/98825a79ce1456863">Ticket 98825a79ce14</a>.
-
 <p><b>Bug fixes backported into patch release 3.8.4.2 (2014-03-26):</b></p>
 
 <li>Fix a potential buffer overread that could result when trying to search a
     corrupt database file.
+
+<p><b>Bug fixes backported into patch release 3.8.4.1 (2014-03-11):</b></p>
+
+<li>Work around a C-preprocessor macro conflict that breaks the build for some
+    configurations with Microsoft Visual Studio.
+<li>When computing the cost of the <a href="../optoverview.html#skipscan">skip-scan optimization</a>, take into account the
+    fact that multiple seeks are required.
 
 </ol></p>
 

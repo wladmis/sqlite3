@@ -111,6 +111,7 @@ Other Documentation Indexes:
 <li> <a href="fasterthanfs.html">35% Faster Than The Filesystem</a> </li>
 <li> <a href="np1queryprob.html">about 200 SQL statements per webpage</a> </li>
 <li> <a href="lang_corefunc.html#abs">abs() SQL function</a> </li>
+<li> <a href="lang_altertable.html#altertabaddcol">add column</a> </li>
 <li> <a href="zipfile.html#adding_entries_to_a_zip_archive">Adding to Zip</a> </li>
 <li> <a href="swarmvtab.html#advanced_usage">advanced</a> </li>
 <li> <a href="wal.html#advantages">advantages of WAL-mode</a> </li>
@@ -120,6 +121,9 @@ Other Documentation Indexes:
 <li> <a href="windowfunctions.html#aggregate_window_functions">aggregate window functions</a> </li>
 <li> <a href="doclist.html">alphabetical listing of documents</a> </li>
 <li> <a href="lang_altertable.html">ALTER TABLE</a> </li>
+<li> <a href="lang_altertable.html#altertabaddcol">ALTER TABLE ADD COLUMN</a> </li>
+<li> <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME</a> </li>
+<li> <a href="lang_altertable.html#altertabmvcol">ALTER TABLE RENAME COLUMN</a> </li>
 <li> <a href="syntax/alter-table-stmt.html">alter-table-stmt</a> </li>
 <li> <a href="syntax/alter-table-stmt.html">alter-table-stmt syntax diagram</a> </li>
 <li> <a href="amalgamation.html">amalgamation</a> </li>
@@ -368,6 +372,7 @@ Other Documentation Indexes:
 <li> <a href="malloc.html#defaultalloc">default memory allocator</a> </li>
 <li> <a href="lang_createtable.html#dfltval">default value</a> </li>
 <li> <a href="pragma.html#pragma_default_cache_size">default_cache_size pragma</a> </li>
+<li> <a href="security.html">defense against dark arts</a> </li>
 <li> <a href="pragma.html#pragma_defer_foreign_keys">defer_foreign_keys pragma</a> </li>
 <li> <a href="lang_delete.html">DELETE</a> </li>
 <li> <a href="syntax/delete-stmt.html">delete-stmt</a> </li>
@@ -399,6 +404,7 @@ Other Documentation Indexes:
 <li> <a href="lang_select.html#distinct">DISTINCT</a> </li>
 <li> <a href="docs.html">documents by category</a> </li>
 <li> <a href="cli.html#dotcmd">dot-commands</a> </li>
+<li> <a href="quirks.html#dblquote">double-quoted string literal</a> </li>
 <li> <a href="download.html">download page</a> </li>
 <li> <a href="lang_dropindex.html">DROP INDEX</a> </li>
 <li> <a href="lang_droptable.html">DROP TABLE</a> </li>
@@ -495,6 +501,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#max_mmap_size">-DSQLITE_MAX_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#max_schema_retry">-DSQLITE_MAX_SCHEMA_RETRY</a> </li>
 <li> <a href="compile.html#max_worker_threads">-DSQLITE_MAX_WORKER_THREADS</a> </li>
+<li> <a href="compile.html#memdb_default_maxsize">-DSQLITE_MEMDB_DEFAULT_MAXSIZE</a> </li>
 <li> <a href="compile.html#memdebug">-DSQLITE_MEMDEBUG</a> </li>
 <li> <a href="compile.html#minimum_file_descriptor">-DSQLITE_MINIMUM_FILE_DESCRIPTOR</a> </li>
 <li> <a href="compile.html#omit_altertable">-DSQLITE_OMIT_ALTERTABLE</a> </li>
@@ -717,6 +724,7 @@ Other Documentation Indexes:
 <li> <a href="syntax/function-invocation.html">function-invocation syntax diagram</a> </li>
 <li> <a href="pragma.html#pragma_function_list">function_list pragma</a> </li>
 <li> <a href="testing.html#fuzztesting">fuzz testing</a> </li>
+<li> <a href="lang_altertable.html#otheralter">generalized ALTER TABLE procedure</a> </li>
 <li> <a href="series.html">generate_series</a> </li>
 <li> <a href="geopoly.html">geopoly</a> </li>
 <li> <a href="geopoly.html">Geopoly extension</a> </li>
@@ -725,7 +733,7 @@ Other Documentation Indexes:
 <li> <a href="geopoly.html#gbbox">geopoly_bbox</a> </li>
 <li> <a href="geopoly.html#gblob">geopoly_blob</a> </li>
 <li> <a href="geopoly.html#ccw">geopoly_ccw</a> </li>
-<li> <a href="geopoly.html#gpoint">geopoly_constains_point</a> </li>
+<li> <a href="geopoly.html#gpoint">geopoly_contains_point</a> </li>
 <li> <a href="geopoly.html#gbbox">geopoly_group_bbox</a> </li>
 <li> <a href="geopoly.html#gjson">geopoly_json</a> </li>
 <li> <a href="geopoly.html#goverlap">geopoly_overlap</a> </li>
@@ -764,6 +772,7 @@ Other Documentation Indexes:
 <li> <a href="howtocompile.html">How To Compile SQLite</a> </li>
 <li> <a href="howtocorrupt.html">how to corrupt</a> </li>
 <li> <a href="lockingv3.html#how_to_corrupt">How To Corrupt Your Database Files</a> </li>
+<li> <a href="lang_vacuum.html#howvacuumworks">how vacuum works</a> </li>
 <li> <a href="lang_corefunc.html#ifnull">ifnull() SQL function</a> </li>
 <li> <a href="pragma.html#pragma_ignore_check_constraints">ignore_check_constraints pragma</a> </li>
 <li> <a href="uri.html#uriimmutable">"immutable" query parameter</a> </li>
@@ -1140,6 +1149,8 @@ Other Documentation Indexes:
 <li> <a href="syntax/release-stmt.html">release-stmt</a> </li>
 <li> <a href="syntax/release-stmt.html">release-stmt syntax diagram</a> </li>
 <li> <a href="footprint.html">relfootprint</a> </li>
+<li> <a href="lang_altertable.html#altertabmvcol">rename column</a> </li>
+<li> <a href="lang_altertable.html#altertabrename">rename table</a> </li>
 <li> <a href="lang_corefunc.html#replace">replace() SQL function</a> </li>
 <li> <a href="fileformat2.html#walreset">reset the WAL</a> </li>
 <li> <a href="tclsqlite.html#restore">restore method</a> </li>
@@ -1673,6 +1684,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a> </li>
+<li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemdbmaxsize">SQLITE_CONFIG_MEMDB_MAXSIZE</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize">SQLITE_CONFIG_MMAP_SIZE</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">SQLITE_CONFIG_MULTITHREAD</a> </li>
@@ -1856,6 +1868,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrollbackatomicwrite">SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE</a> </li>
 <li> <a href="c3ref/c_fcntl_begin_atomic_write.html">SQLITE_FCNTL_SET_LOCKPROXYFILE</a> </li>
 <li> <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizehint">SQLITE_FCNTL_SIZE_HINT</a> </li>
+<li> <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizelimit">SQLITE_FCNTL_SIZE_LIMIT</a> </li>
 <li> <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsync">SQLITE_FCNTL_SYNC</a> </li>
 <li> <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> </li>
 <li> <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltempfilename">SQLITE_FCNTL_TEMPFILENAME</a> </li>
@@ -1981,6 +1994,7 @@ Other Documentation Indexes:
 <li> <a href="limits.html#max_trigger_depth">SQLITE_MAX_TRIGGER_DEPTH</a> </li>
 <li> <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a> </li>
 <li> <a href="compile.html#max_worker_threads">SQLITE_MAX_WORKER_THREADS</a> </li>
+<li> <a href="compile.html#memdb_default_maxsize">SQLITE_MEMDB_DEFAULT_MAXSIZE</a> </li>
 <li> <a href="compile.html#memdebug">SQLITE_MEMDEBUG</a> </li>
 <li> <a href="memstat.html">sqlite_memstat</a> </li>
 <li> <a href="memstat.html">SQLITE_MEMSTAT virtual table</a> </li>
@@ -2095,6 +2109,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_abort.html">SQLITE_PERM</a> </li>
 <li> <a href="compile.html#powersafe_overwrite">SQLITE_POWERSAFE_OVERWRITE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_PRAGMA</a> </li>
+<li> <a href="c3ref/c_prepare_normalize.html#sqlitepreparenovtab">SQLITE_PREPARE_NO_VTAB</a> </li>
 <li> <a href="c3ref/c_prepare_normalize.html#sqlitepreparenormalize">SQLITE_PREPARE_NORMALIZE</a> </li>
 <li> <a href="c3ref/c_prepare_normalize.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_PROTOCOL</a> </li>
@@ -2396,6 +2411,7 @@ Other Documentation Indexes:
 <li> <a href="unlock_notify.html">Using the SQLite Unlock Notification Feature</a> </li>
 <li> <a href="lang_datefunc.html#localtime">'utc' modifier</a> </li>
 <li> <a href="lang_vacuum.html">VACUUM</a> </li>
+<li> <a href="lang_vacuum.html#vacuuminto">VACUUM INTO</a> </li>
 <li> <a href="syntax/vacuum-stmt.html">vacuum-stmt</a> </li>
 <li> <a href="syntax/vacuum-stmt.html">vacuum-stmt syntax diagram</a> </li>
 <li> <a href="lang_select.html#values">VALUES</a> </li>
@@ -2476,6 +2492,7 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_25_2.html">Version 3.25.2</a> </li>
 <li> <a href="releaselog/3_25_3.html">Version 3.25.3</a> </li>
 <li> <a href="releaselog/3_26_0.html">Version 3.26.0</a> </li>
+<li> <a href="releaselog/3_27_0.html">Version 3.27.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0.0</a> </li>
 <li> <a href="releaselog/3_3_1.html">Version 3.3.1</a> </li>

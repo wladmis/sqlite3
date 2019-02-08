@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_CONFIG_COVERING_INDEX_SCAN SQLITE_CONFIG_GETMALLOC SQLITE_CONFIG_GETMUTEX SQLITE_CONFIG_GETPCACHE SQLITE_CONFIG_GETPCACHE2 SQLITE_CONFIG_HEAP SQLITE_CONFIG_LOG SQLITE_CONFIG_LOOKASIDE SQLITE_CONFIG_MALLOC SQLITE_CONFIG_MEMSTATUS SQLITE_CONFIG_MMAP_SIZE SQLITE_CONFIG_MULTITHREAD SQLITE_CONFIG_MUTEX SQLITE_CONFIG_PAGECACHE SQLITE_CONFIG_PCACHE SQLITE_CONFIG_PCACHE2 SQLITE_CONFIG_PCACHE_HDRSZ SQLITE_CONFIG_PMASZ SQLITE_CONFIG_SCRATCH SQLITE_CONFIG_SERIALIZED SQLITE_CONFIG_SINGLETHREAD SQLITE_CONFIG_SMALL_MALLOC SQLITE_CONFIG_SORTERREF_SIZE SQLITE_CONFIG_SQLLOG SQLITE_CONFIG_STMTJRNL_SPILL SQLITE_CONFIG_URI SQLITE_CONFIG_WIN32_HEAPSIZE {configuration option} -->
+<!-- keywords: SQLITE_CONFIG_COVERING_INDEX_SCAN SQLITE_CONFIG_GETMALLOC SQLITE_CONFIG_GETMUTEX SQLITE_CONFIG_GETPCACHE SQLITE_CONFIG_GETPCACHE2 SQLITE_CONFIG_HEAP SQLITE_CONFIG_LOG SQLITE_CONFIG_LOOKASIDE SQLITE_CONFIG_MALLOC SQLITE_CONFIG_MEMDB_MAXSIZE SQLITE_CONFIG_MEMSTATUS SQLITE_CONFIG_MMAP_SIZE SQLITE_CONFIG_MULTITHREAD SQLITE_CONFIG_MUTEX SQLITE_CONFIG_PAGECACHE SQLITE_CONFIG_PCACHE SQLITE_CONFIG_PCACHE2 SQLITE_CONFIG_PCACHE_HDRSZ SQLITE_CONFIG_PMASZ SQLITE_CONFIG_SCRATCH SQLITE_CONFIG_SERIALIZED SQLITE_CONFIG_SINGLETHREAD SQLITE_CONFIG_SMALL_MALLOC SQLITE_CONFIG_SORTERREF_SIZE SQLITE_CONFIG_SQLLOG SQLITE_CONFIG_STMTJRNL_SPILL SQLITE_CONFIG_URI SQLITE_CONFIG_WIN32_HEAPSIZE {configuration option} -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Configuration Options</h2>
@@ -125,6 +125,7 @@ return false;
 #define SQLITE_CONFIG_STMTJRNL_SPILL      26  /* int nByte */
 #define SQLITE_CONFIG_SMALL_MALLOC        27  /* boolean */
 #define SQLITE_CONFIG_SORTERREF_SIZE      28  /* int nByte */
+#define SQLITE_CONFIG_MEMDB_MAXSIZE       29  /* sqlite3_int64 */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -488,7 +489,19 @@ from the database as records are returned in sorted order. The default
 value for this option is to never use this optimization. Specifying a
 negative value for this option restores the default behaviour.
 This option is only available if SQLite is compiled with the
-<a href="../compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> compile-time option.
+<a href="../compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> compile-time option.</p>
+
+<p><a name="sqliteconfigmemdbmaxsize"></a>
+
+<dt>SQLITE_CONFIG_MEMDB_MAXSIZE
+<dd>The SQLITE_CONFIG_MEMDB_MAXSIZE option accepts a single parameter
+<a href="../c3ref/int64.html">sqlite3_int64</a> parameter which is the default maximum size for an in-memory
+database created using <a href="../c3ref/deserialize.html">sqlite3_deserialize()</a>.  This default maximum
+size can be adjusted up or down for individual databases using the
+<a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizelimit">SQLITE_FCNTL_SIZE_LIMIT</a> <a href="../c3ref/file_control.html">file-control</a>.  If this
+configuration setting is never used, then the default maximum is determined
+by the <a href="../compile.html#memdb_default_maxsize">SQLITE_MEMDB_DEFAULT_MAXSIZE</a> compile-time option.  If that
+compile-time option is not set, then the default maximum is 1073741824.
 </dl>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

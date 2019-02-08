@@ -364,6 +364,8 @@ with the <a href="compile.html#enable_icu">-DSQLITE_ENABLE_ICU</a> option and li
 <a href="http://site.icu-project.org/">International Components for Unicode</a>
 library.
 
+<a name="dblquote"></a>
+
 </p><h1 id="double_quoted_string_literals_are_accepted"><span>8. </span>Double-quoted String Literals Are Accepted</h1>
 
 <p>
@@ -375,9 +377,9 @@ and single-quotes around string literals.
 </li></ul>
 <p>
 SQLite accepts both of the above.  But, in an effort to be compatible
-with MySQL 3.x (which was widely popular when SQLite was first being
-designed) will also use content contained in double-quotes as a string
-literal if the content does not match any valid identifier.
+with MySQL 3.x (which was very popular when SQLite was first being
+designed) SQLite will also use content contained in double-quotes as a s
+tring literal if the content does not match any valid identifier.
 </p><p>
 An unfortunate side-effect of this is that a misspelled double-quoted
 identifier will be interpreted as a string literal, rather than generating
@@ -390,6 +392,9 @@ In hindsight, we should not have tried to make SQLite accept MySQL 3.x
 syntax, and should have never allowed double-quoted string literals.
 However, we continue to support that capability to avoid breaking legacy
 applications.
+</p><p>
+Update: As of SQLite 3.27.0 (pending) the use of a double-quoted
+string literal causes a warning message to be sent to the <a href="errlog.html">error log</a>.
 
 </p><h1 id="keywords_can_often_be_used_as_identifiers"><span>9. </span>Keywords Can Often Be Used As Identifiers</h1>
 

@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_PREPARE_NORMALIZE SQLITE_PREPARE_PERSISTENT -->
+<!-- keywords: SQLITE_PREPARE_NORMALIZE SQLITE_PREPARE_NO_VTAB SQLITE_PREPARE_PERSISTENT -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Prepare Flags</h2>
@@ -99,6 +99,7 @@ return false;
 <blockquote><pre>
 #define SQLITE_PREPARE_PERSISTENT              0x01
 #define SQLITE_PREPARE_NORMALIZE               0x02
+#define SQLITE_PREPARE_NO_VTAB                 0x04
 </pre></blockquote>
 <p>
 These constants define various flags that can be passed into
@@ -122,13 +123,18 @@ SQLite may act on this hint differently.</p>
 
 <p><a name="sqlitepreparenormalize"></a>
  <dt>SQLITE_PREPARE_NORMALIZE</dt>
-<dd>The SQLITE_PREPARE_NORMALIZE flag indicates that a normalized
-representation of the SQL statement should be calculated and then
-associated with the prepared statement, which can be obtained via
-the <a href="../c3ref/expanded_sql.html">sqlite3_normalized_sql()</a> interface.  The semantics used to
-normalize a SQL statement are unspecified and subject to change.
-At a minimum, literal values will be replaced with suitable
-placeholders.
+<dd>The SQLITE_PREPARE_NORMALIZE flag is a no-op. This flag used
+to be required for any prepared statement that wanted to use the
+<a href="../c3ref/expanded_sql.html">sqlite3_normalized_sql()</a> interface.  However, the
+<a href="../c3ref/expanded_sql.html">sqlite3_normalized_sql()</a> interface is now available to all
+prepared statements, regardless of whether or not they use this
+flag.</p>
+
+<p><a name="sqlitepreparenovtab"></a>
+ <dt>SQLITE_PREPARE_NO_VTAB</dt>
+<dd>The SQLITE_PREPARE_NO_VTAB flag causes the SQL compiler
+to return an error (error code SQLITE_ERROR) if the statement uses
+any virtual tables.
 </dl>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

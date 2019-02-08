@@ -176,7 +176,7 @@ This article also uses the terms "bytecode program" and
 </p><h2 id="vdbe_source_code"><span>2.1. </span>VDBE Source Code</h2>
 
 <p>The source code to the bytecode engine is in the 
-<a href="http://www.sqlite.org/src/finfo?name=src/vdbe.c">vdbe.c</a> source
+<a href="http://www.sqlite.org/src/file/src/vdbe.c">vdbe.c</a> source
 file.  The <a href="opcode.html#codes">opcode definitions</a> in this document are derived
 from comments in that source file. The 
 source code comments are the canonical source of information
@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.26.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=bf8c1b2b7a596'>bf8c1b2b7a596</a> dated 2018-12-01.
+ version 3.27.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=97744701c3bd4'>97744701c3bd4</a> dated 2019-02-07.
 
 
 
@@ -422,15 +422,15 @@ opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/2fcc75711c00cfd48a560f8f9adf394dc2f9112a">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/b7b6f965153607072917dbd81d654a268abf4872c58d556701d1549550766c02">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.26.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=bf8c1b2b7a596'>bf8c1b2b7a596</a> dated 2018-12-01.
+ version 3.27.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=97744701c3bd4'>97744701c3bd4</a> dated 2019-02-07.
 
 <a name="codes"></a>
 
@@ -1560,6 +1560,9 @@ The cursor is always opened read/write even if
 the main database is read-only.  The ephemeral
 table is deleted automatically when the cursor is closed.</p>
 
+<p>If the cursor P1 is already opened on an ephemeral table, the table
+is cleared (all content is erased).</p>
+
 <p>P2 is the number of columns in the ephemeral table.
 The cursor points to a BTree table if P4==0 and to a BTree index
 if P4 is not 0.  If P4 is not NULL, it points to a KeyInfo structure
@@ -2186,7 +2189,11 @@ statement and rerun it from the beginning.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Vacuum"></a>Vacuum
 <td>Vacuum the entire database P1.  P1 is 0 for "main", and 2 or more
-for an attached database.  The "temp" database may not be vacuumed.</td></tr>
+for an attached database.  The "temp" database may not be vacuumed.</p>
+
+<p>If P2 is not zero, then it is a register holding a string which is
+the file into which the result of vacuum should be written.  When
+P2 is zero, the vacuum overwrites the original database.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Variable"></a>Variable
 <td>Transfer the values of bound parameter P1 into register P2</p>

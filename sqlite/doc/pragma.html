@@ -666,7 +666,7 @@ for use in application programs.</ol></p>
     <p><b>PRAGMA database_list;</b></p>
     <p>This pragma works like a query to return one row for each database
     attached to the current database connection.
-    The second column is the "main" for the main database file, "temp"
+    The second column is "main" for the main database file, "temp"
     for the database file used to store TEMP objects, or the name of the
     ATTACHed database for other database files.
     The third column is the name of the database file itself, or an empty
@@ -1095,14 +1095,14 @@ for use in application programs.</ol></p>
    <p><b>PRAGMA legacy_alter_table;
        <br>PRAGMA legacy_alter_table = <i>boolean</i></b></p>
     <p>This pragma sets or queries the value of the legacy_alter_table
-    flag.  When this flag is on, the ALTER TABLE RENAME
+    flag.  When this flag is on, the <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME</a>
     command (for changing the name of a table) works as it did
     in SQLite 3.24.0 (2018-06-04) and earlier.  More specifically,
     when this flag is on
-    the ALTER TABLE RENAME command only rewrites the initial occurrence
-    of the table name in its CREATE TABLE statement and in any associated
-    CREATE INDEX and CREATE TRIGGER statements.  Other references to the
-    table are unmodifed, including:
+    the <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME</a> command only rewrites the initial occurrence
+    of the table name in its <a href="lang_createtable.html">CREATE TABLE</a> statement and in any associated
+    <a href="lang_createindex.html">CREATE INDEX</a> and <a href="lang_createtrigger.html">CREATE TRIGGER</a> statements.  Other references to the
+    table are unmodified, including:
     <ul>
     <li> References to the table within the bodies of triggers and views.
     <li> References to the table within CHECK constraints in the original
@@ -1113,7 +1113,7 @@ for use in application programs.</ol></p>
     references to the table anywhere in the schema are converted to the new name.
     <p>This pragma is provided as a work-around for older programs that
     contain code that expect the incomplete behavior
-    of ALTER TABLE RENAME found in older versions of SQLite.
+    of <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME</a> found in older versions of SQLite.
     New applications should leave this flag turned off.
     <p>For compatibility with older <a href="vtab.html">virtual table</a> implementations,
     this flag is turned on temporarily while the <a href="vtab.html#xrename">sqlite3_module.xRename</a>

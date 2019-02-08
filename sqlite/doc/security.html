@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
-<title>Resistance To Attack</title>
+<title>Defense Against Dark Arts</title>
 <!-- path= -->
 </head>
 <body>
@@ -94,7 +94,7 @@ return false;
 <div class=fancy>
 <div class=nosearch>
 <div class="fancy_title">
-Resistance To Attack
+Defense Against Dark Arts
 </div>
 </div>
 
@@ -105,21 +105,22 @@ Resistance To Attack
 
 <p>
 SQLite should never crash, overflow a buffer, leak memory,
-or exhibit any other harmful behavior, even with presented with
+or exhibit any other harmful behavior, even when presented with
 maliciously malformed SQL inputs or database files.  SQLite should
-always detected erroneous inputs and raise an error, not crash or
+always detect erroneous inputs and raise an error, not crash or
 corrupt memory.
 Any malfunction caused by an SQL input or database file
 is considered a serious bug and will be promptly addressed when
 brought to the attention of the SQLite developers.  SQLite is
-extensively fuzz-tested to help ensure that it is highly resistant
+extensively fuzz-tested to help ensure that it is resistant
 to these kinds of errors.
 
 </p><p>
 Nevertheless, bugs happen.
 If you are writing an application that sends untrusted SQL inputs
 or database files to SQLite, there are additional steps you can take
-to help prevent zero-day exploits caused by undetected bugs:
+to help reduce the attack surface and
+prevent zero-day exploits caused by undetected bugs.
 
 </p><h2 id="untrusted_sql_inputs"><span>1.1. </span>Untrusted SQL Inputs</h2>
 <p>
@@ -129,7 +130,7 @@ precautions:
 </p><ol>
 <li><p>
 Set the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> flag.
-This prevents ordinary SQL statements from corrupted the database
+This prevents ordinary SQL statements from corrupting the database
 file.
 
 </p></li><li><p>
@@ -144,11 +145,16 @@ the scope of SQL that will be processed.
 </p><ol>
 <li value="3"><p>
 Run <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> or <a href="pragma.html#pragma_quick_check">PRAGMA quick_check</a> on the database
-first, prior to running any other SQLite, and reject the file if any
-errors are detected.
+as the first SQL statement after opening the database files and
+prior to running any other SQL statements.  Reject and refuse to
+process any database file containing errors.
 
 </p></li><li><p>
 Enable the <a href="pragma.html#pragma_cell_size_check">PRAGMA cell_size_check=ON</a> setting.
+
+</p></li><li><p>
+Do not enable memory-mapped I/O.
+In other words, make sure that <a href="pragma.html#pragma_mmap_size">PRAGMA mmap_size=0</a>.
 </p></li></ol>
 
 <h1 id="summary"><span>2. </span>Summary</h1>

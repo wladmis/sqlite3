@@ -262,6 +262,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqliteconfiglog","x":"SQLITE_CONFIG_LOG","s":0},
 {"u":"#sqliteconfiglookaside","x":"SQLITE_CONFIG_LOOKASIDE","s":0},
 {"u":"#sqliteconfigmalloc","x":"SQLITE_CONFIG_MALLOC","s":0},
+{"u":"#sqliteconfigmemdbmaxsize","x":"SQLITE_CONFIG_MEMDB_MAXSIZE","s":0},
 {"u":"#sqliteconfigmemstatus","x":"SQLITE_CONFIG_MEMSTATUS","s":0},
 {"u":"#sqliteconfigmmapsize","x":"SQLITE_CONFIG_MMAP_SIZE","s":0},
 {"u":"#sqliteconfigmultithread","x":"SQLITE_CONFIG_MULTITHREAD","s":0},
@@ -376,6 +377,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitefcntlrollbackatomicwrite","x":"SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE","s":0},
 {"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_SET_LOCKPROXYFILE","s":0},
 {"u":"#sqlitefcntlsizehint","x":"SQLITE_FCNTL_SIZE_HINT","s":0},
+{"u":"#sqlitefcntlsizelimit","x":"SQLITE_FCNTL_SIZE_LIMIT","s":0},
 {"u":"#sqlitefcntlsync","x":"SQLITE_FCNTL_SYNC","s":0},
 {"u":"#sqlitefcntlsyncomitted","x":"SQLITE_FCNTL_SYNC_OMITTED","s":0},
 {"u":"#sqlitefcntltempfilename","x":"SQLITE_FCNTL_TEMPFILENAME","s":0},
@@ -530,6 +532,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_PERM","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_PRAGMA","s":0},
 {"u":"#sqlitepreparenormalize","x":"SQLITE_PREPARE_NORMALIZE","s":0},
+{"u":"#sqlitepreparenovtab","x":"SQLITE_PREPARE_NO_VTAB","s":0},
 {"u":"#sqlitepreparepersistent","x":"SQLITE_PREPARE_PERSISTENT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_PROTOCOL","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_RANGE","s":0},
@@ -4901,6 +4904,7 @@ meaning of each of these checkpoint modes.
 #define SQLITE_CONFIG_STMTJRNL_SPILL      26  /* int nByte */
 #define SQLITE_CONFIG_SMALL_MALLOC        27  /* boolean */
 #define SQLITE_CONFIG_SORTERREF_SIZE      28  /* int nByte */
+#define SQLITE_CONFIG_MEMDB_MAXSIZE       29  /* sqlite3_int64 */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5264,7 +5268,19 @@ from the database as records are returned in sorted order. The default
 value for this option is to never use this optimization. Specifying a
 negative value for this option restores the default behaviour.
 This option is only available if SQLite is compiled with the
-<a href="compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> compile-time option.
+<a href="compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> compile-time option.</p>
+
+<p><a name="sqliteconfigmemdbmaxsize"></a>
+
+<dt>SQLITE_CONFIG_MEMDB_MAXSIZE
+<dd>The SQLITE_CONFIG_MEMDB_MAXSIZE option accepts a single parameter
+<a href="#sqlite3_int64">sqlite3_int64</a> parameter which is the default maximum size for an in-memory
+database created using <a href="#sqlite3_deserialize">sqlite3_deserialize()</a>.  This default maximum
+size can be adjusted up or down for individual databases using the
+<a href="#sqlitefcntlsizelimit">SQLITE_FCNTL_SIZE_LIMIT</a> <a href="#sqlite3_file_control">file-control</a>.  If this
+configuration setting is never used, then the default maximum is determined
+by the <a href="compile.html#memdb_default_maxsize">SQLITE_MEMDB_DEFAULT_MAXSIZE</a> compile-time option.  If that
+compile-time option is not set, then the default maximum is 1073741824.
 </dl>
 </p><hr><a name="SQLITE_DBCONFIG_DEFENSIVE"></a>
 <h2>Database Connection Configuration Options</h2>
@@ -5565,6 +5581,7 @@ return value from the <a href="#sqlite3_set_authorizer">sqlite3_set_authorizer()
 #define SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE  33
 #define SQLITE_FCNTL_LOCK_TIMEOUT           34
 #define SQLITE_FCNTL_DATA_VERSION           35
+#define SQLITE_FCNTL_SIZE_LIMIT             36
 </pre></blockquote>
 <p>
 These integer constants are opcodes for the xFileControl method
@@ -5590,6 +5607,16 @@ current transaction.  This hint is not guaranteed to be accurate but it
 is often close.  The underlying VFS might choose to preallocate database
 file space based on this hint in order to help writes to the database
 file run faster.</p>
+
+<p><li><a name="sqlitefcntlsizelimit"></a>
+
+The <a href="#sqlitefcntlsizelimit">SQLITE_FCNTL_SIZE_LIMIT</a> opcode is used by in-memory VFS that
+implements <a href="#sqlite3_deserialize">sqlite3_deserialize()</a> to set an upper bound on the size
+of the in-memory database.  The argument is a pointer to a <a href="#sqlite3_int64">sqlite3_int64</a>.
+If the integer pointed to is negative, then it is filled in with the
+current limit.  Otherwise the limit is set to the larger of the value
+of the integer pointed to and the current database size.  The integer
+pointed to is set to the new limit.</p>
 
 <p><li><a name="sqlitefcntlchunksize"></a>
 
@@ -6044,6 +6071,7 @@ in the 4th parameter to the <a href="#sqlite3vfsxopen">sqlite3_vfs.xOpen</a> met
 <blockquote><pre>
 #define SQLITE_PREPARE_PERSISTENT              0x01
 #define SQLITE_PREPARE_NORMALIZE               0x02
+#define SQLITE_PREPARE_NO_VTAB                 0x04
 </pre></blockquote>
 <p>
 These constants define various flags that can be passed into
@@ -6067,13 +6095,18 @@ SQLite may act on this hint differently.</p>
 
 <p><a name="sqlitepreparenormalize"></a>
  <dt>SQLITE_PREPARE_NORMALIZE</dt>
-<dd>The SQLITE_PREPARE_NORMALIZE flag indicates that a normalized
-representation of the SQL statement should be calculated and then
-associated with the prepared statement, which can be obtained via
-the <a href="#sqlite3_expanded_sql">sqlite3_normalized_sql()</a> interface.  The semantics used to
-normalize a SQL statement are unspecified and subject to change.
-At a minimum, literal values will be replaced with suitable
-placeholders.
+<dd>The SQLITE_PREPARE_NORMALIZE flag is a no-op. This flag used
+to be required for any prepared statement that wanted to use the
+<a href="#sqlite3_expanded_sql">sqlite3_normalized_sql()</a> interface.  However, the
+<a href="#sqlite3_expanded_sql">sqlite3_normalized_sql()</a> interface is now available to all
+prepared statements, regardless of whether or not they use this
+flag.</p>
+
+<p><a name="sqlitepreparenovtab"></a>
+ <dt>SQLITE_PREPARE_NO_VTAB</dt>
+<dd>The SQLITE_PREPARE_NO_VTAB flag causes the SQL compiler
+to return an error (error code SQLITE_ERROR) if the statement uses
+any virtual tables.
 </dl>
 </p><hr><a name="SQLITE_SCANSTAT_EST"></a>
 <h2>Prepared Statement Scan Status Opcodes</h2>
@@ -6167,9 +6200,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.26.0"
-#define SQLITE_VERSION_NUMBER 3026000
-#define SQLITE_SOURCE_ID      "2018-12-01 12:34:55 bf8c1b2b7a5960c282e543b9c293686dccff272512d08865f4600fb58238b4f9"
+#define SQLITE_VERSION        "3.27.0"
+#define SQLITE_VERSION_NUMBER 3027000
+#define SQLITE_SOURCE_ID      "2019-02-07 17:02:52 97744701c3bd414e6c9d7182639d8c2ce7cf124c4fce625071ae65658ac61713"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -9303,9 +9336,9 @@ of how long that statement took to run.  The profile callback
 time is in units of nanoseconds, however the current implementation
 is only capable of millisecond resolution so the six least significant
 digits in the time are meaningless.  Future versions of SQLite
-might provide greater resolution on the profiler callback.  The
-sqlite3_profile() function is considered experimental and is
-subject to change in future versions of SQLite.
+might provide greater resolution on the profiler callback.  Invoking
+either <a href="#sqlite3_profile">sqlite3_trace()</a> or <a href="#sqlite3_trace_v2">sqlite3_trace_v2()</a> will cancel the
+profile callback.
 </p><hr><a name="sqlite3_result_blob"></a>
 <h2>Setting The Result Of An SQL Function</h2>
 </div>
@@ -9617,7 +9650,9 @@ zero is returned.</p>
 sqlite3_uri_boolean(F,P,B) returns B.  If F is not a NULL pointer and
 is not a database file pathname pointer that SQLite passed into the xOpen
 VFS method, then the behavior of this routine is undefined and probably
-undesirable.
+undesirable.</p>
+
+<p>See the <a href="uri.html">URI filename</a> documentation for additional information.
 </p><hr><a name="sqlite3_value_blob"></a>
 <h2>Obtaining SQL Values</h2>
 </div>

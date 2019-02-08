@@ -567,6 +567,15 @@ some design situations, every little bit helps.
   setting that determines the maximum number of auxiliary threads that a single
   <a href="c3ref/stmt.html">prepared statement</a> will use to aid with CPU-intensive computations
   (mostly sorting).  See also the <a href="compile.html#default_worker_threads">SQLITE_DEFAULT_WORKER_THREADS</a> options.
+</p></blockquote><a name="memdb_default_maxsize"></a>
+<p><b>SQLITE_MEMDB_DEFAULT_MAXSIZE=<i>N</i></b></p><blockquote><p>
+  Set the default size limit (in bytes) for in-memory databases created using
+  <a href="c3ref/deserialize.html">sqlite3_deserialize()</a>.  This is just the default.  The limit can be
+  changed at start-time using
+  <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemdbmaxsize">SQLITE_CONFIG_MEMDB_MAXSIZE</a>,N)
+  or at run-time for individual databases using the
+  <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizelimit">SQLITE_FCNTL_SIZE_LIMIT</a> <a href="c3ref/file_control.html">file-control</a>.
+  If no default is specified, 1073741824 is used.
 </p></blockquote><a name="minimum_file_descriptor"></a>
 <p><b>SQLITE_MINIMUM_FILE_DESCRIPTOR=<i>N</i></b></p><blockquote><p>
   The unix <a href="vfs.html">VFS</a> will never use a file descriptor less than <i>N</i>.  The
@@ -1523,7 +1532,14 @@ The SQLITE_OMIT_* compile-time options are mostly unsupported.
   <a href="c3ref/aggregate_count.html">sqlite3_transfer_bindings()</a>,
   <a href="c3ref/aggregate_count.html">sqlite3_global_recover()</a>,
   <a href="c3ref/aggregate_count.html">sqlite3_thread_cleanup()</a> and
-  <a href="c3ref/aggregate_count.html">sqlite3_memory_alarm()</a> interfaces.
+  <a href="c3ref/aggregate_count.html">sqlite3_memory_alarm()</a> interfaces and
+  <a href="pragma.html#syntax">PRAGMA</a> statements <a href="pragma.html#pragma_count_changes">PRAGMA count_changes</a>,
+  <a href="pragma.html#pragma_data_store_directory">PRAGMA data_store_directory</a>,
+  <a href="pragma.html#pragma_default_cache_size">PRAGMA default_cache_size</a>,
+  <a href="pragma.html#pragma_empty_result_callbacks">PRAGMA empty_result_callbacks</a>,
+  <a href="pragma.html#pragma_full_column_names">PRAGMA full_column_names</a>,
+  <a href="pragma.html#pragma_short_column_names">PRAGMA short_column_names</a>, and
+  <a href="pragma.html#pragma_temp_store_directory">PRAGMA temp_store_directory</a>.
 </p></blockquote><a name="omit_diskio"></a>
 <p><b>SQLITE_OMIT_DISKIO</b></p><blockquote><p>
   This option omits all support for writing to the disk and forces

@@ -117,6 +117,14 @@ return false;
      cases, VACUUM may also reduce the number of partially filled pages in
      the database, reducing the size of the database file further.
 
+  <li> <p> When content is deleted from an SQLite database, the content is not
+     usually erased but rather the space used to hold the content is marked as
+     being available for reuse.  This can allow deleted content to be recovered
+     by a hacker or by forensic analysis.  Running VACUUM will clean the database
+     of all traces of deleted content, thus preventing an adversary from recovering
+     deleted content.  Using VACUUM in this way is an alternative to setting
+     <a href="pragma.html#pragma_secure_delete">PRAGMA secure_delete=ON</a>. 
+
   <li> <p> Normally, the database <a href="pragma.html#pragma_page_size">page_size</a> and whether or not the database
      supports <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> must be configured before the database file is
      actually created. However, when not in <a href="wal.html">write-ahead log</a> mode, the 
@@ -137,6 +145,60 @@ added in <a href="releaselog/3_15_0.html">version 3.15.0</a> (2016-10-14).  Prio
 VACUUM statement would be silently ignored and the "main" schema would be
 vacuumed.</p>
 
+<a name="vacuuminto"></a>
+
+<h3>VACUUM with an INTO clause</h3>
+
+<p>If the INTO clause is included, then the original database file is
+unchanged and a new database is created in the filename given by the
+argument to the INTO clause.  The new database will contain the same
+logical content as the original database, fully vacuumed.
+
+<p>
+The VACUUM command with an INTO clause is an alternative to the
+<a href="backup.html">backup API</a> for generating backup copies of a live database.
+The advantage of using VACUUM INTO is that the resulting backup
+database is minimal in size and hence the amount of filesystem
+I/O may be reduced.  Also, all deleted content is purged from the
+backup, leaving behind no forensic traces.  On the other hand,
+the <a href="backup.html">backup API</a> uses fewer CPU cycles and can be executed
+incrementally.
+
+<p>
+The filename in the INTO clause can be an arbitrary SQL expression
+that evaluates to a string.
+The file named by the INTO clause must not previously exist, or
+else it must be an empty file, or the VACUUM INTO command will
+fail with an error.
+
+<p>
+The argument to INTO can a <a href="uri.html">URI filename</a> if URI filenames
+are enabled.
+URL filenames are enabled if any of the following are true:
+<ul>
+<li> The SQLite library was compiled with <a href="compile.html#use_uri">-DSQLITE_USE_URI=1</a>.
+<li> The <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a>,1) interfaces was
+     invoked at start-time.
+<li> The <a href="c3ref/sqlite3.html">database connection</a> that is running the VACUUM INTO
+     statement was originally opened using the
+     <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_URI</a> flag.
+</ul>
+
+<p>
+The VACUUM INTO command is transactional in the sense that
+the generated output database is a consistent snapshot of the
+original database.  However, if the VACUUM INTO command is
+interrupted by a unplanned shutdown or power lose, then
+the generated output database might be incomplete and corrupt.
+Also, SQLite does not invoke fsync() or FlushFileBuffers()
+on the generated database to ensure that it has reached
+non-volatile storage before completing.
+
+
+<a name="howvacuumworks"></a>
+
+<h3>How VACUUM works</h3>
+
 <p>The VACUUM command works by copying the contents of the database into
 a temporary database file and then overwriting the original with the 
 contents of the temporary file. When overwriting the original, a rollback
@@ -144,6 +206,10 @@ journal or <a href="wal.html">write-ahead log</a> WAL file is used just as it wo
 other database transaction. This means that when VACUUMing a database, 
 as much as twice the size of the original database file is required in free
 disk space.
+
+<p>The VACUUM INTO command works the same way except that it uses the file
+named on the INTO clause in place of the temporary database and omits the
+step of copying the vacuumed database back over top of the original database.
 
 <p>The VACUUM command may change the <a href="lang_createtable.html#rowid">ROWIDs</a> of entries in any
 tables that do not have an explicit <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.

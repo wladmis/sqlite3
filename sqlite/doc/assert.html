@@ -326,7 +326,7 @@ other part of the code that has corrupted the linked list.
 An ALWAYS(X) or NEVER(X) sometimes verifies pre-conditions that are
 subject to change if other parts of the code are modified in
 subtle ways.  At <a href="https://sqlite.org/src/artifact/18a53540aa3?ln=5512-5516">https://sqlite.org/src/artifact/18a53540aa3?ln=5512-5516</a>
-we have a case test for two pre-conditions that are true only because
+we have a test for two pre-conditions that are true only because
 of the limited scope of use of the sqlite3BtreeRowCountEst() function.
 Future enhancements to SQLite might use sqlite3BtreeRowCountEst() in
 new ways where those preconditions no longer hold, and the NEVER()

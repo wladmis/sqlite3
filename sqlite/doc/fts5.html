@@ -1835,11 +1835,11 @@ specifically:
             the tokenizer substitutes "first" for "1st" and the query works
             as expected.
 <p>
-       </p></li><li> By adding multiple synonyms for a single term to the FTS index.
-            In this case, when tokenizing query text, the tokenizer may 
-            provide multiple synonyms for a single term within the document.
-            FTS5 then queries the index for each synonym individually. For
-            example, faced with the query:
+       </p></li><li> By querying the index for all synonyms of each query term
+            separately. In this case, when tokenizing query text, the
+            tokenizer may provide multiple synonyms for a single term 
+            within the document. FTS5 then queries the index for each 
+            synonym individually. For example, faced with the query:
 <p>
    </p><div class="codeblock"><pre>... MATCH 'first place'
 </pre></div>
@@ -1863,7 +1863,7 @@ specifically:
             "place".
 <p>
             This way, even if the tokenizer does not provide synonyms
-            when tokenizing query text (it should not - to do would be
+            when tokenizing query text (it should not - to do so would be
             inefficient), it doesn't matter if the user queries for 
             'first + place' or '1st + place', as there are entries in the
             FTS index corresponding to both forms of the first token.
@@ -2140,14 +2140,8 @@ Query for the details of phrase match iIdx within the current row.
 <p>
    Usually, output parameter *piPhrase is set to the phrase number, *piCol
    to the column in which it occurs and *piOff the token offset of the
-   first token of the phrase. The exception is if the table was created
-   with the offsets=0 option specified. In this case *piOff is always
-   set to -1.
-</p>
-
-<p>
-   Returns SQLITE_OK if successful, or an error code (i.e. SQLITE_NOMEM) 
-   if an error occurs.
+   first token of the phrase. Returns SQLITE_OK if successful, or an error
+   code (i.e. SQLITE_NOMEM) if an error occurs.
 </p>
 
 <p>
