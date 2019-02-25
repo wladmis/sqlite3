@@ -1202,10 +1202,6 @@ comments in the source code.
 <dd><p>So the following query could use the partial index: SELECT * FROM tab2 WHERE b=456 AND c<>0; -- uses partial index
 <i>(source: <a href="partialindex.html">partialindex.html</a>, checked-by: th3/cov1/index01.test, matrix: <a href='matrix/partialindex.html#R-05254-00658-23742-34136-13538-61949-20472-35341'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-05254-00658-23742-34136-13538-61949-20472-35341'>detail</a>)</i></p></dd>
 
-<dt><b>R-05256-02411-03120-41159-49408-38531-58118-03521</b></dt>
-<dd><p>The second column is the "main" for the main database file, "temp" for the database file used to store TEMP objects, or the name of the ATTACHed database for other database files.
-<i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/req1/pragma14.test, matrix: <a href='matrix/pragma.html#R-05256-02411-03120-41159-49408-38531-58118-03521'>context</a>, <a href='matrix/matrix_dpragma.html#R-05256-02411-03120-41159-49408-38531-58118-03521'>detail</a>)</i></p></dd>
-
 <dt><b>R-05272-22592-13374-24756-51597-06491-53677-55023</b></dt>
 <dd><p>The index for named parameters can be looked up using the sqlite3_bind_parameter_index() API if desired.
 <i>(source: <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>, checked-by: th3/req1/bind01.test, matrix: <a href='matrix/c3ref/bind_blob.html#R-05272-22592-13374-24756-51597-06491-53677-55023'>context</a>, <a href='matrix/matrix_dbind_blob.html#R-05272-22592-13374-24756-51597-06491-53677-55023'>detail</a>)</i></p></dd>
@@ -9834,6 +9830,10 @@ comments in the source code.
 <dd><p>PRAGMA encoding; PRAGMA encoding = "UTF-8"; PRAGMA encoding = "UTF-16"; PRAGMA encoding = "UTF-16le"; PRAGMA encoding = "UTF-16be";
 <i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/req1/pragma16.test, matrix: <a href='matrix/pragma.html#R-49101-35304-43944-04630-00737-13180-26009-06638'>context</a>, <a href='matrix/matrix_dpragma.html#R-49101-35304-43944-04630-00737-13180-26009-06638'>detail</a>)</i></p></dd>
 
+<dt><b>R-49128-31170-23004-04082-05241-62766-17146-48048</b></dt>
+<dd><p>The second column is "main" for the main database file, "temp" for the database file used to store TEMP objects, or the name of the ATTACHed database for other database files.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-49128-31170-23004-04082-05241-62766-17146-48048'>context</a>, <a href='matrix/matrix_dpragma.html#R-49128-31170-23004-04082-05241-62766-17146-48048'>detail</a>)</i></p></dd>
+
 <dt><b>R-49155-63541-44229-54839-02572-16362-28643-16859</b></dt>
 <dd><p>If the busy-handler returns 0 before the writer lock is obtained or while waiting for database readers, the checkpoint operation proceeds from that point in the same way as SQLITE_CHECKPOINT_PASSIVE - checkpointing as many frames as possible without blocking any further.
 <i>(source: <a href="c3ref/wal_checkpoint_v2.html">c3ref/wal_checkpoint_v2.html</a>, checked-by: tcl/e_walckpt.test, matrix: <a href='matrix/c3ref/wal_checkpoint_v2.html#R-49155-63541-44229-54839-02572-16362-28643-16859'>context</a>, <a href='matrix/matrix_dwal_checkpoint_v2.html#R-49155-63541-44229-54839-02572-16362-28643-16859'>detail</a>)</i></p></dd>
@@ -10490,6 +10490,10 @@ comments in the source code.
 <dd><p>All terms of the WHERE clause are analyzed to see if they can be satisfied using indices.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-52638-40483-64904-57206-41972-21673-15082-17271'>context</a>, <a href='matrix/matrix_doptoverview.html#R-52638-40483-64904-57206-41972-21673-15082-17271'>detail</a>)</i></p></dd>
 
+<dt><b>R-52653-05256-00101-41227-35426-26812-44795-06520</b></dt>
+<dd><p>These functions only work for dates between 0000-01-01 00:00:00 and 9999-12-31 23:59:59 (julian day numbers 1721059.5 through 5373484.5).
+<i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, matrix: <a href='matrix/lang_datefunc.html#R-52653-05256-00101-41227-35426-26812-44795-06520'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-52653-05256-00101-41227-35426-26812-44795-06520'>detail</a>)</i></p></dd>
+
 <dt><b>R-52669-16467-62181-15890-38253-37577-17953-50258</b></dt>
 <dd><p>The first parameter is the prepared statement that implements the SELECT statement.
 <i>(source: <a href="c3ref/column_name.html">c3ref/column_name.html</a>, matrix: <a href='matrix/c3ref/column_name.html#R-52669-16467-62181-15890-38253-37577-17953-50258'>context</a>, <a href='matrix/matrix_dcolumn_name.html#R-52669-16467-62181-15890-38253-37577-17953-50258'>detail</a>)</i></p></dd>
@@ -10989,10 +10993,6 @@ comments in the source code.
 <dt><b>R-55352-50321-25777-65350-51066-10256-38308-17470</b></dt>
 <dd><p>The number of columns in the result can be determined using sqlite3_column_count().
 <i>(source: <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>, checked-by: th3/req1/column01.test, matrix: <a href='matrix/c3ref/column_blob.html#R-55352-50321-25777-65350-51066-10256-38308-17470'>context</a>, <a href='matrix/matrix_dcolumn_blob.html#R-55352-50321-25777-65350-51066-10256-38308-17470'>detail</a>)</i></p></dd>
-
-<dt><b>R-55354-05099-56810-41359-25714-34128-15293-12246</b></dt>
-<dd><p>These functions only work for dates between 0000-01-01 00:00:00 and 9999-12-31 23:59:59 (julidan day numbers 1721059.5 through 5373484.5).
-<i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, checked-by: th3/req1/date01.test, matrix: <a href='matrix/lang_datefunc.html#R-55354-05099-56810-41359-25714-34128-15293-12246'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-55354-05099-56810-41359-25714-34128-15293-12246'>detail</a>)</i></p></dd>
 
 <dt><b>R-55392-56277-35725-48242-28273-14685-15840-32650</b></dt>
 <dd><p>If the third parameter to sqlite3_bind_text() or sqlite3_bind_text16() or sqlite3_bind_blob() is a NULL pointer then the fourth parameter is ignored and the end result is the same as sqlite3_bind_null().
@@ -11917,6 +11917,10 @@ comments in the source code.
 <dt><b>R-60364-48303-16474-64960-19278-15379-28844-42689</b></dt>
 <dd><p>The sqlite3_mutex_try() interface returns SQLITE_OK upon successful entry.
 <i>(source: <a href="c3ref/mutex_alloc.html">c3ref/mutex_alloc.html</a>, matrix: <a href='matrix/c3ref/mutex_alloc.html#R-60364-48303-16474-64960-19278-15379-28844-42689'>context</a>, <a href='matrix/matrix_dmutex_alloc.html#R-60364-48303-16474-64960-19278-15379-28844-42689'>detail</a>)</i></p></dd>
+
+<dt><b>R-60377-28246-58625-03704-45785-30133-60045-47181</b></dt>
+<dd><p>The argument to INTO can a URI filename if URI filenames are enabled.
+<i>(source: <a href="lang_vacuum.html">lang_vacuum.html</a>, matrix: <a href='matrix/lang_vacuum.html#R-60377-28246-58625-03704-45785-30133-60045-47181'>context</a>, <a href='matrix/matrix_dlang_vacuum.html#R-60377-28246-58625-03704-45785-30133-60045-47181'>detail</a>)</i></p></dd>
 
 <dt><b>R-60389-26911-28107-48751-35058-52596-03462-21420</b></dt>
 <dd><p>Format 12 is the Julian day number expressed as a floating point value.
