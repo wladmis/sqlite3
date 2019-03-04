@@ -2373,21 +2373,32 @@ SELECT * FROM porter WHERE porter MATCH 'Frustration';
   recognizes ASCII space and punctuation characters as token separators.
 
 </p><p>
-  By default, "unicode61" also removes all diacritics from Latin script
+  By default, "unicode61" attempts to remove diacritics from Latin script
   characters. This behaviour can be overridden by adding the tokenizer argument
   "remove_diacritics=0". For example:
 
-</p><div class="codeblock"><pre><i>-- Create tables that remove diacritics from Latin script characters</i>
+</p><div class="codeblock"><pre><i>-- Create tables that remove <b>all</b>diacritics from Latin script characters</i>
 <i>-- as part of tokenization.</i>
 CREATE VIRTUAL TABLE txt1 USING fts4(tokenize=unicode61);
-CREATE VIRTUAL TABLE txt2 USING fts4(tokenize=unicode61 "remove_diacritics=1");
+CREATE VIRTUAL TABLE txt2 USING fts4(tokenize=unicode61 "remove_diacritics=2");
 
 <i>-- Create a table that does not remove diacritics from Latin script</i>
 <i>-- characters as part of tokenization.</i>
 CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 "remove_diacritics=0");
 </pre></div>
 
-<p>
+<p>The remove_diacritics option may be set to "0", "1" or "2". The default
+   value is "1".  If it is set to "1" or "2", then diacritics are removed from
+   Latin script characters as described above. However, if it is set to "1",
+   then diacritics are not removed in the fairly uncommon case where a single
+   unicode codepoint is used to represent a character with more that one
+   diacritic. For example, diacritics are not removed from codepoint 0x1ED9
+   ("LATIN SMALL LETTER O WITH CIRCUMFLEX AND DOT BELOW"). This is technically
+   a bug, but cannot be fixed without creating backwards compatibility
+   problems. If this option is set to "2", then diacritics are correctly
+   removed from all Latin characters.
+
+</p><p>
   It is also possible to customize the set of codepoints that unicode61 treats
   as separator characters. The "separators=" option may be used to specify one
   or more extra characters that should be treated as separator characters, and

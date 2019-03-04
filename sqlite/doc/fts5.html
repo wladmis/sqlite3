@@ -401,7 +401,7 @@ one or more tokens. A string is transformed into a phrase by passing it to
 the FTS table tokenizer. Two phrases can be concatenated into a single 
 large phrase using the "+" operator. For example, assuming the tokenizer
 module being used tokenizes the input "one.two.three" to three separate
-tokens, the following three queries all specify the same phrase:
+tokens, the following four queries all specify the same phrase:
 
 </p><div class="codeblock"><pre>... MATCH '"one two three"'
 ... MATCH 'one + two + three'
@@ -763,16 +763,22 @@ following options:
 </p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
   <tr style="text-align:left"><th> Option </th><th> Usage
   </th></tr><tr style="text-align:left;background-color:#DDDDDD"><td> remove_diacritics
-  </td><td>This option should be set to "0" or "1". If it is set (the default),
-  diacritics are removed from all latin script characters as described above.
-  If it is clear, they are not. 
+  </td><td>This option should be set to "0", "1" or "2". The default value is "1".
+  If it is set to "1" or "2", then diacritics are removed from Latin script
+  characters as described above. However, if it is set to "1", then diacritics
+  are not removed in the fairly uncommon case where a single unicode codepoint
+  is used to represent a character with more that one diacritic. For example,
+  diacritics are not removed from codepoint 0x1ED9 ("LATIN SMALL LETTER O WITH
+  CIRCUMFLEX AND DOT BELOW"). This is technically a bug, but cannot be fixed
+  without creating backwards compatibility problems. If this option is set to
+  "2", then diacritics are correctly removed from all Latin characters.
 
   </td></tr><tr style="text-align:left"><td> categories
   </td><td>This option may be used to modify the set of Unicode general categories
   that are considered to correspond to token characters. The argument must
   consist of a space separated list of two-character general category
   abbreviations (e.g. "Lu" or "Nd"), or of the same with the second character
-  replaced with an asterix ("*"), interpreted as a glob pattern. The default
+  replaced with an asterisk ("*"), interpreted as a glob pattern. The default
   value is "L* N* Co".
 
   </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td> tokenchars

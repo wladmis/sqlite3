@@ -105,6 +105,19 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_27_2"></a>
+<h3>2019-02-25 (3.27.2)</h3><p><ol class='lessindent'>
+<li> Fix a bug in the IN operator that was introduced by an 
+     attempted optimization in version 3.27.0. Ticket
+     <a href="https://www.sqlite.org/src/info/df46dfb631f75694">df46dfb631f75694</a>
+<li> Fix a bug causing a crash when a <a href="windowfunctions.html">window function</a> is misused.  Ticket
+     <a href="https://www.sqlite.org/src/info/4feb3159c6bc3f7e33959">4feb3159c6bc3f7e33959</a>.
+<li> Fix various documentation typos
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: bd49a8271d650fa89e446b42e513b595a717b9212c91dd384aab871fc1d0f6d7
+<li>SHA3-256 for sqlite3.c: 1dbae33bff261f979d0042338f72c9e734b11a80720fb32498bae9150cc576e7
+
+</ol></p>
 <a name="version_3_27_1"></a>
 <h3>2019-02-08 (3.27.1)</h3><p><ol class='lessindent'>
 <li> Fix a bug in the query optimizer: an adverse interaction between
@@ -162,7 +175,6 @@ of the SQLite library itself:
 <li> Add options "--expanded", "--normalized", "--plain", "--profile", "--row",
      "--stmt", and "--close" to the ".trace" command.
 </ol>
-<li> Omit deprecated PRAGMA statements when compiling with <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
 <li> Increased robustness against malicious SQL that is run against a 
      maliciously corrupted database.
  <p><b>Bug fixes:</b>
@@ -1349,13 +1361,6 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.4.1 (2014-03-11):</b></p>
-
-<li>Work around a C-preprocessor macro conflict that breaks the build for some
-    configurations with Microsoft Visual Studio.
-<li>When computing the cost of the <a href="optoverview.html#skipscan">skip-scan optimization</a>, take into account the
-    fact that multiple seeks are required.
-
 <p><b>Bug fixes backported into patch release 3.8.4 (2014-03-10):</b></p>
 
 <li>Code optimization and refactoring for improved performance.
@@ -1394,6 +1399,14 @@ with a home-baked pie.</center>
     "DEFAULT(-(-9223372036854775808))" so that they work correctly, initializing
     the column to a floating point value approximately equal to
     +9223372036854775808.0.
+
+<p><b>Bug fixes backported into patch release 3.8.3.1 (2014-02-11):</b></p>
+
+<li>Fix a bug (ticket <a href="http://www.sqlite.org/src/info/4c86b126f2">4c86b126f2</a>)
+    that causes rows to go missing on some queries with OR clauses and
+    IS NOT NULL operators in the WHERE clause, when the <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>
+    or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> compile-time options are used.
+<li>Fix a harmless compiler warning that was causing problems for VS2013.
 
 </ol></p>
 <a name="version_3_12_2"></a>

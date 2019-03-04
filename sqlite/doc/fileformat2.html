@@ -339,7 +339,7 @@ size of 65536 bytes is supported.  The value 65536 will not fit in a
 two-byte integer, so to specify a 65536-byte page size, the value
 at offset 16 is 0x00 0x01.
 This value can be interpreted as a big-endian
-1 and thought of is as a magic number to represent the 65536 page size.
+1 and thought of as a magic number to represent the 65536 page size.
 Or one can view the two-byte field as a little endian number and say
 that it represents the page size divided by 256.  These two 
 interpretations of the page-size field are equivalent.</p>
@@ -370,7 +370,7 @@ This value is usually 0.  The value can be odd.</p>
 
 <a name="usable_size"></a>
 
-<p>The "usable size" of a database page is the page size specify by the
+<p>The "usable size" of a database page is the page size specified by the
 2-byte integer at offset 16 in the header less the "reserved" space size
 recorded in the 1-byte integer at offset 20 in the header.  The usable
 size of a page might be an odd number.  However, the usable size is not
@@ -604,7 +604,7 @@ is deleted from the database.  Unused pages are stored on the freelist
 and are reused when additional pages are required.</p>
 
 <p>The freelist is organized as a linked list of freelist trunk pages
-with each trunk pages containing page numbers for zero or more freelist
+with each trunk page containing page numbers for zero or more freelist
 leaf pages.</p>
 
 <p>A freelist trunk page consists of an array of 4-byte big-endian integers.
@@ -851,7 +851,7 @@ with the high-order bit clear, or nine bytes, whichever is shorter.
 The lower seven bits of each of the first eight bytes and all 8 bits of
 the ninth byte are used to reconstruct the 64-bit twos-complement integer.
 Varints are big-endian: bits taken from the earlier byte of the varint
-are the more significant than bits taken from the later bytes. </p>
+are more significant than bits taken from the later bytes. </p>
 
 <p>The format of a cell depends on which kind of b-tree page the cell
 appears on.  The following table shows the elements of a cell, in
@@ -2036,7 +2036,7 @@ old frames in the WAL that have already been checkpointed but not yet
 overwritten, and prevent them from being checkpointed again.</p>
 
 <p>The WAL file can optionally be truncated on a reset, but it need not be.
-Performance is usually a little better if the WAL is not truncate, since
+Performance is usually a little better if the WAL is not truncated, since
 filesystems generally will overwrite an existing file faster than they
 will grow a file.
 

@@ -392,6 +392,30 @@ not be unloaded (xDlClose will not be invoked) and the extension will remain
 in process memory indefinitely.  The SQLITE_OK_LOAD_PERMANENTLY return
 value is useful for extensions that want to register new <a href="vfs.html">VFSes</a>.
 
+</p><p>To clarify: an extension for which the initialization function returns
+SQLITE_OK_LOAD_PERMANENTLY continues to exist in memory after the database
+connection closes.  However, the extension is <em>not</em> automatically
+registered with subsequent database connections.  This makes it possible
+to load extensions that implement new <a href="vfs.html">VFSes</a>.
+To persistently load and register an extension that implements new SQL
+functions, collating sequences, and/or virtual tables, such that those
+added capabilities are available to all subsequent database connections,
+then the initialization routine should also invoke <a href="c3ref/auto_extension.html">sqlite3_auto_extension()</a>
+on a subfunction that will register those services.
+
+</p><p>The <a href="https://sqlite.org/src/file/ext/misc/vfsstat.c">vfsstat.c</a> extension
+show an example of a loadable extension that persistently registers both
+a new VFS and a new virtual table.  The
+<a href="https://sqlite.org/src/info/77b5b4235c9f7f11?ln=801-819">sqlite3_vfsstat_init()</a>
+initialization routine in that extension is called only once, when the
+extension is first loaded.  It registers the new "vfslog" VFS just that
+one time, and it returns SQLITE_OK_LOAD_PERMANENTLY so that the code used
+to implement the "vfslog" VFS will remain in memory. The initialization routine
+also invokes <a href="c3ref/auto_extension.html">sqlite3_auto_extension()</a> on a pointer to the "vstatRegister()"
+function so that all subsequent database connections will invoke the
+"vstatRegister()" function as they start up, and hence register the
+"vfsstat" virtual table.  
+
 </p><h1 id="statically_linking_a_run_time_loadable_extension"><span>6. </span>Statically Linking A Run-Time Loadable Extension</h1>
 
 <p>The exact same source code can be used for both a run-time loadable
@@ -420,7 +444,7 @@ is opened.  You only have to register each extension once, and you can
 do so near the beginning of your main() routine.  Using the
 <a href="c3ref/auto_extension.html">sqlite3_auto_extension()</a> interface to register your extensions makes
 your extensions work as if they were built into the core SQLite - they
-are automatically there whenever you open a new database connection
+automatically exist whenever you open a new database connection
 without needing to be initialized.  Just be sure to complete any
 configuration you need to accomplish using <a href="c3ref/config.html">sqlite3_config()</a> before
 registering your extensions, since the <a href="c3ref/auto_extension.html">sqlite3_auto_extension()</a>

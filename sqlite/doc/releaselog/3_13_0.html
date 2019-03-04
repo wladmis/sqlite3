@@ -129,13 +129,6 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.4.1 (2014-03-11):</b></p>
-
-<li>Work around a C-preprocessor macro conflict that breaks the build for some
-    configurations with Microsoft Visual Studio.
-<li>When computing the cost of the <a href="../optoverview.html#skipscan">skip-scan optimization</a>, take into account the
-    fact that multiple seeks are required.
-
 <p><b>Bug fixes backported into patch release 3.8.4 (2014-03-10):</b></p>
 
 <li>Code optimization and refactoring for improved performance.
@@ -174,6 +167,14 @@ return false;
     "DEFAULT(-(-9223372036854775808))" so that they work correctly, initializing
     the column to a floating point value approximately equal to
     +9223372036854775808.0.
+
+<p><b>Bug fixes backported into patch release 3.8.3.1 (2014-02-11):</b></p>
+
+<li>Fix a bug (ticket <a href="http://www.sqlite.org/src/info/4c86b126f2">4c86b126f2</a>)
+    that causes rows to go missing on some queries with OR clauses and
+    IS NOT NULL operators in the WHERE clause, when the <a href="../compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>
+    or <a href="../compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> compile-time options are used.
+<li>Fix a harmless compiler warning that was causing problems for VS2013.
 
 </ol></p>
 

@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.27.1 check-in
-<a href='https://www.sqlite.org/src/timeline?c=0eca3dd3d38b3'>0eca3dd3d38b3</a> dated 2019-02-08.
+ version 3.27.2 check-in
+<a href='https://www.sqlite.org/src/timeline?c=bd49a8271d650'>bd49a8271d650</a> dated 2019-02-25.
 
 
 
@@ -417,20 +417,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 171
+<p>There are currently 170
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/b7b6f965153607072917dbd81d654a268abf4872c58d556701d1549550766c02">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/2c61090f2328ad125c8e55b4dab0712a78cfdfac893152fae34bed7e015b7cd7">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.27.1 check-in
-<a href='https://www.sqlite.org/src/timeline?c=0eca3dd3d38b3'>0eca3dd3d38b3</a> dated 2019-02-08.
+ version 3.27.2 check-in
+<a href='https://www.sqlite.org/src/timeline?c=bd49a8271d650'>bd49a8271d650</a> dated 2019-02-25.
 
 <a name="codes"></a>
 
@@ -1194,10 +1194,6 @@ cause any problems.)</p>
 
 <p>This instruction only works on tables.  The equivalent instruction
 for indices is <a href="opcode.html#IdxInsert">IdxInsert</a>.</td></tr>
-<tr><td valign="top" align="center">
-<a name="InsertInt"></a>InsertInt
-<td>This works exactly like <a href="opcode.html#Insert">Insert</a> except that the key is the
-integer value P3, not the value of the integer stored in register P3.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Int64"></a>Int64
 <td>P4 is a pointer to a 64-bit integer value.

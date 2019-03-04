@@ -97,9 +97,17 @@ return false;
 
 <a name="2019_02_08"></a><h3>2019-02-08 - Release 3.27.1</h3><blockquote>
 After release 3.27.0 was tagged, but before the build could
-be completed and uploaded, a long standing bug in the query
-optimizer was reported via System.Data.SQLite.  The 3.27.1
-release is merely the 3.27.0 release with that one bug fix.
+be completed and uploaded, a 
+<a href="https://www.sqlite.org/src/info/4e8e4857d32d401f">long-standing bug</a>
+in the query optimizer was reported via System.Data.SQLite.
+Since people will be upgrading anyhow, we decided 
+publish the fix for this newly discovered problems right
+away.  Hence, 3.27.1 was released less than 24 hours after
+3.27.0.
+<p>
+It would have been better if the query optimizer bug had come to
+our attention one day earlier, so that we could have incorporated
+a fix into 3.27.0, but sometimes that's the way things go.
 </blockquote><hr width="50%"><a name="2019_02_07"></a><h3>2019-02-07 - Release 3.27.0</h3><blockquote>
 SQLite <a href="releaselog/3_27_0.html">version 3.27.0</a> is a routine maintenance release with various
 performance and feature enhancements.  See the
