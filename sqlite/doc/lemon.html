@@ -190,9 +190,6 @@ improvements, including:
 A grammar file (<a href="https://sqlite.org/src/file/src/parse.y">parse.y</a>) is
 compiled by Lemon into parse.c and parse.h.  The parse.c file is
 incorporated into the <a href="amalgamation.html">amalgamation</a> without further modification.
-The parse.h file is post-processed by the
-<a href="https://sqlite.org/src/file/tool/addopcodes.tcl">addopcodes.tcl</a> script
-before being incorporated into the <a href="amalgamation.html">amalgamation</a>.
 
 </p><p>Lemon is also used to generate parse for the query pattern
 expressions in the <a href="fts5.html">FTS5</a> extension.  In this case, the input grammar

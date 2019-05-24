@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_nochange sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type -->
+<!-- keywords: sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_frombind sqlite3_value_int sqlite3_value_int64 sqlite3_value_nochange sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Obtaining SQL Values</h2>
@@ -111,6 +111,7 @@ int sqlite3_value_bytes16(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
 int sqlite3_value_nochange(sqlite3_value*);
+int sqlite3_value_frombind(sqlite3_value*);
 </pre></blockquote>
 <p>
 <b>Summary:</b>
@@ -138,6 +139,8 @@ datatype of the value
 <tr><td><b>sqlite3_value_nochange&nbsp;&nbsp;</b>
 <td>&rarr;&nbsp;&nbsp;<td>True if the column is unchanged in an UPDATE
 against a virtual table.
+<tr><td><b>sqlite3_value_frombind&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>True if value originated from a <a href="../lang_expr.html#varparam">bound parameter</a>
 </table></blockquote></p>
 
 <p><b>Details:</b></p>
@@ -198,6 +201,11 @@ sqlite3_value_nochange(X) is true will in all other respects appear
 to be a NULL value.  If sqlite3_value_nochange(X) is invoked anywhere other
 than within an <a href="../vtab.html#xupdate">xUpdate</a> method call for an UPDATE statement, then
 the return value is arbitrary and meaningless.</p>
+
+<p>The sqlite3_value_frombind(X) interface returns non-zero if the
+value X originated from one of the <a href="../c3ref/bind_blob.html">sqlite3_bind()</a>
+interfaces.  If X comes from an SQL literal value, or a table column,
+and expression, then sqlite3_value_frombind(X) returns zero.</p>
 
 <p>Please pay particular attention to the fact that the pointer returned
 from <a href="../c3ref/value_blob.html">sqlite3_value_blob()</a>, <a href="../c3ref/value_blob.html">sqlite3_value_text()</a>, or

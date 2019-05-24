@@ -181,6 +181,7 @@ return false;
 <li><a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfignockptonclose">c3ref/c_dbconfig_defensive.html#sqlitedbconfignockptonclose</a> &rarr; SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</li>
 <li><a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigresetdatabase">c3ref/c_dbconfig_defensive.html#sqlitedbconfigresetdatabase</a> &rarr; SQLITE_DBCONFIG_RESET_DATABASE</li>
 <li><a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigtriggereqp">c3ref/c_dbconfig_defensive.html#sqlitedbconfigtriggereqp</a> &rarr; SQLITE_DBCONFIG_TRIGGER_EQP</li>
+<li><a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigwritableschema">c3ref/c_dbconfig_defensive.html#sqlitedbconfigwritableschema</a> &rarr; SQLITE_DBCONFIG_WRITABLE_SCHEMA</li>
 <li><a href="c3ref/c_dbstatus_options.html">c3ref/c_dbstatus_options.html</a> &rarr; {SQLITE_DBSTATUS options} SQLITE_DBSTATUS_MAX</li>
 <li><a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit">c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit</a> &rarr; SQLITE_DBSTATUS_CACHE_HIT</li>
 <li><a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss">c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss</a> &rarr; SQLITE_DBSTATUS_CACHE_MISS</li>
@@ -405,6 +406,7 @@ return false;
 <li><a href="c3ref/step.html">c3ref/step.html</a> &rarr; sqlite3_step</li>
 <li><a href="c3ref/stmt.html">c3ref/stmt.html</a> &rarr; {prepared statement} {prepared statements} sqlite3_stmt</li>
 <li><a href="c3ref/stmt_busy.html">c3ref/stmt_busy.html</a> &rarr; sqlite3_stmt_busy</li>
+<li><a href="c3ref/stmt_isexplain.html">c3ref/stmt_isexplain.html</a> &rarr; sqlite3_stmt_isexplain</li>
 <li><a href="c3ref/stmt_readonly.html">c3ref/stmt_readonly.html</a> &rarr; sqlite3_stmt_readonly</li>
 <li><a href="c3ref/stmt_scanstatus.html">c3ref/stmt_scanstatus.html</a> &rarr; sqlite3_stmt_scanstatus</li>
 <li><a href="c3ref/stmt_scanstatus_reset.html">c3ref/stmt_scanstatus_reset.html</a> &rarr; sqlite3_stmt_scanstatus_reset</li>
@@ -429,7 +431,7 @@ return false;
 <li><a href="c3ref/uri_boolean.html">c3ref/uri_boolean.html</a> &rarr; sqlite3_uri_boolean sqlite3_uri_int64 sqlite3_uri_parameter</li>
 <li><a href="c3ref/user_data.html">c3ref/user_data.html</a> &rarr; sqlite3_user_data</li>
 <li><a href="c3ref/value.html">c3ref/value.html</a> &rarr; {protected sqlite3_value} sqlite3_value {unprotected sqlite3_value}</li>
-<li><a href="c3ref/value_blob.html">c3ref/value_blob.html</a> &rarr; sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_nochange sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type</li>
+<li><a href="c3ref/value_blob.html">c3ref/value_blob.html</a> &rarr; sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_frombind sqlite3_value_int sqlite3_value_int64 sqlite3_value_nochange sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type</li>
 <li><a href="c3ref/value_dup.html">c3ref/value_dup.html</a> &rarr; sqlite3_value_dup sqlite3_value_free</li>
 <li><a href="c3ref/value_subtype.html">c3ref/value_subtype.html</a> &rarr; sqlite3_value_subtype</li>
 <li><a href="c3ref/vfs.html">c3ref/vfs.html</a> &rarr; sqlite3_vfs</li>
@@ -452,6 +454,7 @@ return false;
 <li><a href="chronology.html">chronology.html</a> &rarr; chronology {prior releases}</li>
 <li><a href="cintro.html">cintro.html</a> &rarr; cintro</li>
 <li><a href="cli.html">cli.html</a> &rarr; CLI {Command Line Interface} {command-line interface} {command-line shell} sqlite3.exe {sqlite3.exe command-line shell}</li>
+<li><a href="cli.html#arinsup">cli.html#arinsup</a> &rarr; {--insert option} {--update option}</li>
 <li><a href="cli.html#csv">cli.html#csv</a> &rarr; .import {CSV import}</li>
 <li><a href="cli.html#csvout">cli.html#csvout</a> &rarr; {CSV export}</li>
 <li><a href="cli.html#dotcmd">cli.html#dotcmd</a> &rarr; dot-commands</li>
@@ -463,6 +466,7 @@ return false;
 <li><a href="cli.html#expert">cli.html#expert</a> &rarr; {.expert command}</li>
 <li><a href="cli.html#fileio">cli.html#fileio</a> &rarr; {file I/O functions}</li>
 <li><a href="cli.html#fullschema">cli.html#fullschema</a> &rarr; .fullschema {the .fullschema dot-command}</li>
+<li><a href="cli.html#param">cli.html#param</a> &rarr; {.parameter command}</li>
 <li><a href="cli.html#selftest">cli.html#selftest</a> &rarr; {.selftest dot-command}</li>
 <li><a href="cli.html#sha3sum">cli.html#sha3sum</a> &rarr; {.sha3sum dot-command}</li>
 <li><a href="cli.html#sqlar">cli.html#sqlar</a> &rarr; {.archive command}</li>
@@ -548,6 +552,7 @@ return false;
 <li><a href="compile.html#fts3_max_expr_depth">compile.html#fts3_max_expr_depth</a> &rarr; -DSQLITE_FTS3_MAX_EXPR_DEPTH SQLITE_FTS3_MAX_EXPR_DEPTH</li>
 <li><a href="compile.html#gmtime_r">compile.html#gmtime_r</a> &rarr; -DHAVE_GMTIME_R HAVE_GMTIME_R</li>
 <li><a href="compile.html#have_isnan">compile.html#have_isnan</a> &rarr; -DSQLITE_HAVE_ISNAN SQLITE_HAVE_ISNAN</li>
+<li><a href="compile.html#have_zlib">compile.html#have_zlib</a> &rarr; -DSQLITE_HAVE_ZLIB SQLITE_HAVE_ZLIB</li>
 <li><a href="compile.html#introspection_pragmas">compile.html#introspection_pragmas</a> &rarr; -DSQLITE_INTROSPECTION_PRAGMAS SQLITE_INTROSPECTION_PRAGMAS</li>
 <li><a href="compile.html#isnan">compile.html#isnan</a> &rarr; -DHAVE_ISNAN HAVE_ISNAN</li>
 <li><a href="compile.html#like_doesnt_match_blobs">compile.html#like_doesnt_match_blobs</a> &rarr; -DSQLITE_LIKE_DOESNT_MATCH_BLOBS SQLITE_LIKE_DOESNT_MATCH_BLOBS</li>
@@ -641,7 +646,6 @@ return false;
 <li><a href="compile.html#use_alloca">compile.html#use_alloca</a> &rarr; -DSQLITE_USE_ALLOCA SQLITE_USE_ALLOCA</li>
 <li><a href="compile.html#use_fcntl_trace">compile.html#use_fcntl_trace</a> &rarr; -DSQLITE_USE_FCNTL_TRACE SQLITE_USE_FCNTL_TRACE</li>
 <li><a href="compile.html#use_uri">compile.html#use_uri</a> &rarr; -DSQLITE_USE_URI SQLITE_USE_URI</li>
-<li><a href="compile.html#use_zlib">compile.html#use_zlib</a> &rarr; -DSQLITE_USE_ZLIB SQLITE_USE_ZLIB</li>
 <li><a href="compile.html#usleep">compile.html#usleep</a> &rarr; -DHAVE_USLEEP HAVE_USLEEP</li>
 <li><a href="compile.html#utime">compile.html#utime</a> &rarr; -DHAVE_UTIME HAVE_UTIME</li>
 <li><a href="compile.html#win32_heap_create">compile.html#win32_heap_create</a> &rarr; -DSQLITE_WIN32_HEAP_CREATE SQLITE_WIN32_HEAP_CREATE</li>
@@ -874,6 +878,7 @@ return false;
 <li><a href="json1.html#jvalid">json1.html#jvalid</a> &rarr; json_valid {json_valid SQL function}</li>
 <li><a href="keyword_index.html">keyword_index.html</a> &rarr; {keyword index}</li>
 <li><a href="lang_UPSERT.html">lang_UPSERT.html</a> &rarr; UPSERT upsert {upsert clause}</li>
+<li><a href="lang_UPSERT.html#parseambig">lang_UPSERT.html#parseambig</a> &rarr; {UPSERT parsing ambiguity}</li>
 <li><a href="lang_aggfunc.html">lang_aggfunc.html</a> &rarr; {Aggregate Functions} aggfunc</li>
 <li><a href="lang_aggfunc.html#avg">lang_aggfunc.html#avg</a> &rarr; avg {avg aggregate function}</li>
 <li><a href="lang_aggfunc.html#count">lang_aggfunc.html#count</a> &rarr; count {count aggregate function}</li>
@@ -1237,6 +1242,7 @@ return false;
 <li><a href="releaselog/3_27_0.html">releaselog/3_27_0.html</a> &rarr; {Version 3.27.0} {version 3.27.0}</li>
 <li><a href="releaselog/3_27_1.html">releaselog/3_27_1.html</a> &rarr; {Version 3.27.1} {version 3.27.1}</li>
 <li><a href="releaselog/3_27_2.html">releaselog/3_27_2.html</a> &rarr; {Version 3.27.2} {version 3.27.2}</li>
+<li><a href="releaselog/3_28_0.html">releaselog/3_28_0.html</a> &rarr; {Version 3.28.0} {version 3.28.0}</li>
 <li><a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a> &rarr; {Version 3.2.0} {version 3.2.0}</li>
 <li><a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a> &rarr; {Version 3.2.1} {version 3.2.1}</li>
 <li><a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a> &rarr; {Version 3.2.2} {version 3.2.2}</li>
@@ -1615,6 +1621,7 @@ return false;
 <li><a href="tclsqlite.html">tclsqlite.html</a> &rarr; {TCL Interface} {Tcl extension}</li>
 <li><a href="tclsqlite.html#authorizer">tclsqlite.html#authorizer</a> &rarr; {TCL interface authorizer method} {authorizer method}</li>
 <li><a href="tclsqlite.html#backup">tclsqlite.html#backup</a> &rarr; {TCL interface backup method} {backup method}</li>
+<li><a href="tclsqlite.html#bind_fallback">tclsqlite.html#bind_fallback</a> &rarr; {TCL interface bind_fallback method} {bind_fallback method}</li>
 <li><a href="tclsqlite.html#busy">tclsqlite.html#busy</a> &rarr; {TCL interface busy method} {busy method}</li>
 <li><a href="tclsqlite.html#cache">tclsqlite.html#cache</a> &rarr; {TCL interface cache method} {cache method}</li>
 <li><a href="tclsqlite.html#changes">tclsqlite.html#changes</a> &rarr; {TCL interface changes method} {changes method}</li>
@@ -1738,9 +1745,19 @@ return false;
 <li><a href="whentouse.html#website">whentouse.html#website</a> &rarr; {using SQLite for websites}</li>
 <li><a href="whentouse.html#wireproto">whentouse.html#wireproto</a> &rarr; {data transfer format}</li>
 <li><a href="windowfunctions.html">windowfunctions.html</a> &rarr; {window function} {window functions}</li>
-<li><a href="windowfunctions.html#aggregate_window_functions">windowfunctions.html#aggregate_window_functions</a> &rarr; {aggregate window functions}</li>
+<li><a href="windowfunctions.html#aggwinfunc">windowfunctions.html#aggwinfunc</a> &rarr; {aggregate window functions}</li>
 <li><a href="windowfunctions.html#biwinfunc">windowfunctions.html#biwinfunc</a> &rarr; {builtin window functions}</li>
-<li><a href="windowfunctions.html#user_defined_aggregate_window_functions">windowfunctions.html#user_defined_aggregate_window_functions</a> &rarr; {user-defined window functions}</li>
+<li><a href="windowfunctions.html#builtins">windowfunctions.html#builtins</a> &rarr; {built-in window functions} built-ins</li>
+<li><a href="windowfunctions.html#exprrange">windowfunctions.html#exprrange</a> &rarr; {RANGE n FOLLOWING} {RANGE n PRECEDING}</li>
+<li><a href="windowfunctions.html#frameboundary">windowfunctions.html#frameboundary</a> &rarr; {frame boundary}</li>
+<li><a href="windowfunctions.html#framespec">windowfunctions.html#framespec</a> &rarr; {frame specification} frames</li>
+<li><a href="windowfunctions.html#frametype">windowfunctions.html#frametype</a> &rarr; {frame type}</li>
+<li><a href="windowfunctions.html#grouptype">windowfunctions.html#grouptype</a> &rarr; {GROUPS frames}</li>
+<li><a href="windowfunctions.html#ptxn">windowfunctions.html#ptxn</a> &rarr; partition</li>
+<li><a href="windowfunctions.html#rangetype">windowfunctions.html#rangetype</a> &rarr; {RANGE frames}</li>
+<li><a href="windowfunctions.html#udfwinfunc">windowfunctions.html#udfwinfunc</a> &rarr; {application-defined window functions} {user-defined window functions}</li>
+<li><a href="windowfunctions.html#wchaining">windowfunctions.html#wchaining</a> &rarr; {window chaining}</li>
+<li><a href="windowfunctions.html#wexcls">windowfunctions.html#wexcls</a> &rarr; {EXCLUDE clause} {exclude clause}</li>
 <li><a href="withoutrowid.html">withoutrowid.html</a> &rarr; {Clustered indexes} {WITHOUT ROWID} {WITHOUT rowid}</li>
 <li><a href="withoutrowid.html#bene">withoutrowid.html#bene</a> &rarr; {benefits of using WITHOUT ROWID}</li>
 <li><a href="withoutrowid.html#wtu">withoutrowid.html#wtu</a> &rarr; {when to use WITHOUT ROWID}</li>

@@ -121,15 +121,16 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#_sqlite_archive_create_command_">14.1.  SQLite Archive Create Command </a></div>
 <div class="fancy-toc2"><a href="#_sqlite_archive_extract_command_">14.2.  SQLite Archive Extract Command </a></div>
 <div class="fancy-toc2"><a href="#_sqlite_archive_list_command_">14.3.  SQLite Archive List Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlite_archive_update_command_">14.4.  SQLite Archive Update Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_insert_and_update_commands_">14.4.  SQLite Archive Insert And Update Commands </a></div>
 <div class="fancy-toc2"><a href="#_operations_on_zip_archives_">14.5.  Operations On ZIP Archives </a></div>
 <div class="fancy-toc2"><a href="#_sql_used_to_implement_sqlite_archive_operations_">14.6.  SQL Used To Implement SQLite Archive Operations </a></div>
-<div class="fancy-toc1"><a href="#index_recommendations_sqlite_expert_">15. Index Recommendations (SQLite Expert)</a></div>
-<div class="fancy-toc1"><a href="#other_dot_commands">16. Other Dot Commands</a></div>
-<div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">17. Using sqlite3 in a shell script</a></div>
-<div class="fancy-toc1"><a href="#ending_shell_commands">18. Ending shell commands</a></div>
-<div class="fancy-toc1"><a href="#compiling_the_sqlite3_program_from_sources">19. Compiling the sqlite3 program from sources</a></div>
-<div class="fancy-toc2"><a href="#_do_it_yourself_builds_">19.1.  Do-It-Yourself Builds </a></div>
+<div class="fancy-toc1"><a href="#sql_parameters">15. SQL Parameters</a></div>
+<div class="fancy-toc1"><a href="#index_recommendations_sqlite_expert_">16. Index Recommendations (SQLite Expert)</a></div>
+<div class="fancy-toc1"><a href="#other_dot_commands">17. Other Dot Commands</a></div>
+<div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">18. Using sqlite3 in a shell script</a></div>
+<div class="fancy-toc1"><a href="#ending_shell_commands">19. Ending shell commands</a></div>
+<div class="fancy-toc1"><a href="#compiling_the_sqlite3_program_from_sources">20. Compiling the sqlite3 program from sources</a></div>
+<div class="fancy-toc2"><a href="#_do_it_yourself_builds_">20.1.  Do-It-Yourself Builds </a></div>
 </div>
 </div>
 <script>
@@ -176,7 +177,7 @@ by a semicolon), press "Enter" and the SQL will be executed.</p>
 with a single table named "tbl1", you might do this:</p>
 
 <div class="codeblock"><pre>$ <b>sqlite3 ex1</b>
-SQLite version 3.8.5 2014-05-29 12:36:14
+SQLite version 3.28.0 2019-03-02 15:25:24
 Enter ".help" for usage hints.
 sqlite&gt; <b>create table tbl1(one varchar(10), two smallint);</b>
 sqlite&gt; <b>insert into tbl1 values('hello!',10);</b>
@@ -219,7 +220,7 @@ database that is deleted when the session exits.
 To use a persistent disk file as the database, enter the ".open" command
 immediately after the terminal window starts up:
 
-</p><div class="codeblock"><pre>SQLite version 3.8.5 2014-05-29 12:36:14
+</p><div class="codeblock"><pre>SQLite version 3.28.0 2019-03-02 15:25:24
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
@@ -237,7 +238,7 @@ In other words use "c:/work/ex1.db", not "c:\work\ex1.db".</p>
 <p>Alternatively, you can create a new database using the default temporary
 storage, then save that database into a disk file using the ".save" command:
 
-</p><div class="codeblock"><pre>SQLite version 3.16.0 2016-12-29 19:48:46
+</p><div class="codeblock"><pre>SQLite version 3.28.0 2019-03-02 15:25:24
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
@@ -262,6 +263,8 @@ But input lines that begin with a dot (".")
 are intercepted and interpreted by the sqlite3 program itself.
 These "dot commands" are typically used to change the output format
 of queries, or to execute certain prepackaged query statements.
+There were originally just a few dot commands, but over the years
+many new features have accumulated so that today there over 60.
 </p>
 
 <p>
@@ -285,7 +288,7 @@ The list of available dot-commands follows:
 .dbinfo ?DB?             Show status information about the database
 .dump ?TABLE? ...        Render all database content as SQL
 .echo on|off             Turn command echo on or off
-.eqp on|off|full         Enable or disable automatic EXPLAIN QUERY PLAN
+.eqp on|off|full|...     Enable or disable automatic EXPLAIN QUERY PLAN
 .excel                   Display the output of next command in a spreadsheet
 .exit ?CODE?             Exit this program with return-code CODE
 .expert                  EXPERIMENTAL. Suggest indexes for specified queries
@@ -305,7 +308,9 @@ The list of available dot-commands follows:
 .once (-e|-x|FILE)       Output for the next SQL command only to FILE
 .open ?OPTIONS? ?FILE?   Close existing database and reopen FILE
 .output ?FILE?           Send output to FILE or stdout if FILE is omitted
+.parameter CMD ...       Manage SQL parameter bindings
 .print STRING...         Print literal STRING
+.progress N              Invoke progress handler after every N opcodes
 .prompt MAIN CONTINUE    Replace the standard prompts
 .quit                    Exit this program
 .read FILE               Read input from FILE
@@ -325,7 +330,7 @@ The list of available dot-commands follows:
 .testcase NAME           Begin redirecting output to 'testcase-out.txt'
 .timeout MS              Try opening locked tables for MS milliseconds
 .timer on|off            Turn SQL timer on or off
-.trace FILE|off          Output each SQL statement as it is run
+.trace ?OPTIONS?         Output each SQL statement as it is run
 .vfsinfo ?AUX?           Information about the top-level VFS
 .vfslist                 List all available VFSes
 .vfsname ?AUX?           Print the name of the VFS stack
@@ -972,8 +977,9 @@ are available for ".archive":
   <tr style="text-align:left"><th style="width:15ex">Option</th><th style="width:17ex">Long&nbsp;Option</th><th>Purpose
   </th></tr><tr style="text-align:left;background-color:#DDDDDD"><td>-c</td><td>--create</td><td>Create a new archive containing specified files.
   </td></tr><tr style="text-align:left"><td>-x</td><td>--extract</td><td>Extract specified files from archive.
-  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>-t</td><td>--list</td><td>List the files in the archive.
-  </td></tr><tr style="text-align:left"><td>-u</td><td>--update</td><td>Add files to existing archive.
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>-i</td><td>--insert</td><td>Add files to existing archive.
+  </td></tr><tr style="text-align:left"><td>-t</td><td>--list</td><td>List the files in the archive.
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>-u</td><td>--update</td><td>Add files to existing archive <em>if</em> they have changed.
 </td></tr></table>
 
 <p>As well as the command option, each invocation of ".ar" may specify
@@ -1063,13 +1069,23 @@ change in the future.
 .ar --list
 </pre></div>
 
-<h2 id="_sqlite_archive_update_command_"><span>14.4. </span> SQLite Archive Update Command </h2>
+<a name="arinsup"></a>
 
-<p> This command works the same way as the --create command, except that 
-it does not delete the current archive before commencing. New versions of
+<h2 id="_sqlite_archive_insert_and_update_commands_"><span>14.4. </span> SQLite Archive Insert And Update Commands </h2>
+
+<p> The --update and --insert commands work like --create command, except that 
+they do not delete the current archive before commencing. New versions of
 files silently replace existing files with the same names, but otherwise
 the initial contents of the archive (if any) remain intact.
 
+</p><p> For the --insert command, all files listed are inserted into the archive.
+For the --update command, files are only inserted if they do not previously
+exist in the archive, or if their "mtime" or "mode" is different from what
+is currently in the archive.
+
+</p><p> Compatibility node:  Prior to SQLite version 3.28.0 (2019-04-16) only
+the --update option was supported but that option worked like --insert in that
+it always reinserted every file regardless of whether or not it had changed.
 
 </p><h2 id="_operations_on_zip_archives_"><span>14.5. </span> Operations On ZIP Archives </h2>
 
@@ -1132,9 +1148,54 @@ extension is only needed if the --append option to the .archive
 command is used.
 </p></li></ol>
 
+<a name="param"></a>
+
+<h1 id="sql_parameters"><span>15. </span>SQL Parameters</h1>
+
+<p>SQLite allows <a href="lang_expr.html#varparam">bound parameters</a> to appear in an SQL statement anywhere
+that a literal value is allowed.  The values for these parameters are set
+using the <a href="c3ref/bind_blob.html">sqlite3_bind_...()</a> family of APIs.
+
+</p><p>Parameters can be either named or unnamed.  An unnamed parameter is a single
+question mark ("?").  Named parameters are a "?" followed immediately by a number
+(ex: "?15" or "?123") or one of the characters "$", ":", or "@" followed by an
+alphanumeric name (ex: "$var1", ":xyz", "@bingo").
+
+</p><p>This command-line shell leaves unnamed parameters unbound, meaning that they
+will have a value of an SQL NULL, but named parameters might be assigned values.
+If there exists a TEMP table named "sqlite_parameters" with a schema like this:
+
+</p><div class="codeblock"><pre>CREATE TEMP TABLE sqlite_parameters(
+  key TEXT PRIMARY KEY,
+  value ANY
+) WITHOUT ROWID;
+</pre></div>
+
+<p>And if there is an entry in that table where the key column exactly matches
+the name of parameter (including the initial "?", "$", ":", or "@" character)
+then the parameter is assigned the value of the value column.  If no entry exists,
+the parameter defaults to NULL.
+
+</p><p>The ".parameter" command exists to simplify managing this table.  The
+".parameter init" command (often abbreviated as just ".param init") creates
+the temp.sqlite_parameters table if it does not already exist.  The ".param list"
+command shows all entries in the temp.sqlite_parameters table.  The ".param clear"
+command drops the temp.sqlite_parameters table.  The ".param set KEY VALUE" and
+".param unset KEY" commands create or delete entries from the 
+temp.sqlite_parameters table.
+
+</p><p>The temp.sqlite_parameters table only provides values for parameters in the
+command-line shell.  The temp.sqlite_parameter table has no affect on queries
+that are run directly using the SQLite C-language API.  Individual applications
+are expected to implement their own parameter binding.  You can search for 
+"sqlite_parameters" in the 
+<a href="https://sqlite.org/src/file/src/shell.c.in">command-line shell source code</a>
+to see how the command-line shell does parameter binding, and use that as
+a hint for how to implement it yourself.
+
 <a name="expert"></a>
 
-<h1 id="index_recommendations_sqlite_expert_"><span>15. </span>Index Recommendations (SQLite Expert)</h1>
+</p><h1 id="index_recommendations_sqlite_expert_"><span>16. </span>Index Recommendations (SQLite Expert)</h1>
 
 <p><b>Note: This command is experimental. It may be removed or the 
 interface modified in incompatible ways at some point in the future.
@@ -1207,7 +1268,7 @@ SQLite expert extension</a> code.
 
 <a name="dotother"></a>
 
-</p><h1 id="other_dot_commands"><span>16. </span>Other Dot Commands</h1>
+</p><h1 id="other_dot_commands"><span>17. </span>Other Dot Commands</h1>
 
 <p>There are many other dot-commands available in the command-line
 shell.  See the ".help" command for a complete list for any particular
@@ -1215,7 +1276,7 @@ version and build of SQLite.
 
 <a name="insh"></a>
 
-</p><h1 id="using_sqlite3_in_a_shell_script"><span>17. </span>Using sqlite3 in a shell script</h1>
+</p><h1 id="using_sqlite3_in_a_shell_script"><span>18. </span>Using sqlite3 in a shell script</h1>
 
 <p>
 One way to use sqlite3 in a shell script is to use "echo" or
@@ -1240,7 +1301,7 @@ $
 
 <a name="endsh"></a>
 
-<h1 id="ending_shell_commands"><span>18. </span>Ending shell commands</h1>
+<h1 id="ending_shell_commands"><span>19. </span>Ending shell commands</h1>
 
 <p>
 SQLite commands are normally terminated by a semicolon.  In the shell 
@@ -1253,7 +1314,7 @@ to that function.</p>
 
 <a name="compiling"></a>
 
-<h1 id="compiling_the_sqlite3_program_from_sources"><span>19. </span>Compiling the sqlite3 program from sources</h1>
+<h1 id="compiling_the_sqlite3_program_from_sources"><span>20. </span>Compiling the sqlite3 program from sources</h1>
 
 <p>
 To compile the command-line shell on unix systems and on Windows with MinGW,
@@ -1289,7 +1350,7 @@ of the source tree and compile this way:
 </p><div class="codeblock"><pre>nmake /f Makefile.msc USE_ZLIB=1
 </pre></div>
 
-<h2 id="_do_it_yourself_builds_"><span>19.1. </span> Do-It-Yourself Builds </h2>
+<h2 id="_do_it_yourself_builds_"><span>20.1. </span> Do-It-Yourself Builds </h2>
 
 <p>
 The source code to the sqlite3 command line interface is in a single
@@ -1311,7 +1372,7 @@ provide a full-featured command-line shell:
 </p><ul>
 <li> <a href="compile.html#threadsafe">-DSQLITE_THREADSAFE=0</a>
 </li><li> <a href="compile.html#enable_explain_comments">-DSQLITE_ENABLE_EXPLAIN_COMMENTS</a>
-</li><li> <a href="compile.html#use_zlib">-DSQLITE_USE_ZLIB</a>
+</li><li> <a href="compile.html#have_zlib">-DSQLITE_HAVE_ZLIB</a>
 </li><li> <a href="compile.html#introspection_pragmas">-DSQLITE_INTROSPECTION_PRAGMAS</a>
 </li><li> <a href="compile.html#enable_unknown_sql_function">-DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION</a>
 </li><li> <a href="compile.html#enable_stmtvtab">-DSQLITE_ENABLE_STMTVTAB</a>

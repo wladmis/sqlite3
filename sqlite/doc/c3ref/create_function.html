@@ -150,7 +150,7 @@ expected for the second parameter (the name of the function being
 created) and the presence or absence of a destructor callback for
 the application data pointer. Function sqlite3_create_window_function()
 is similar, but allows the user to supply the extra callback functions
-needed by <a href="../windowfunctions.html#aggregate_window_functions">aggregate window functions</a>.</p>
+needed by <a href="../windowfunctions.html#aggwinfunc">aggregate window functions</a>.</p>
 
 <p>The first parameter is the <a href="../c3ref/sqlite3.html">database connection</a> to which the SQL
 function is to be added.  If an application uses more than one database
@@ -214,7 +214,7 @@ which case a regular aggregate function is created, or must both be
 non-NULL, in which case the new function may be used as either an aggregate
 or aggregate window function. More details regarding the implementation
 of aggregate window functions are
-<a href="../windowfunctions.html#user_defined_aggregate_window_functions">available here</a>.</p>
+<a href="../windowfunctions.html#udfwinfunc">available here</a>.</p>
 
 <p>If the final parameter to sqlite3_create_function_v2() or
 sqlite3_create_window_function() is not NULL, then it is destructor for

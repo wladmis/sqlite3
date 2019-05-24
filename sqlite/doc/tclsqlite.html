@@ -193,7 +193,7 @@ Use an alternative <a href="vfs.html">VFS</a> named by the argument.
 <p>
 Once an SQLite database is open, it can be controlled using 
 methods of the <i>dbcmd</i>.
-There are currently 38 methods
+There are currently 39 methods
 defined.</p>
 
 
@@ -201,6 +201,7 @@ defined.</p>
 <tr><td valign='top'><ul>
 <li><a href="#authorizer">authorizer</a></li>
 <li><a href="#backup">backup</a></li>
+<li><a href="#bind_fallback">bind_fallback</a></li>
 <li><a href="#busy">busy</a></li>
 <li><a href="#cache">cache</a></li>
 <li><a href="#changes">changes</a></li>
@@ -211,9 +212,9 @@ defined.</p>
 <li><a href="#complete">complete</a></li>
 <li><a href="#copy">copy</a></li>
 <li><a href="#deserialize">deserialize</a></li>
-<li><a href="#enable_load_extension">enable_load_extension</a></li>
 </ul></td>
 <td valign='top'><ul>
+<li><a href="#enable_load_extension">enable_load_extension</a></li>
 <li><a href="#errorcode">errorcode</a></li>
 <li><a href="#eval">eval</a></li>
 <li><a href="#exists">exists</a></li>
@@ -226,9 +227,9 @@ defined.</p>
 <li><a href="#preupdate">preupdate</a></li>
 <li><a href="#profile">profile</a></li>
 <li><a href="#progress">progress</a></li>
-<li><a href="#restore">restore</a></li>
 </ul></td>
 <td valign='top'><ul>
+<li><a href="#restore">restore</a></li>
 <li><a href="#rollback_hook">rollback_hook</a></li>
 <li><a href="#serialize">serialize</a></li>
 <li><a href="#status">status</a></li>
@@ -684,6 +685,21 @@ uses this information to cache answers from function calls with
 constant inputs and reuse the result rather than invoke the function
 repeatedly.
 </dl>
+
+<dt><b>-returntype integer|real|text|blob|any</b>
+<dd><p>
+This option is used to configure the type of the result returned by the
+function.  If this option is set to "any" (the default), SQLite attempts to
+determine the type of each value returned by the function implementation based
+on the Tcl value's internal type. Or, if it is set to "text" or "blob", the
+returned value is always a text or blob value, respectively. If this option is
+set to "integer", SQLite attempts to coerce the value returned by the function
+to an integer. If this is not possible without data loss, it attempts to coerce
+it to a real value, and finally falls back to text. If this option is set to
+"real", an attempt is made to return a real value, falling back to text if this
+is not possible.
+
+</dl>
 </blockquote>
 <a name="nullvalue"></a>
 <h3>The "nullvalue" method</h3>
@@ -744,6 +760,42 @@ then the compilation fails with an error.
 
 <p>If the argument is an empty string then the authorizer is disabled.
 If the argument is omitted, then the current authorizer is returned.</p>
+<a name="bind_fallback"></a>
+<h3>The "bind_fallback" method</h3>
+
+
+<p>The "bind_fallback" method gives the application control over how to
+handle parameter binding when no TCL variable matches the parameter name.
+
+<p>When the <a href="#eval">eval method</a> sees a named SQL
+parameter such as "$abc" or ":def" or "@ghi" in an SQL statement, it tries
+to look up a TCL variable with the same name, and it binds the value
+of that TCL variable to the SQL parameter.  If no such TCL variable exists,
+the default behavior is to bind an SQL NULL value to the parameter.  However,
+if a bind_fallback proc is specified, then that proc is invoked with the
+name of the SQL parameter and the return value from the proc is bound to
+the SQL parameter.  Or if the proc returns an error, then the SQL statement
+aborts with that error.  If the proc returns with some code other than
+TCL_OK or TCL_ERROR, then the SQL parameter is bound to NULL, as it would
+be by default.
+
+<p>The "bind_fallback" method has a single optional argument.  If the argument
+is an empty string, then the bind_fallback is cancelled and the default behavior
+is restored.  If the argument is a non-empty string, then the argument is a
+TCL command (usually the name of a proc) to invoke whenever an SQL parameter 
+is seen that does not match any TCL variable.  If the "bind_fallback" method 
+is given no arguments, then the current bind_fallback command is returned.
+
+<p>As an example, the following setup causes TCL to throw an error if
+an SQL statement contains an parameter that does not match any global
+TCL variable:
+
+<blockquote><pre><b>
+proc bind_error {nm} {
+  error "no such variable: $nm"
+}
+db bind_fallback bind_error
+</b></pre></blockquote>
 <a name="progress"></a>
 <h3>The "progress" method</h3>
 
@@ -769,12 +821,12 @@ sequence.
 "NOCASE" that sorts in text order without regard to case:
 </p>
 
-<blockquote><b>
-proc nocase_compare {a b} {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return &#91;string compare &#91;string tolower $a&#93; &#91;string tolower $b&#93;&#93;<br>
-}<br>
-db collate NOCASE nocase_compare<br>
-</b></blockquote>
+<blockquote><pre><b>
+proc nocase_compare {a b} {
+  return &#91;string compare &#91;string tolower $a] &#91;string tolower $b]]
+}
+db collate NOCASE nocase_compare
+</b></pre></blockquote>
 <a name="collation_needed"></a>
 <h3>The "collation_needed" method</h3>
 

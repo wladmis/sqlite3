@@ -103,12 +103,16 @@ Table Of Contents
 </a>
 <div id="toc_sub"><div class="fancy-toc1"><a href="#introduction_to_window_functions">1. Introduction to Window Functions</a></div>
 <div class="fancy-toc1"><a href="#aggregate_window_functions">2. Aggregate Window Functions</a></div>
-<div class="fancy-toc2"><a href="#frame_specifications">2.1. Frame Specifications</a></div>
-<div class="fancy-toc2"><a href="#the_partition_by_clause">2.2. The PARTITION BY Clause</a></div>
+<div class="fancy-toc2"><a href="#the_partition_by_clause">2.1. The PARTITION BY Clause</a></div>
+<div class="fancy-toc2"><a href="#frame_specifications">2.2. Frame Specifications</a></div>
+<div class="fancy-toc3"><a href="#frame_type">2.2.1. Frame Type</a></div>
+<div class="fancy-toc3"><a href="#frame_boundaries">2.2.2. Frame Boundaries</a></div>
+<div class="fancy-toc3"><a href="#the_exclude_clause">2.2.3. The EXCLUDE Clause</a></div>
 <div class="fancy-toc2"><a href="#the_filter_clause">2.3. The FILTER Clause</a></div>
 <div class="fancy-toc1"><a href="#built_in_window_functions">3. Built-in Window Functions</a></div>
-<div class="fancy-toc1"><a href="#user_defined_aggregate_window_functions">4. User-Defined Aggregate Window Functions</a></div>
-<div class="fancy-toc1"><a href="#history">5. History</a></div>
+<div class="fancy-toc1"><a href="#window_chaining">4. Window Chaining</a></div>
+<div class="fancy-toc1"><a href="#user_defined_aggregate_window_functions">5. User-Defined Aggregate Window Functions</a></div>
+<div class="fancy-toc1"><a href="#history">6. History</a></div>
 </div>
 </div>
 <script>
@@ -132,9 +136,17 @@ mk.innerHTML = "&#x25ba;";
 
 <h1 id="introduction_to_window_functions"><span>1. </span>Introduction to Window Functions</h1>
 
-<p>A window function is a special SQL function where the input
+<p>A window function is an SQL function where the input
 values are taken from
 a "window" of one or more rows in the results set of a SELECT statement.
+
+</p><p>Window functions are distinguished from other SQL functions by the
+presence of an OVER clause. If a function has an OVER clause,
+then it is a window function. If it lacks an OVER clause, then it is an
+ordinary aggregate or scalar function. Window functions might also
+have a FILTER clause in between the function and the OVER clause.
+
+</p><p>The syntax for a window function is like this:
 
 
 <p><b><a href="syntax/window-function-invocation.html">window-function-invocation:</a></b>
@@ -234,27 +246,33 @@ a "window" of one or more rows in the results set of a SELECT statement.
 </div>
 
 
-</p><p>Window functions are distinguished from ordinary SQL functions by the
-presence of an OVER clause.  If a function invocation has an OVER clause
-then it is a window function, and if lacks an OVER clause it is an ordinary
-function.  Window functions might also have a FILTER
-clause in between the function and the OVER clause.
 
 </p><p>Unlike ordinary functions, window functions
 cannot use the DISTINCT keyword.
 Also, Window functions may only appear in the result set and in the
 ORDER BY clause of a SELECT statement.
 
-</p><p>The following simple table is used to demonstrate how window
-functions work:
+</p><p>Window functions come in two varieties: 
+<a href="windowfunctions.html#aggwinfunc">aggregate window functions</a> and
+<a href="windowfunctions.html#builtins">built-in window functions</a>.  Every aggregate window function
+can also work as a ordinary aggregate function, simply by omitting
+the OVER and FILTER clauses.  Furthermore, all of the built-in
+<a href="lang_aggfunc.html">aggregate functions</a> of SQLite can be used as an
+aggregate window function by adding an appropriate OVER clause.
+Applications can register new aggregate window functions using
+the <a href="c3ref/create_function.html">sqlite3_create_window_function()</a> interface.
+The built-in window functions, however, require special-case
+handling in the query planner and hence new window functions
+that exhibit the exceptional properties found in the built-in
+window functions cannot be added by the application.
+
+</p><p>Here is an example using the built-in row_number()
+window function:
 
 </p><div class="codeblock"><pre>CREATE TABLE t0(x INTEGER PRIMARY KEY, y TEXT);
 INSERT INTO t0 VALUES (1, 'aaa'), (2, 'ccc'), (3, 'bbb');
-</pre></div>
 
-<p>An example of using window functions:
-
-</p><div class="codeblock"><pre><i>-- The following SELECT statement returns:</i>
+<i>-- The following SELECT statement returns:</i>
 <i>-- </i>
 <i>--   x | y | row_number</i>
 -----------------------
@@ -265,9 +283,9 @@ INSERT INTO t0 VALUES (1, 'aaa'), (2, 'ccc'), (3, 'bbb');
 SELECT x, y, row_number() OVER (ORDER BY y) AS row_number FROM t0 ORDER BY x;
 </pre></div>
 
-<p>The example uses the built-in window function row_number().
+<p>
 The row_number() window function
-assigns a monotonically increasing integer to each
+assigns consecutive integers to each
 row in order of the "ORDER BY" clause within the
 <span class='yynonterm'>window-defn</span> (in this case "ORDER BY y"). Note that 
 this does not affect the order in which results are returned from
@@ -290,8 +308,9 @@ ORDER BY x;
 <p>The WINDOW clause, when one is present, comes after any HAVING clause and
 before any ORDER BY.
 
-</p><a name="aggregate_window_functions"></a>
-<h1 tags="aggregate window functions" id="aggregate_window_functions"><span>2. </span>Aggregate Window Functions</h1>
+<a name="aggwinfunc"></a>
+
+</p><h1 id="aggregate_window_functions"><span>2. </span>Aggregate Window Functions</h1>
 
 <p> The examples in this section all assume that the database is populated as
 follows:
@@ -306,10 +325,12 @@ INSERT INTO t1 VALUES   (1, 'A', 'one'  ),
                         (7, 'G', 'one'  );
 </pre></div>
 
-<p> An aggregate window function is similar to an aggregate function, except
+<p> An aggregate window function is similar to an 
+<a href="lang_aggfunc.html">ordinary aggregate function</a>, except
 adding it to a query does not change the number of rows returned. Instead,
 for each row the result of the aggregate window function is as if the
-corresponding aggregate were run over all rows in the "window frame".
+corresponding aggregate were run over all rows in the "window frame"
+specified by the OVER clause.
 
 
 </p><div class="codeblock"><pre><i>-- The following SELECT statement returns:</i>
@@ -337,37 +358,89 @@ For example, the frame for the row with (a=3) consists of rows (2, 'B', 'two'),
 (3, 'C', 'three') and (4, 'D', 'one'). The result of group_concat(b, '.') 
 for that row is therefore 'B.C.D'.
 
-</p><p> This means that, after sorting the rows returned by the SELECT according to
-the ORDER BY clause in the <span class='yynonterm'>window-definition</span>,
-the window frame consists
-of all rows between the first row and the last row with the same values as
-the current row for all ORDER BY expressions. This implies that rows that
-have the same values for all ORDER BY expressions will also have the same
-value for the result of the window function (as the window frame is the same).
-For example:
+</p><p> All of SQLite's <a href="lang_aggfunc.html">aggregate functions</a> may
+be used as aggregate window functions. It is also possible to 
+<a href="windowfunctions.html#udfwinfunc">create user-defined aggregate window functions</a>.
+
+
+<a name="ptxn"></a>
+
+</p><h2 id="the_partition_by_clause"><span>2.1. </span>The PARTITION BY Clause</h2>
+
+<p> For the purpose of computing window functions, the result set
+of a query is divided into one or more "partitions".  A partition consists
+of all rows that have the same value for all terms of the PARTITION BY clause
+in the <span class='yynonterm'>window-defn</span>.  If there is no PARTITION BY clause,
+then the entire result set of the query is a single partition.
+Window-function processing is performed separately for each partition.
+
+</p><p> For example:
 
 </p><div class="codeblock"><pre><i>-- The following SELECT statement returns:</i>
 <i>-- </i>
-<i>--   a | b | c | group_concat</i>
------------------------------
-<i>--   1 | A | one   | A.D.G       </i>
-<i>--   2 | B | two   | A.D.G.C.F.B.E</i>
-<i>--   3 | C | three | A.D.G.C.F   </i>
-<i>--   4 | D | one   | A.D.G       </i>
-<i>--   5 | E | two   | A.D.G.C.F.B.E</i>
-<i>--   6 | F | three | A.D.G.C.F   </i>
-<i>--   7 | G | one   | A.D.G       </i>
+<i>--   c     | a | b | group_concat</i>
+---------------------------------
+<i>--   one   | 1 | A | A.D.G       </i>
+<i>--   one   | 4 | D | D.G         </i>
+<i>--   one   | 7 | G | G           </i>
+<i>--   three | 3 | C | C.F         </i>
+<i>--   three | 6 | F | F           </i>
+<i>--   two   | 2 | B | B.E         </i>
+<i>--   two   | 5 | E | E           </i>
 <i>-- </i>
-SELECT a, b, c, 
-       group_concat(b, '.') OVER (ORDER BY c) AS group_concat 
+SELECT c, a, b, group_concat(b, '.') OVER (
+  PARTITION BY c ORDER BY a RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
+) AS group_concat
+FROM t1 ORDER BY c, a;
+</pre></div>
+
+<p> In the query above, the "PARTITION BY c" clause breaks the
+result set up into three partitions. The first partition has
+three rows with c=='one'.  The second partition has two rows with
+c=='three' and the third partition has two rows with c=='two'.
+
+</p><p> In the example above, all the rows for each partition are
+grouped together in the final output.  This is because the PARTITION BY
+clause is a prefix of the ORDER BY clause on the overall query.  
+But that does not have
+to be the case.  A partition can be composed of rows scattered
+about haphazardly within the result set.  For example:
+
+</p><div class="codeblock"><pre><i>-- The following SELECT statement returns:</i>
+<i>-- </i>
+<i>--   c     | a | b | group_concat</i>
+---------------------------------
+<i>--   one   | 1 | A | A.D.G       </i>
+<i>--   two   | 2 | B | B.E         </i>
+<i>--   three | 3 | C | C.F         </i>
+<i>--   one   | 4 | D | D.G         </i>
+<i>--   two   | 5 | E | E           </i>
+<i>--   three | 6 | F | F           </i>
+<i>--   one   | 7 | G | G           </i>
+<i>-- </i>
+SELECT c, a, b, group_concat(b, '.') OVER (
+  PARTITION BY c ORDER BY a RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
+) AS group_concat
 FROM t1 ORDER BY a;
 </pre></div>
 
-<p> All of SQLite's <a href="lang_aggfunc.html">aggregate functions</a> may
-be used as aggregate window functions. It is also possible to 
-<a href="windowfunctions.html#user_defined_aggregate_window_functions">create user-defined aggregate window functions</a>.
 
-</p><h2 id="frame_specifications"><span>2.1. </span>Frame Specifications</h2>
+<a name="framespec"></a>
+
+<h2 id="frame_specifications"><span>2.2. </span>Frame Specifications</h2>
+
+<p> The <span class='yynonterm'>frame-spec</span> determines which output rows are
+read by an aggregate window function.  The
+<span class='yynonterm'>frame-spec</span> consists of four parts:
+
+</p><ul>
+  <li> A frame type - either ROWS, RANGE or GROUPS,
+  </li><li> A starting frame boundary,
+  </li><li> An ending frame boundary,
+  </li><li> An EXCLUDE clause.
+</li></ul>
+
+<p> Here are the syntax details:
 
 <p><b><a href="syntax/frame-spec.html">frame-spec:</a></b>
 <button id='x2081' onclick='hideorshow("x2081","x2082")'>hide</button></p>
@@ -461,56 +534,176 @@ be used as aggregate window functions. It is also possible to
 </div>
 
 
-<p> The <span class='yynonterm'>frame-spec</span> determines which output rows are
-read by an aggregate window function.  The
-<span class='yynonterm'>frame-spec</span> consists of three parts:
 
-</p><ul>
-  <li> A frame type - either RANGE or ROWS.
-  </li><li> A starting frame boundary, and
-  </li><li> An ending frame boundary.
-</li></ul>
+</p><p>The ending frame boundary can be omitted (if the
+BETWEEN and AND keywords that surround the starting frame boundary
+are also omitted),
+in which case the ending frame boundary defaults to CURRENT ROW.
 
-<p>The ending frame boundary can be omitted, in which case it defaults
-to CURRENT ROW.
+</p><p> If the frame type is RANGE or GROUPS, then rows with the same values for
+all ORDER BY expressions are considered "peers". Or, if there are no ORDER BY
+terms, all rows are peers. Peers are always within the same frame.
 
 </p><p>The default <span class='yynonterm'>frame-spec</span> is:
 
-</p><div class="codeblock"><pre>RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+</p><div class="codeblock"><pre>RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE NO OTHERS
 </pre></div>
 
 <p>The default means that aggregate window functions read all
 rows from the beginning of the partition up to and including the
-current row and its peers.
+current row and its peers. This implies that rows that have the same values for
+all ORDER BY expressions will also have the same value for the result of the
+window function (as the window frame is the same). For example:
 
-</p><p> If the frame type is RANGE, then rows with the same values for all ORDER BY
-expressions are considered "peers". Or, if there are no ORDER BY terms,
-all rows are peers. Rows that are peers always have the same window frames.
+</p><div class="codeblock"><pre><i>-- The following SELECT statement returns:</i>
+<i>-- </i>
+<i>--   a | b | c | group_concat</i>
+-----------------------------
+<i>--   1 | A | one   | A.D.G       </i>
+<i>--   2 | B | two   | A.D.G.C.F.B.E</i>
+<i>--   3 | C | three | A.D.G.C.F   </i>
+<i>--   4 | D | one   | A.D.G       </i>
+<i>--   5 | E | two   | A.D.G.C.F.B.E</i>
+<i>--   6 | F | three | A.D.G.C.F   </i>
+<i>--   7 | G | one   | A.D.G       </i>
+<i>-- </i>
+SELECT a, b, c, 
+       group_concat(b, '.') OVER (ORDER BY c) AS group_concat 
+FROM t1 ORDER BY a;
+</pre></div>
 
-</p><p> There are five options for frame boundaries:
+<a name="frametype"></a>
 
-</p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
-<tr style="text-align:left"><th>Frame Boundary </th><th>Description
-</th></tr><tr style="text-align:left;background-color:#DDDDDD"><td>UNBOUNDED&nbsp;PRECEDING </td><td> The start of the frame is the first
-        row in the set.
-</td></tr><tr style="text-align:left"><td>&lt;expr&gt; PRECEDING </td><td> &lt;expr&gt; is a constant expression
-        that evaluates to a non-negative integer value. The start
-        or end of the frame is &lt;expr&gt; rows before the current row. "0
-        PRECEDING" is the same as "CURRENT ROW". This frame boundary type may
-        only be used with ROWS frames.
-</td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>CURRENT ROW </td><td> The current row. For RANGE frame types, all peers of
-        the current row are also included in the window frame, regardless of
-        whether CURRENT ROW is used as the starting or ending frame boundary.
-</td></tr><tr style="text-align:left"><td>&lt;expr&gt; FOLLOWING </td><td> &lt;expr&gt; is a constant expression
-        that must evaluate to a non-negative integer value. The start
-        or end of the frame is &lt;expr&gt; rows after the current row. "0
-        FOLLOWING" is the same as "CURRENT ROW". This frame boundary type may
-        only be used with ROWS frames.
-</td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>UNBOUNDED&nbsp;FOLLOWING </td><td> The end of the frame is the last
-        row in the set.
-</td></tr></table>
+<h3 id="frame_type"><span>2.2.1. </span>Frame Type</h3>
 
-<p> The ending frame boundary must not take a form that appears higher in
+<p>
+There are three frame types:  ROWS, GROUPS, and RANGE.
+The frame type determines how the starting and ending boundaries
+of the frame are measured.
+
+</p><ul>
+<li><p><b>ROWS</b>: 
+The ROWS frame type means that the starting and ending boundaries
+for the frame are determined by counting individual rows relative
+to the current row.
+
+<a name="grouptype"></a>
+
+</p></li><li><p><b>GROUPS</b>:
+The GROUPS frame type means that the starting and ending boundaries
+are determine by counting "groups" relative to the current group.
+A "group" is a set of rows that all have equivalent values for all
+all terms of the window ORDER BY clause.  ("Equivalent" means that
+the <a href="lang_expr.html#isisnot">IS operator</a> is true when comparing the two values.)
+In other words, a group consists of all peers of a row.
+
+<a name="rangetype"></a>
+
+</p></li><li><p><b>RANGE</b>:
+The RANGE frame type requires that the ORDER BY clause of the
+window have exactly one term.  Call that term "X".  With the
+RANGE frame type, the elements of the frame are determined by
+computing the value of expression X for all rows in the partition
+and framing those rows for which the value of X is within a certain
+range of the value of X for the current row.  See the description
+in the "<a href="windowfunctions.html#exprrange">&lt;expr&gt; PRECEDING</a>" boundary
+specification below for details.
+</p></li></ul>
+
+<p>The ROWS and GROUPS frame types are similar in that they
+both determine the extent of a frame by counting relative to
+the current row.  The difference is that ROWS counts individual
+rows and GROUPS counts peer groups.
+The RANGE frame type is different.
+The RANGE frame type determines the extent of a frame by
+looking for expression values that are within some band of
+values relative to the current row.
+
+<a name="frameboundary"></a>
+
+</p><h3 id="frame_boundaries"><span>2.2.2. </span>Frame Boundaries</h3>
+
+<p> There are five ways to describe starting and ending frame boundaries:
+
+</p><ol>
+<li><p> <b>UNBOUNDED PRECEDING</b><br>
+     The frame boundary is the first
+     row in the <a href="windowfunctions.html#ptxn">partition</a>.
+
+</p></li><li><p> <b>&lt;expr&gt; PRECEDING</b><br>
+        &lt;expr&gt; must be a non-negative constant numeric expression.
+        The boundary is a row that is &lt;expr&gt; "units" prior to
+        the current row.  The meaning of "units" here depends on the
+        frame type:
+        </p><ul>
+        <li><p> <b>ROWS &rarr;</b>
+        The frame boundary is the row that is &lt;expr&gt;
+        rows before the current row, or the first row of the
+        partition if there are fewer than &lt;expr&gt; rows
+        before the current row.  &lt;expr&gt; must be an integer.
+        </p></li><li><p> <b>GROUPS &rarr;</b>
+        A "group" is a set of peer rows - rows that all have
+        the same values for every term in the ORDER BY clause.
+        The frame boundary is the group that is &lt;expr&gt;
+        groups before the group containing the current row, or the
+        first group of the partition if there are fewer
+        than &lt;expr&gt; groups before the current row.
+        For the starting boundary of a frame, the first
+        row of the group is used and for the ending boundary
+        of a frame, the last row of the group is used.
+        &lt;expr&gt; must be an integer.
+        <a name="exprrange"></a>
+
+        </p></li><li><p> <b>RANGE &rarr;</b>
+        For this form, the ORDER BY clause of the
+        <span class='yynonterm'>window-defn</span> must have a single
+        term.  Call that ORDER BY term "X".  Let
+        X<sub><small>i</small></sub> be the value of the X
+        expression for the i-th row in the partition and let
+        X<sub><small>c</small></sub> be the value of X for the
+        current row.  Informally, a RANGE bound is the first row
+        for which X<sub><small>i</small></sub> is within
+        the &lt;expr&gt; of X<sub><small>c</small></sub>.
+        More precisely:
+        </p><ol type="a">
+        <li> If either X<sub><small>i</small></sub> or
+             X<sub><small>c</small></sub> are non-numeric, then
+             the boundary is the first row for which the expression
+             "X<sub><small>i</small></sub> IS X<sub><small>c</small></sub>"
+             is true.
+        </li><li> Else if the ORDER BY is ASC then the boundary
+             is the first row for which
+             X<sub><small>i</small></sub>&gt;=X<sub><small>c</small></sub>-&lt;expr&gt;.
+        </li><li> Else if the ORDER BY is DESC then the boundary
+        is the first row for which
+        X<sub><small>i</small></sub>&lt;=X<sub><small>c</small></sub>-&lt;expr&gt;.
+        </li></ol>
+        For this form, the &lt;expr&gt; does not have to be an
+        integer. It can evaluate to a real number as long as
+        it is constant and non-negative.
+        </li></ul>
+    The boundary description "0 PRECEDING" always means the same
+    thing as "CURRENT ROW".
+
+</li><li><p><b>CURRENT ROW</b><br>
+        The current row. For RANGE and GROUPS frame types,
+        peers of the current row are also included in the frame,
+        unless specifically excluded by the EXCLUDE clause.
+        This is true regardless of whether CURRENT ROW is used
+        as the starting or ending frame boundary.
+
+</p></li><li><p><b>&lt;expr&gt; FOLLOWING</b><br>
+        This is the same as "&lt;expr&gt; PRECEDING" except that
+        the boundary is &lt;expr&gt; units after the current
+        rather than before the current row.
+
+</p></li><li><p> <b>UNBOUNDED FOLLOWING</b><br>
+   The frame boundary is the last
+   row in the <a href="windowfunctions.html#ptxn">partition</a>.
+
+</p></li></ol>
+
+<p> The ending frame boundary may not take a form that appears higher in
 the above list than the starting frame boundary.
 
 </p><p> In the following example, the window frame for each row consists of all
@@ -535,32 +728,58 @@ SELECT c, a, b, group_concat(b, '.') OVER (
 FROM t1 ORDER BY c, a;
 </pre></div>
 
-<h2 id="the_partition_by_clause"><span>2.2. </span>The PARTITION BY Clause</h2>
+<a name="wexcls"></a>
+ 
+<h3 id="the_exclude_clause"><span>2.2.3. </span>The EXCLUDE Clause</h3>
 
-<p> A <span class='yynonterm'>window-defn</span> may include a PARTITION BY clause.
-If so, the rows returned by the SELECT statement are divided into groups -
-partitions - with the same values for each PARTITION BY expression, and then
-window-function processing is performed separately for each
-partition. This is similar to the way the rows are grouped by the
-GROUP BY clause of an aggregate query.
+<p> The optional EXCLUDE clause may take any of the following four forms:
 
-</p><p> For example:
+</p><ul>
+  <li> <p><b> EXCLUDE NO OTHERS</b>: This is the default. In this case no
+  rows are excluded from the window frame as defined by its starting and ending
+  frame boundaries.
+
+  </p></li><li> <p><b> EXCLUDE CURRENT ROW</b>: In this case the current row is 
+  excluded from the window frame.  Peers of the current row remain in
+  the frame for the GROUPS and RANGE frame types.
+
+  </p></li><li> <p><b> EXCLUDE GROUP</b>: In this case the current row and all other
+  rows that are peers of the current row are excluded from the frame. When
+  processing an EXCLUDE clause, all rows with the same ORDER BY values, or all
+  rows in the partition if there is no ORDER BY clause, are considered peers,
+  even if the frame type is ROWS.
+
+  </p></li><li> <p><b> EXCLUDE TIES</b>: In this case the current row is part of the
+  frame, but peers of the current row are excluded.
+</p></li></ul>
+
+<p> The following example demonstrates the effect of the various
+forms of the EXCLUDE clause:
 
 </p><div class="codeblock"><pre><i>-- The following SELECT statement returns:</i>
 <i>-- </i>
-<i>--   c     | a | b | group_concat</i>
----------------------------------
-<i>--   one   | 1 | A | A.D.G       </i>
-<i>--   one   | 4 | D | D.G         </i>
-<i>--   one   | 7 | G | G           </i>
-<i>--   three | 3 | C | C.F         </i>
-<i>--   three | 6 | F | F           </i>
-<i>--   two   | 2 | B | B.E         </i>
-<i>--   two   | 5 | E | E           </i>
+<i>--   c    | a | b | no_others     | current_row | grp       | ties</i>
+<i>--  one   | 1 | A | A.D.G         | D.G         |           | A</i>
+<i>--  one   | 4 | D | A.D.G         | A.G         |           | D</i>
+<i>--  one   | 7 | G | A.D.G         | A.D         |           | G</i>
+<i>--  three | 3 | C | A.D.G.C.F     | A.D.G.F     | A.D.G     | A.D.G.C</i>
+<i>--  three | 6 | F | A.D.G.C.F     | A.D.G.C     | A.D.G     | A.D.G.F</i>
+<i>--  two   | 2 | B | A.D.G.C.F.B.E | A.D.G.C.F.E | A.D.G.C.F | A.D.G.C.F.B</i>
+<i>--  two   | 5 | E | A.D.G.C.F.B.E | A.D.G.C.F.B | A.D.G.C.F | A.D.G.C.F.E</i>
 <i>-- </i>
-SELECT c, a, b, group_concat(b, '.') OVER (
-  PARTITION BY c ORDER BY a RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
-) AS group_concat
+SELECT c, a, b,
+  group_concat(b, '.') OVER (
+    ORDER BY c GROUPS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE NO OTHERS
+  ) AS no_others,
+  group_concat(b, '.') OVER (
+    ORDER BY c GROUPS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE CURRENT ROW
+  ) AS current_row,
+  group_concat(b, '.') OVER (
+    ORDER BY c GROUPS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE GROUP
+  ) AS grp,
+  group_concat(b, '.') OVER (
+    ORDER BY c GROUPS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE TIES
+  ) AS ties
 FROM t1 ORDER BY c, a;
 </pre></div>
 
@@ -681,6 +900,9 @@ SELECT c, a, b, group_concat(b, '.') FILTER (WHERE c!='two') OVER (
 FROM t1 ORDER BY a;
 </pre></div>
 
+
+<a name="builtins"></a>
+
 <h1 id="built_in_window_functions"><span>3. </span>Built-in Window Functions</h1>
 
 <p> As well as aggregate window functions, SQLite features a set of built-in
@@ -695,8 +917,8 @@ clause affects each built-in window function is described below. Some of
 the window functions (rank(), dense_rank(), percent_rank() and ntile()) use
 the concept of "peer groups" (rows within the same partition that have the
 same values for all ORDER BY expressions). In these cases, it does not matter
-whether the <span class='yynonterm'>frame-spec</span> specifies ROWS or RANGE - for
-the purposes of built-in window function processing, rows with the same values
+whether the <span class='yynonterm'>frame-spec</span> specifies ROWS, GROUPS, or RANGE.
+For the purposes of built-in window function processing, rows with the same values
 for all ORDER BY expressions are considered peers regardless of the frame type.
 
 </p><p> Most built-in window functions ignore the
@@ -880,8 +1102,55 @@ FROM t1
 WINDOW win AS (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
 </pre></div>
 
-<a name="user_defined_aggregate_window_functions"></a>
-<h1 tags="user-defined window functions" id="user_defined_aggregate_window_functions"><span>4. </span>User-Defined Aggregate Window Functions</h1>
+
+<a name="wchaining"></a>
+
+<h1 id="window_chaining"><span>4. </span>Window Chaining</h1>
+
+<p>
+Window chaining is a shorthand that allows one window to be defined in terms 
+of another. Specifically, the shorthand allows the new window to implicitly
+copy the PARTITION BY and optionally ORDER BY clauses of the base window. For
+example, in the following:
+
+</p><div class="codeblock"><pre>SELECT group_concat(b, '.') OVER (
+  win ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+)
+FROM t1
+WINDOW win AS (PARTITION BY a ORDER BY c)
+</pre></div>
+
+<p>
+the window used by the group_concat() function is equivalent
+to "PARTITION BY a ORDER BY c ROWS BETWEEN UNBOUNDED PRECEDING
+AND CURRENT ROW". In order to use window
+chaining, all of the following must be true:
+
+</p><ul>
+  <li><p>The new window definition must not include a PARTITION BY clause. The
+       PARTITION BY clause, if there is one, must be supplied by the base
+       window specification.
+
+  </p></li><li><p>If the base window has an ORDER BY clause, it is copied into the new
+       window. In this case the new window must not specify an ORDER BY clause.
+       If the base window has no ORDER BY clause, one may be specified as part
+       of the new window definition.
+  
+  </p></li><li><p>The base window may not specify a frame specification.  The frame
+      specification can only be given in the new window specification.
+</p></li></ul>
+
+<p>The two fragments of SQL below are similar, but not entirely equivalent, as
+the latter will fail if the definition of window "win" contains a frame
+specification.
+
+</p><div class="codeblock"><pre>SELECT group_concat(b, '.') OVER win ...
+SELECT group_concat(b, '.') OVER (win) ...
+</pre></div>
+
+<a name="udfwinfunc"></a>
+
+<h1 id="user_defined_aggregate_window_functions"><span>5. </span>User-Defined Aggregate Window Functions</h1>
 
 <p> User-defined aggregate window functions may be created using the
 <a href="c3ref/create_function.html">sqlite3_create_window_function</a>() API. Implementing an aggregate window
@@ -1062,13 +1331,19 @@ follows:
   </li><li> <b>xValue()</b> - invoked to obtain the value for row (x='d'). 9.
 </li></ol>
 
-<h1 id="history"><span>5. </span>History</h1>
+<h1 id="history"><span>6. </span>History</h1>
 
-<p>Window function support was added to SQLite with release
+<p>Window function support was first added to SQLite with release
 <a href="releaselog/3_25_0.html">version 3.25.0</a> (2018-09-15). The SQLite developers used
 the <a href="http://www.postgresql.org">PostgreSQL</a> window function
 documentation as their primary reference for how window functions
 ought to behave.  Many test cases have been run against PostgreSQL
 to ensure that window functions operate the same way in both
 SQLite and PostgreSQL.
+
+</p><p>In SQLite <a href="releaselog/3_28_0.html">version 3.28.0</a> (2019-04-16),
+windows function support was extended to include the EXCLUDE clause,
+GROUPS frame types, window chaining, and support for
+"&lt;expr&gt; PRECEDING" and "&lt;expr&gt; FOLLOWING" boundaries
+in RANGE frames.
 </p>

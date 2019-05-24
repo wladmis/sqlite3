@@ -95,7 +95,37 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2019_02_08"></a><h3>2019-02-08 - Release 3.27.1</h3><blockquote>
+<a name="2019_04_16"></a><h3>2019-04-16 - Release 3.28.0</h3><blockquote>
+Version 3.28.0 is a regularly scheduled maintenance release
+of SQLite containing miscellaneous performance and feature
+enhancements.  See the <a href="releaselog/3_28_0.html">change log</a> for
+details.
+<p>
+This release fixes an obscure security issue. Applications
+using older versions of SQLite may be vulnerable if
+<ol>
+<li> SQLite is compiled with certain optional extensions
+     enabled, and
+<li> the attacker is able to inject arbitrary SQL.
+</ol>
+We are not aware of any applications that are vulnerable to
+this problem. On the other hand, we do not know about
+every application that uses SQLite.  
+If your application allows unauthenticated users on the internet
+(and hence potential attackers) to run arbitrary SQL and if
+you build SQLite with any of the optional extensions enabled,
+then you should take this upgrade at your earliest opportunity.
+<p>
+For further information about improving SQLite's robustness
+in internet-facing applications, see the our
+<a href="security.html">security recommendations</a>.
+</blockquote><hr width="50%"><a name="2019_02_25"></a><h3>2019-02-25 - Release 3.27.2</h3><blockquote>
+Version 3.27.2 is a patch release that
+fixes a two bugs and various documentation
+errors found in the version 3.27.1.  The
+changes from version 3.27.1 and 3.27.0 are
+minimal.
+</blockquote><hr width="50%"><a name="2019_02_08"></a><h3>2019-02-08 - Release 3.27.1</h3><blockquote>
 After release 3.27.0 was tagged, but before the build could
 be completed and uploaded, a 
 <a href="https://www.sqlite.org/src/info/4e8e4857d32d401f">long-standing bug</a>

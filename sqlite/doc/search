@@ -1077,6 +1077,12 @@ proc ttime {script} {
 proc searchchanges {} {
   set q [wapp-param q]
   if {$q==""} {return {}}
+  if {[regexp -all \x22 $q] % 2} { append q \x22 }
+  set x ""
+  foreach word [split $q " "] {
+    append x " \"[string map [list "\"" "\"\""] $word]\""
+  }
+  set q [string trim $x]
   set open {<span style="background-color:#d9f2e6">}
   set close {</span>}
   set query {

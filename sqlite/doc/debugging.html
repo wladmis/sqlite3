@@ -116,6 +116,9 @@ each command prior to actually running that command.
 
 <p>For added readability, also set ".echo on" so that the output contains
 the original SQL text.
+
+<p>The newer ".eqp trace" command does everything that ".eqp full" does
+and also turns on <a href="pragma.html#pragma_vdbe_trace">VDBE tracing</a>.
 </li>
 
 <li>
@@ -173,7 +176,7 @@ run the script in a debugger.  Set a breakpoint on the "test_addoptrace"
 routine.  Then run the "PRAGMA vdbe_addoptrace=ON;" followed by the
 SQL statement in question.  Each opcode will be displayed as it is
 appended to the VDBE program, and the breakpoint will fire immediately
-thereafter.  Step until reaching the opcode and question then look backwards
+thereafter.  Step until reaching the opcode then look backwards
 in the stack to see where and how it was generated.
 
 <p>This only works when compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.
@@ -195,11 +198,25 @@ used.  Use an argument of "0" to turn all tracing output back off.
 </li>
 
 <li>
+<p><b>Using the ".breakpoint" shell command</b>
+
+<p>The ".breakpoint" command in the CLI does nothing but invoke the
+procedure named "test_breakpoint()", which is a no-op.
+
+<p>If you have a script and you want to start debugging at some point
+half-way through that script, simply set a breakpoint in gdb (or whatever
+debugger you are using) on the test_breakpoint() function, and add a
+".breakpoint" command where you want to stop.  When you reach that first
+breakpoint, set whatever additional breakpoints are variable traces you
+need.
+
+<li>
 <p><b>Disable the <a href="malloc.html#lookaside">lookaside memory allocator</a></b>
 
 <p>When looking for memory allocation problems (memory leaks, use-after-free
 errors, buffer overflows, etc) it is sometimes useful to disable the
-<a href="malloc.html#lookaside">lookaside memory allocator</a> then run the test under valgrind.
+<a href="malloc.html#lookaside">lookaside memory allocator</a> then run the test under valgrind or MSAN or
+some other heap memory debugging tool.
 The lookaside memory allocator can 
 be disabled at start-time using the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a>
 interface.  The <a href="cli.html">command-line shell</a> will use that interface to

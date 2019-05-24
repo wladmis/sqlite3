@@ -317,6 +317,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitedbconfignockptonclose","x":"SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE","s":0},
 {"u":"#sqlitedbconfigresetdatabase","x":"SQLITE_DBCONFIG_RESET_DATABASE","s":0},
 {"u":"#sqlitedbconfigtriggereqp","x":"SQLITE_DBCONFIG_TRIGGER_EQP","s":0},
+{"u":"#sqlitedbconfigwritableschema","x":"SQLITE_DBCONFIG_WRITABLE_SCHEMA","s":0},
 {"u":"#sqlitedbstatuscachehit","x":"SQLITE_DBSTATUS_CACHE_HIT","s":0},
 {"u":"#sqlitedbstatuscachemiss","x":"SQLITE_DBSTATUS_CACHE_MISS","s":0},
 {"u":"#sqlitedbstatuscachespill","x":"SQLITE_DBSTATUS_CACHE_SPILL","s":0},
@@ -672,7 +673,7 @@ document.getElementById("listtab23").innerHTML = h;
 <p>Note: Functions marked with "<small><i>(exp)</i></small>"
 are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
-<!-- number of functions: 261 -->
+<!-- number of functions: 263 -->
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 0 -->
 <style>
@@ -880,6 +881,7 @@ var listitems24 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_status","x":"sqlite3_status64","s":0},
 {"u":"#sqlite3_step","x":"sqlite3_step","s":0},
 {"u":"#sqlite3_stmt_busy","x":"sqlite3_stmt_busy","s":0},
+{"u":"#sqlite3_stmt_isexplain","x":"sqlite3_stmt_isexplain","s":0},
 {"u":"#sqlite3_stmt_readonly","x":"sqlite3_stmt_readonly","s":0},
 {"u":"#sqlite3_stmt_scanstatus","x":"sqlite3_stmt_scanstatus","s":0},
 {"u":"#sqlite3_stmt_scanstatus_reset","x":"sqlite3_stmt_scanstatus_reset","s":0},
@@ -920,6 +922,7 @@ var listitems24 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_double","s":0},
 {"u":"#sqlite3_value_dup","x":"sqlite3_value_dup","s":0},
 {"u":"#sqlite3_value_dup","x":"sqlite3_value_free","s":0},
+{"u":"#sqlite3_value_blob","x":"sqlite3_value_frombind","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int64","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_nochange","s":0},
@@ -2601,7 +2604,7 @@ The sqlite3_db_filename(D,N) interface returns a pointer to a filename
 associated with database N of connection D.  The main database file
 has the name "main".  If there is no attached database N on the database
 connection D, or if database N is a temporary or in-memory database, then
-a NULL pointer is returned.</p>
+this function will return either a NULL pointer or an empty string.</p>
 
 <p>The filename returned by this function is the output of the
 xFullPathname method of the <a href="vfs.html">VFS</a>.  In other words, the filename
@@ -3690,6 +3693,18 @@ to locate all prepared statements associated with a database
 connection that are in need of being reset.  This can be used,
 for example, in diagnostic routines to search for prepared
 statements that are holding a transaction open.
+</p><hr><a name="sqlite3_stmt_isexplain"></a>
+<h2>Query The EXPLAIN Setting For A Prepared Statement</h2>
+</div>
+<blockquote><pre>
+int sqlite3_stmt_isexplain(sqlite3_stmt *pStmt);
+</pre></blockquote>
+<p>
+The sqlite3_stmt_isexplain(S) interface returns 1 if the
+prepared statement S is an EXPLAIN statement, or 2 if the
+statement S is an EXPLAIN QUERY PLAN.
+The sqlite3_stmt_isexplain(S) interface returns 0 if S is
+an ordinary statement or a NULL pointer.
 </p><hr><a name="sqlite3_stmt_readonly"></a>
 <h2>Determine If An SQL Statement Writes The Database</h2>
 </div>
@@ -5297,7 +5312,8 @@ compile-time option is not set, then the default maximum is 1073741824.
 #define SQLITE_DBCONFIG_TRIGGER_EQP           1008 /* int int* */
 #define SQLITE_DBCONFIG_RESET_DATABASE        1009 /* int int* */
 #define SQLITE_DBCONFIG_DEFENSIVE             1010 /* int int* */
-#define SQLITE_DBCONFIG_MAX                   1010 /* Largest DBCONFIG */
+#define SQLITE_DBCONFIG_WRITABLE_SCHEMA       1011 /* int int* */
+#define SQLITE_DBCONFIG_MAX                   1011 /* Largest DBCONFIG */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5362,8 +5378,8 @@ which case the trigger setting is not reported back. </dd></p>
 <p><a name="sqlitedbconfigenablefts3tokenizer"></a>
 
 <dt>SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</dt>
-<dd> This option is used to enable or disable the two-argument
-version of the <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function which is part of the
+<dd> This option is used to enable or disable the
+<a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function which is part of the
 <a href="fts3.html">FTS3</a> full-text search engine extension.
 There should be two additional arguments.
 The first argument is an integer which is 0 to disable fts3_tokenizer() or
@@ -5481,6 +5497,18 @@ features include but are not limited to the following:
 <li> Writes to the <a href="dbpage.html">sqlite_dbpage</a> virtual table.
 <li> Direct writes to <a href="vtab.html#xshadowname">shadow tables</a>.
 </ul>
+</dd></p>
+
+<p><a name="sqlitedbconfigwritableschema"></a>
+ <dt>SQLITE_DBCONFIG_WRITABLE_SCHEMA</dt>
+<dd>The SQLITE_DBCONFIG_WRITABLE_SCHEMA option activates or deactivates the
+"writable_schema" flag. This has the same effect and is logically equivalent
+to setting <a href="pragma.html#pragma_writable_schema">PRAGMA writable_schema=ON</a> or <a href="pragma.html#pragma_writable_schema">PRAGMA writable_schema=OFF</a>.
+The first argument to this setting is an integer which is 0 to disable
+the writable_schema, positive to enable writable_schema, or negative to
+leave the setting unchanged. The second parameter is a pointer to an
+integer into which is written 0 or 1 to indicate whether the writable_schema
+is enabled or disabled following this call.
 </dd>
 </dl>
 </p><hr><a name="SQLITE_DENY"></a>
@@ -6200,9 +6228,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.27.2"
-#define SQLITE_VERSION_NUMBER 3027002
-#define SQLITE_SOURCE_ID      "2019-02-25 16:06:06 bd49a8271d650fa89e446b42e513b595a717b9212c91dd384aab871fc1d0f6d7"
+#define SQLITE_VERSION        "3.28.0"
+#define SQLITE_VERSION_NUMBER 3028000
+#define SQLITE_SOURCE_ID      "2019-04-16 19:49:53 884b4b7e502b4e991677b53971277adfaf0a04a284f8e483e2553d0f83156b50"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -7400,6 +7428,7 @@ var listitems29 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
 {"u":"#sqlite3_expanded_sql","x":"sqlite3_sql","s":0},
 {"u":"#sqlite3_step","x":"sqlite3_step","s":0},
 {"u":"#sqlite3_stmt_busy","x":"sqlite3_stmt_busy","s":0},
+{"u":"#sqlite3_stmt_isexplain","x":"sqlite3_stmt_isexplain","s":0},
 {"u":"#sqlite3_stmt_readonly","x":"sqlite3_stmt_readonly","s":0},
 {"u":"#sqlite3_stmt_scanstatus","x":"sqlite3_stmt_scanstatus","s":0},
 {"u":"#sqlite3_stmt_scanstatus_reset","x":"sqlite3_stmt_scanstatus_reset","s":0},
@@ -7491,6 +7520,7 @@ var listitems30 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_double","s":0},
 {"u":"#sqlite3_value_dup","x":"sqlite3_value_dup","s":0},
 {"u":"#sqlite3_value_dup","x":"sqlite3_value_free","s":0},
+{"u":"#sqlite3_value_blob","x":"sqlite3_value_frombind","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int64","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_nochange","s":0},
@@ -8015,6 +8045,9 @@ automatically rolled back because the database connection is closed.</p>
 #ifndef SQLITE_OMIT_COMPILEOPTION_DIAGS
 int sqlite3_compileoption_used(const char *zOptName);
 const char *sqlite3_compileoption_get(int N);
+#else
+# define sqlite3_compileoption_used(X) 0
+# define sqlite3_compileoption_get(X)  ((void*)0)
 #endif
 </pre></blockquote>
 <p>
@@ -9671,6 +9704,7 @@ int sqlite3_value_bytes16(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
 int sqlite3_value_nochange(sqlite3_value*);
+int sqlite3_value_frombind(sqlite3_value*);
 </pre></blockquote>
 <p>
 <b>Summary:</b>
@@ -9698,6 +9732,8 @@ datatype of the value
 <tr><td><b>sqlite3_value_nochange&nbsp;&nbsp;</b>
 <td>&rarr;&nbsp;&nbsp;<td>True if the column is unchanged in an UPDATE
 against a virtual table.
+<tr><td><b>sqlite3_value_frombind&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>True if value originated from a <a href="lang_expr.html#varparam">bound parameter</a>
 </table></blockquote></p>
 
 <p><b>Details:</b></p>
@@ -9758,6 +9794,11 @@ sqlite3_value_nochange(X) is true will in all other respects appear
 to be a NULL value.  If sqlite3_value_nochange(X) is invoked anywhere other
 than within an <a href="vtab.html#xupdate">xUpdate</a> method call for an UPDATE statement, then
 the return value is arbitrary and meaningless.</p>
+
+<p>The sqlite3_value_frombind(X) interface returns non-zero if the
+value X originated from one of the <a href="#sqlite3_bind_blob">sqlite3_bind()</a>
+interfaces.  If X comes from an SQL literal value, or a table column,
+and expression, then sqlite3_value_frombind(X) returns zero.</p>
 
 <p>Please pay particular attention to the fact that the pointer returned
 from <a href="#sqlite3_value_blob">sqlite3_value_blob()</a>, <a href="#sqlite3_value_blob">sqlite3_value_text()</a>, or
@@ -9944,7 +9985,9 @@ with embedded NULs is undefined.</p>
 <p>The fifth argument to the BLOB and string binding interfaces
 is a destructor used to dispose of the BLOB or
 string after SQLite has finished with it.  The destructor is called
-to dispose of the BLOB or string even if the call to bind API fails.
+to dispose of the BLOB or string even if the call to the bind API fails,
+except the destructor is not called if the third parameter is a NULL
+pointer or the fourth parameter is negative.
 If the fifth argument is
 the special value <a href="#SQLITE_STATIC">SQLITE_STATIC</a>, then SQLite assumes that the
 information is in static, unmanaged space and does not need to be freed.
@@ -10197,7 +10240,7 @@ expected for the second parameter (the name of the function being
 created) and the presence or absence of a destructor callback for
 the application data pointer. Function sqlite3_create_window_function()
 is similar, but allows the user to supply the extra callback functions
-needed by <a href="windowfunctions.html#aggregate_window_functions">aggregate window functions</a>.</p>
+needed by <a href="windowfunctions.html#aggwinfunc">aggregate window functions</a>.</p>
 
 <p>The first parameter is the <a href="#sqlite3">database connection</a> to which the SQL
 function is to be added.  If an application uses more than one database
@@ -10261,7 +10304,7 @@ which case a regular aggregate function is created, or must both be
 non-NULL, in which case the new function may be used as either an aggregate
 or aggregate window function. More details regarding the implementation
 of aggregate window functions are
-<a href="windowfunctions.html#user_defined_aggregate_window_functions">available here</a>.</p>
+<a href="windowfunctions.html#udfwinfunc">available here</a>.</p>
 
 <p>If the final parameter to sqlite3_create_function_v2() or
 sqlite3_create_window_function() is not NULL, then it is destructor for

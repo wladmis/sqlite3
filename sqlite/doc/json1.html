@@ -276,7 +276,7 @@ and BLOBs.  It is not possible to add a sixth "JSON" type.
 The json1 extension does not (currently) support a binary encoding
 of JSON.  Experiments have been unable to find a binary encoding
 that is significantly smaller or faster than a plain text encoding.
-(The present implementation parses JSON text at over 300 MB/s.)
+(The present implementation parses JSON text at over 1 GB/s.)
 All json1 functions currently throw an error if any of their
 arguments are BLOBs because BLOBs are reserved
 for a future enhancement in which BLOBs will store the binary encoding

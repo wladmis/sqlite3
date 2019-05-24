@@ -2472,9 +2472,12 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
 </pre></div>
 
 <p>
-  Where &lt;tokenizer-name&gt; is a string identifying the tokenizer and
-  &lt;sqlite3_tokenizer_module ptr&gt; is a pointer to an sqlite3_tokenizer_module
-  structure encoded as an SQL blob. If the second argument is present,
+  Where &lt;tokenizer-name&gt; is <a href="lang_expr.html#varparam">parameter</a> to which a string is bound using
+  <a href="c3ref/bind_blob.html">sqlite3_bind_text()</a> where the string identifies the tokenizer and
+  &lt;sqlite3_tokenizer_module ptr&gt; is a <a href="lang_expr.html#varparam">parameter</a> to which a BLOB is
+  bound using <a href="c3ref/bind_blob.html">sqlite3_bind_blob()</a> where the value of the BLOB is a
+  pointer to an sqlite3_tokenizer_module structure.
+  If the second argument is present,
   it is registered as tokenizer &lt;tokenizer-name&gt; and a copy of it
   returned. If only one argument is passed, a pointer to the tokenizer
   implementation currently registered as &lt;tokenizer-name&gt; is returned,
@@ -2482,26 +2485,14 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
   (error) is raised.
 
 </p><p>
-  Because of security concerns, SQLite <a href="releaselog/3_11_0.html">version 3.11.0</a> (2016-02-15)
-  and later only enabled the
-  second form of the fts3_tokenizer() function when the library is compiled
-  with the <a href="compile.html#enable_fts3_tokenizer">-DSQLITE_ENABLE_FTS3_TOKENIZER</a>
-  option. In earlier versions it was
-  always available.  Beginning with SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a>
-  (2016-03-29), the second form of
-  fts3_tokenizer() can also be activated at run-time by calling
+  Prior to SQLite <a href="releaselog/3_11_0.html">version 3.11.0</a> (2016-02-15), the arguments to
+  fts3_tokenzer() could be literal strings or BLOBs. They did not have to
+  be <a href="lang_expr.html#varparam">bound parameters</a>.  But that could lead to security problems in the
+  event of an SQL injection.  Hence, the legacy behavior is now disabled
+  by default.  But the old legacy behavior can be enabled, for backwards
+  compatibility in applications that really need it, 
+  by calling
   <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0).
-
-</p><p>
-  <b>SECURITY WARNING</b>: 
-  If a version of the fts3/4 extension that supports the two-argument form of
-  fts3_tokenizer() is deployed in an environment where malicious users can
-  run arbitrary SQL, then those users should be prevented from invoking the 
-  two-argument fts3_tokenizer() function.
-  This can be done using the <a href="c3ref/set_authorizer.html">authorization callback</a>, 
-  or by disabling the two-argument fts3_tokenizer() interface using a
-  call to
-  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,0,0).
 
 </p><p>
   The following block contains an example of calling the fts3_tokenizer()
@@ -2517,7 +2508,7 @@ int registerTokenizer(
 ){
   int rc;
   sqlite3_stmt *pStmt;
-  const char *zSql = "SELECT fts3_tokenizer(?, ?)";
+  const char *zSql = "SELECT fts3_tokenizer(?1, ?2)";
 
   rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, 0);
   if( rc!=SQLITE_OK ){

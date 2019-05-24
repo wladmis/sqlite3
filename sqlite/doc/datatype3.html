@@ -472,7 +472,7 @@ CREATE VIEW v1(x,y,z) AS SELECT b, a+c, 42 FROM t1 WHERE b!=11;
 </pre></blockquote>
 
 <p>The affinity of the v1.x column will be the same as the affinity
-of t1.b (INTEGER), since v1.x maps directly into t1.b.  But
+of t1.b (TEXT), since v1.x maps directly into t1.b.  But
 columns v1.y and v1.z both have no affinity, since those columns
 map into expression a+c and 42, and expressions always have no
 affinity.

@@ -105,6 +105,78 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_28_0"></a>
+<h3>2019-04-16 (3.28.0)</h3><p><ol class='lessindent'>
+<li> Enhanced <a href="windowfunctions.html">window functions</a>:
+<ol type="a">
+<li> Add support the <a href="windowfunctions.html#wexcls">EXCLUDE clause</a>.
+<li> Add support for <a href="windowfunctions.html#wchaining">window chaining</a>.
+<li> Add support for <a href="windowfunctions.html#grouptype">GROUPS frames</a>.
+<li> Add support for "<a href="windowfunctions.html#exprrange">&lt;expr&gt; PRECEDING</a>" and
+     "<a href="windowfunctions.html#exprrange">&lt;expr&gt; FOLLOWING</a>" boundaries
+     in RANGE <a href="windowfunctions.html#framespec">frames</a>.
+</ol>
+<li> Added the new <a href="c3ref/stmt_isexplain.html">sqlite3_stmt_isexplain(S)</a> interface for determining
+     whether or not a <a href="c3ref/stmt.html">prepared statement</a> is an <a href="lang_explain.html">EXPLAIN</a>.
+<li> Enhanced <a href="lang_vacuum.html#vacuuminto">VACUUM INTO</a> so that it works for read-only databases.
+<li> New query optimizations:
+<ol type="a">
+<li> Enable the <a href="optoverview.html#like_opt">LIKE optimization</a> for cases when the ESCAPE keyword
+     is present and <a href="pragma.html#pragma_case_sensitive_like">PRAGMA case_sensitive_like</a> is on.
+<li> In queries that are driven by a <a href="partialindex.html">partial index</a>, avoid unnecessary
+     tests of the constraint named in the WHERE clause of the partial
+     index, since we know that constraint must always be true.
+</ol>
+<li> Enhancements to the <a href="tclsqlite.html">TCL Interface</a>:
+<ol type="a">
+<li> Added the -returntype option to the <a href="tclsqlite.html#function">function method</a>.
+<li> Added the new <a href="tclsqlite.html#bind_fallback">bind_fallback method</a>.
+</ol>
+<li> Enhancements to the <a href="cli.html">CLI</a>:
+<ol type="a">
+<li> Added support for <a href="lang_expr.html#varparam">bound parameters</a> and the <a href="cli.html#param">.parameter command</a>.
+<li> Fix the <a href="cli.html#fileio">readfile()</a> function so that it returns
+     an empty BLOB rather than throwing an out-of-memory error when
+     reading an empty file.
+<li> Fix the <a href="cli.html#fileio">writefile()</a> function so that when it
+     creates new directories along the path of a new file, it gives them
+     umask permissions rather than the same permissions as the file.
+<li> Change <a href="cli.html#arinsup">--update option</a> in the <a href="cli.html#sqlar">.archive command</a> so that it skips
+     files that are already in the archive and are unchanged.  Add the
+     new --insert option that works like --update used to work.
+</ol>
+<li> Added the <a href="https://sqlite.org/src/file/ext/misc/fossildelta.c">fossildelta.c</a>
+     extension that can create, apply, and deconstruct the 
+ <a href="https://fossil-scm.org/fossil/doc/trunk/www/delta_format.wiki">Fossil DVCS file delta format</a>
+     that is used by the <a href="rbu.html">RBU extension</a>.
+<li> Added the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigwritableschema">SQLITE_DBCONFIG_WRITABLE_SCHEMA</a> verb for the <a href="c3ref/db_config.html">sqlite3_db_config()</a>
+     interface, that does the same work as <a href="pragma.html#pragma_writable_schema">PRAGMA writable_schema</a> without using the
+     SQL parser.
+<li> Added the <a href="c3ref/value_blob.html">sqlite3_value_frombind()</a> API for determining if the argument
+     to an SQL function is from a <a href="lang_expr.html#varparam">bound parameter</a>.
+<li> Security and compatibilities enhancements to <a href="fts3.html#f3tknzr">fts3_tokenizer()</a>:
+<ol type="a">
+<li> The <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function always returns NULL
+     unless either the legacy application-defined FTS3 tokenizers interface
+     are enabled using
+     the <a href="c3ref/db_config.html">sqlite3_db_config</a>(<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>)
+     setting, or unless the first argument to fts3_tokenizer() is a <a href="lang_expr.html#varparam">bound parameter</a>.
+<li> The two-argument version of <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> accepts a pointer to the
+     tokenizer method object even without
+     the <a href="c3ref/db_config.html">sqlite3_db_config</a>(<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>) setting
+     if the second argument is a <a href="lang_expr.html#varparam">bound parameter</a>
+</ol>     
+<li> Improved robustness against corrupt database files.
+<li> Miscellaneous performance enhancements
+<li> Established a Git mirror of the offical SQLite source tree. 
+     The canonical sources for SQLite are maintained using the
+     <a href="https://fossil-scm.org/">Fossil DVCS</a> at <a href="https://sqlite.org/src">https://sqlite.org/src</a>.
+     The Git mirror can be seen at <a href="https://github.com/sqlite/sqlite">https://github.com/sqlite/sqlite</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: 2019-04-16 19:49:53 884b4b7e502b4e991677b53971277adfaf0a04a284f8e483e2553d0f83156b50
+<li>SHA3-256 for sqlite3.c: 411efca996b65448d9798eb203d6ebe9627b7161a646f5d00911e2902a57b2e9
+
+</ol></p>
 <a name="version_3_27_2"></a>
 <h3>2019-02-25 (3.27.2)</h3><p><ol class='lessindent'>
 <li> Fix a bug in the IN operator that was introduced by an 
@@ -1361,45 +1433,6 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.4 (2014-03-10):</b></p>
-
-<li>Code optimization and refactoring for improved performance.
-<li>Add the ".clone" and ".save" commands to the command-line shell.
-<li>Update the banner on the command-line shell to alert novice users when they
-    are using an ephemeral in-memory database.
-<li>Fix editline support in the command-line shell.
-<li>Add support for coverage testing of VDBE programs using the
-    <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_VDBE_COVERAGE</a> verb of <a href="c3ref/test_control.html">sqlite3_test_control()</a>.
-<li>Update the _FILE_OFFSET_BITS macro so that builds work again on QNX.
-<li>Change the datatype of SrcList.nSrc from type u8 to type int to work around 
-    an issue in the C compiler on AIX.
-<li>Get extension loading working on Cygwin.
-<li>Bug fix: Fix the <a href="lang_corefunc.html#char">char()</a> SQL function so that it returns an empty string
-    rather than an "out of memory" error when called with zero arguments. 
-<li>Bug fix: DISTINCT now recognizes that a <a href="lang_corefunc.html#zeroblob">zeroblob</a> and a blob of all
-    0x00 bytes are the same thing. 
-    <a href="http://www.sqlite.org/src/info/fccbde530a">Ticket &#91;fccbde530a&#93</a>
-<li>Bug fix: Compute the correct answer for queries that contain an IS NOT NULL
-    term in the WHERE clause and also contain an OR term in the WHERE clause and
-    are compiled with <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>.
-    <a href="http://www.sqlite.org/src/info/4c86b126f2">Ticket &#91;4c86b126f2&#93</a>
-<li>Bug fix: Make sure "rowid" columns are correctly resolved in joins between
-    normal tables and WITHOUT ROWID tables.
-    <a href="http://www.sqlite.org/src/info/c34d0557f7">Ticket &#91;c34d0557f7&#93</a>
-<li>Bug fix: Make sure the same temporary registers are not used in concurrent
-    co-routines used to implement compound SELECT statements containing ORDER
-    BY clauses, as such use can lead to incorrect answers.
-    <a href="http://www.sqlite.org/src/info/8c63ff0eca">Ticket &#91;8c63ff0eca&#93</a>
-<li>Bug fix: Ensure that "ORDER BY random()" clauses do not get optimized out.
-    <a href="http://www.sqlite.org/src/info/65bdeb9739">Ticket &#91;65bdeb9739&#93</a>
-<li>Bug fix: Repair a name-resolution error that can occur in sub-select statements
-    contained within a TRIGGER.
-    <a href="http://www.sqlite.org/src/info/4ef7e3cfca">Ticket &#91;4ef7e3cfca&#93</a>
-<li>Bug fix: Fix column default values expressions of the form
-    "DEFAULT(-(-9223372036854775808))" so that they work correctly, initializing
-    the column to a floating point value approximately equal to
-    +9223372036854775808.0.
-
 <p><b>Bug fixes backported into patch release 3.8.3.1 (2014-02-11):</b></p>
 
 <li>Fix a bug (ticket <a href="http://www.sqlite.org/src/info/4c86b126f2">4c86b126f2</a>)
@@ -1407,6 +1440,32 @@ with a home-baked pie.</center>
     IS NOT NULL operators in the WHERE clause, when the <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>
     or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> compile-time options are used.
 <li>Fix a harmless compiler warning that was causing problems for VS2013.
+
+<p><b>Bug fixes backported into patch release 3.8.3 (2014-02-03):</b></p>
+
+<li>Added support for <a href="lang_with.html">common table expressions</a> and the <a href="lang_with.html">WITH clause</a>.
+<li>Added the <a href="lang_corefunc.html#printf">printf()</a> SQL function.
+<li>Added <a href="c3ref/c_deterministic.html">SQLITE_DETERMINISTIC</a> as an optional bit in the 4th argument to the
+    <a href="c3ref/create_function.html">sqlite3_create_function()</a> and related interfaces, providing applications with
+    the ability to create new functions that can be factored out of inner loops when
+    they have constant arguments.
+<li>Add <a href="rescode.html#readonly_dbmoved">SQLITE_READONLY_DBMOVED</a> error code, returned at the beginning of a
+    transaction, to indicate that the underlying database file has been renamed
+    or moved out from under SQLite.
+<li>Allow arbitrary expressions, including function calls and subqueries, in
+    the filename argument to <a href="lang_attach.html">ATTACH</a>.
+<li>Allow a <a href="lang_select.html#values">VALUES clause</a> to be used anywhere a <a href="lang_select.html">SELECT</a> statement is valid.
+<li>Reseed the PRNG used by <a href="c3ref/randomness.html">sqlite3_randomness(N,P)</a> when invoked with N==0.
+    Automatically reseed after a fork() on unix.
+<li>Enhance the <a href="spellfix1.html">spellfix1</a> virtual table so that it can search efficiently by rowid.
+<li>Performance enhancements.
+<li>Improvements to the comments in the VDBE byte-code display when running <a href="lang_explain.html">EXPLAIN</a>.
+<li>Add the "%token_class" directive to <a href="lemon.html">Lemon parser generator</a> and use it to simplify
+    the grammar.
+<li>Change the <a href="lemon.html">Lemon</a> source code to avoid calling C-library functions that OpenBSD
+    considers dangerous.  (Ex: sprintf).
+<li>Bug fix: In the <a href="cli.html">command-line shell</a> CSV import feature, do not end a field
+    when an escaped double-quote occurs at the end of a CRLN line.
 
 </ol></p>
 <a name="version_3_12_2"></a>

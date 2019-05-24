@@ -172,7 +172,7 @@ else it must be an empty file, or the VACUUM INTO command will
 fail with an error.
 
 <p>
-The argument to INTO can a <a href="uri.html">URI filename</a> if URI filenames
+The argument to INTO can be a <a href="uri.html">URI filename</a> if URI filenames
 are enabled.
 URL filenames are enabled if any of the following are true:
 <ul>
@@ -215,8 +215,13 @@ step of copying the vacuumed database back over top of the original database.
 tables that do not have an explicit <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.
 </p>
 
-<p>A VACUUM will fail if there is an open transaction, or if there are one or
-more active SQL statements when it is run.
+<p>A VACUUM will fail if there is an open transaction on the database
+connection that is attempting to run the VACUUM.  Unfinalized SQL
+statements typically hold a read transaction open, so the VACUUM
+might fail if there are unfinalized SQL statements on the same connection.
+VACUUM (but not VACUUM INTO) is a write operation and so if another
+database connection is holding a lock that prevents writes, then
+the VACUUM will fail.
 
 <p>An alternative to using the VACUUM command to
 reclaim space after data has been deleted is auto-vacuum mode, enabled using

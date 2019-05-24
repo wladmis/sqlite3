@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.27.2 check-in
-<a href='https://www.sqlite.org/src/timeline?c=bd49a8271d650'>bd49a8271d650</a> dated 2019-02-25.
+ version 3.28.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=884b4b7e502b4'>884b4b7e502b4</a> dated 2019-04-16.
 
 
 
@@ -422,15 +422,15 @@ opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/2c61090f2328ad125c8e55b4dab0712a78cfdfac893152fae34bed7e015b7cd7">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/711ef421b3bb3db3b2476067b2dc3c71ef5844d9b1a723026578f89f6da621e8">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.27.2 check-in
-<a href='https://www.sqlite.org/src/timeline?c=bd49a8271d650'>bd49a8271d650</a> dated 2019-02-25.
+ version 3.28.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=884b4b7e502b4'>884b4b7e502b4</a> dated 2019-04-16.
 
 <a name="codes"></a>
 
@@ -1799,10 +1799,6 @@ will refer to the first entry in the database table or index.
 If the table or index is empty, jump immediately to P2.
 If the table or index is not empty, fall through to the following
 instruction.</p>
-
-<p>If P5 is non-zero and the table is not empty, then the "skip-next"
-flag is set on the cursor so that the next <a href="opcode.html#Next">Next</a> instruction
-executed on it is a no-op.</p>
 
 <p>This opcode leaves the cursor configured to move in forward order,
 from the beginning toward the end.  In other words, the cursor is

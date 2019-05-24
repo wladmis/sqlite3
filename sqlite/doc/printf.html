@@ -227,6 +227,12 @@ value, but some doubles require more than 16 or 26 significant digits.
 The order of the buffer pointer and buffer size parameters in the built-in
 snprintf() implementation is reversed from the order used in standard-library
 implementations.
+
+</p></li><li><p>
+The built-in printf() implementation does not handle posix positional referencing
+modifiers that allow the order of arguments to printf() to be different from the
+order of the %-substitutions.  In the built-in printf(), the order of the arguments
+must exactly match the order of the %-substitutions.
 </p></li></ol>
 
 <p>

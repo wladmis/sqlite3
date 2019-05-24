@@ -118,7 +118,7 @@ Other Documentation Indexes:
 <li> <a href="datatype3.html#affinity">affinity</a> </li>
 <li> <a href="datatype3.html#expraff">Affinity Of Expressions</a> </li>
 <li> <a href="lang_aggfunc.html">Aggregate Functions</a> </li>
-<li> <a href="windowfunctions.html#aggregate_window_functions">aggregate window functions</a> </li>
+<li> <a href="windowfunctions.html#aggwinfunc">aggregate window functions</a> </li>
 <li> <a href="doclist.html">alphabetical listing of documents</a> </li>
 <li> <a href="lang_altertable.html">ALTER TABLE</a> </li>
 <li> <a href="lang_altertable.html#altertabaddcol">ALTER TABLE ADD COLUMN</a> </li>
@@ -136,6 +136,7 @@ Other Documentation Indexes:
 <li> <a href="appfileformat.html">application file-format</a> </li>
 <li> <a href="fileformat2.html#appid">Application ID</a> </li>
 <li> <a href="c3ref/create_function.html">application-defined SQL function</a> </li>
+<li> <a href="windowfunctions.html#udfwinfunc">application-defined window functions</a> </li>
 <li> <a href="pragma.html#pragma_application_id">application_id pragma</a> </li>
 <li> <a href="whentouse.html">Appropriate Uses For SQLite</a> </li>
 <li> <a href="cli.html#sqlar">.archive command</a> </li>
@@ -176,6 +177,7 @@ Other Documentation Indexes:
 <li> <a href="lang_expr.html#between">BETWEEN</a> </li>
 <li> <a href="datatype3.html#collation">BINARY collating function</a> </li>
 <li> <a href="lang_expr.html#binaryops">binary operators</a> </li>
+<li> <a href="tclsqlite.html#bind_fallback">bind_fallback method</a> </li>
 <li> <a href="c3ref/blob.html">BLOB handle</a> </li>
 <li> <a href="intern-v-extern-blob.html">BLOB I/O performance</a> </li>
 <li> <a href="queryplanner.html#partialsort">block sorting</a> </li>
@@ -188,6 +190,8 @@ Other Documentation Indexes:
 <li> <a href="howtocompile.html#amal">building the amalgamation</a> </li>
 <li> <a href="malloc.html#altalloc">built-in memory allocators</a> </li>
 <li> <a href="printf.html">built-in printf()</a> </li>
+<li> <a href="windowfunctions.html#builtins">built-in window functions</a> </li>
+<li> <a href="windowfunctions.html#builtins">built-ins</a> </li>
 <li> <a href="windowfunctions.html#biwinfunc">builtin window functions</a> </li>
 <li> <a href="c3ref/busy_handler.html">busy handler</a> </li>
 <li> <a href="tclsqlite.html#busy">busy method</a> </li>
@@ -495,6 +499,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#extra_durable">-DSQLITE_EXTRA_DURABLE</a> </li>
 <li> <a href="compile.html#fts3_max_expr_depth">-DSQLITE_FTS3_MAX_EXPR_DEPTH</a> </li>
 <li> <a href="compile.html#have_isnan">-DSQLITE_HAVE_ISNAN</a> </li>
+<li> <a href="compile.html#have_zlib">-DSQLITE_HAVE_ZLIB</a> </li>
 <li> <a href="compile.html#introspection_pragmas">-DSQLITE_INTROSPECTION_PRAGMAS</a> </li>
 <li> <a href="compile.html#like_doesnt_match_blobs">-DSQLITE_LIKE_DOESNT_MATCH_BLOBS</a> </li>
 <li> <a href="compile.html#max_memory">-DSQLITE_MAX_MEMORY</a> </li>
@@ -580,7 +585,6 @@ Other Documentation Indexes:
 <li> <a href="compile.html#use_alloca">-DSQLITE_USE_ALLOCA</a> </li>
 <li> <a href="compile.html#use_fcntl_trace">-DSQLITE_USE_FCNTL_TRACE</a> </li>
 <li> <a href="compile.html#use_uri">-DSQLITE_USE_URI</a> </li>
-<li> <a href="compile.html#use_zlib">-DSQLITE_USE_ZLIB</a> </li>
 <li> <a href="compile.html#win32_heap_create">-DSQLITE_WIN32_HEAP_CREATE</a> </li>
 <li> <a href="compile.html#win32_malloc">-DSQLITE_WIN32_MALLOC</a> </li>
 <li> <a href="compile.html#win32_malloc_validate">-DSQLITE_WIN32_MALLOC_VALIDATE</a> </li>
@@ -603,6 +607,7 @@ Other Documentation Indexes:
 <li> <a href="tclsqlite.html#errorcode">errorcode method</a> </li>
 <li> <a href="lang_expr.html#like">ESCAPE</a> </li>
 <li> <a href="tclsqlite.html#eval">eval method</a> </li>
+<li> <a href="windowfunctions.html#wexcls">exclude clause</a> </li>
 <li> <a href="tclsqlite.html#exists">exists method</a> </li>
 <li> <a href="lang_expr.html#exists_op">EXISTS operator</a> </li>
 <li> <a href="c3ref/experimental.html">experimental</a> </li>
@@ -648,8 +653,12 @@ Other Documentation Indexes:
 <li> <a href="pragma.html#pragma_foreign_key_check">foreign_key_check pragma</a> </li>
 <li> <a href="pragma.html#pragma_foreign_key_list">foreign_key_list pragma</a> </li>
 <li> <a href="pragma.html#pragma_foreign_keys">foreign_keys pragma</a> </li>
+<li> <a href="windowfunctions.html#frameboundary">frame boundary</a> </li>
+<li> <a href="windowfunctions.html#framespec">frame specification</a> </li>
+<li> <a href="windowfunctions.html#frametype">frame type</a> </li>
 <li> <a href="syntax/frame-spec.html">frame-spec</a> </li>
 <li> <a href="syntax/frame-spec.html">frame-spec syntax diagram</a> </li>
+<li> <a href="windowfunctions.html#framespec">frames</a> </li>
 <li> <a href="fileformat2.html#freelist">free-page list</a> </li>
 <li> <a href="fileformat2.html#freelist">freelist</a> </li>
 <li> <a href="pragma.html#pragma_freelist_count">freelist_count pragma</a> </li>
@@ -746,6 +755,7 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#glob">glob() SQL function</a> </li>
 <li> <a href="lang_select.html#resultset">GROUP BY</a> </li>
 <li> <a href="lang_aggfunc.html#groupconcat">group_concat() aggregate function</a> </li>
+<li> <a href="windowfunctions.html#grouptype">GROUPS frames</a> </li>
 <li> <a href="compile.html#fdatasync">HAVE_FDATASYNC</a> </li>
 <li> <a href="compile.html#gmtime_r">HAVE_GMTIME_R</a> </li>
 <li> <a href="compile.html#isnan">HAVE_ISNAN</a> </li>
@@ -798,6 +808,7 @@ Other Documentation Indexes:
 <li> <a href="queryplanner.html">indexing</a> </li>
 <li> <a href="queryplanner.html">indexing tutorial</a> </li>
 <li> <a href="lang_insert.html">INSERT</a> </li>
+<li> <a href="cli.html#arinsup">--insert option</a> </li>
 <li> <a href="syntax/insert-stmt.html">insert-stmt</a> </li>
 <li> <a href="syntax/insert-stmt.html">insert-stmt syntax diagram</a> </li>
 <li> <a href="lang_createtrigger.html#instead_of_trigger">INSTEAD OF</a> </li>
@@ -983,6 +994,7 @@ Other Documentation Indexes:
 <li> <a href="malloc.html#pagecache">pagecache memory allocator</a> </li>
 <li> <a href="lang_expr.html#varparam">parameter</a> </li>
 <li> <a href="c3ref/bind_blob.html">parameter binding</a> </li>
+<li> <a href="cli.html#param">.parameter command</a> </li>
 <li> <a href="foreignkeys.html#parentchild">parent key</a> </li>
 <li> <a href="foreignkeys.html#parentchild">parent table</a> </li>
 <li> <a href="pragma.html#pragma_parser_trace">parser_trace pragma</a> </li>
@@ -990,6 +1002,7 @@ Other Documentation Indexes:
 <li> <a href="partialindex.html">partial indexes</a> </li>
 <li> <a href="partialindex.html">partial indices</a> </li>
 <li> <a href="queryplanner.html#partialsort">partial sorting by index</a> </li>
+<li> <a href="windowfunctions.html#ptxn">partition</a> </li>
 <li> <a href="sessionintro.html#changeset">patchset</a> </li>
 <li> <a href="sitemap.html">permuted index</a> </li>
 <li> <a href="loadext.html#persist">persistent loadable extensions</a> </li>
@@ -1118,6 +1131,9 @@ Other Documentation Indexes:
 <li> <a href="syntax/raise-function.html">raise-function syntax diagram</a> </li>
 <li> <a href="lang_corefunc.html#random">random() SQL function</a> </li>
 <li> <a href="lang_corefunc.html#randomblob">randomblob() SQL function</a> </li>
+<li> <a href="windowfunctions.html#rangetype">RANGE frames</a> </li>
+<li> <a href="windowfunctions.html#exprrange">RANGE n FOLLOWING</a> </li>
+<li> <a href="windowfunctions.html#exprrange">RANGE n PRECEDING</a> </li>
 <li> <a href="optoverview.html#rangequery">range query optimization</a> </li>
 <li> <a href="rbu.html">RBU</a> </li>
 <li> <a href="rbu.html#database_contents">RBU Database Contents</a> </li>
@@ -1507,6 +1523,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/step.html">sqlite3_step</a> </li>
 <li> <a href="c3ref/stmt.html">sqlite3_stmt</a> </li>
 <li> <a href="c3ref/stmt_busy.html">sqlite3_stmt_busy</a> </li>
+<li> <a href="c3ref/stmt_isexplain.html">sqlite3_stmt_isexplain</a> </li>
 <li> <a href="c3ref/stmt_readonly.html">sqlite3_stmt_readonly</a> </li>
 <li> <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus</a> </li>
 <li> <a href="c3ref/stmt_scanstatus_reset.html">sqlite3_stmt_scanstatus_reset</a> </li>
@@ -1551,6 +1568,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/value_blob.html">sqlite3_value_double</a> </li>
 <li> <a href="c3ref/value_dup.html">sqlite3_value_dup</a> </li>
 <li> <a href="c3ref/value_dup.html">sqlite3_value_free</a> </li>
+<li> <a href="c3ref/value_blob.html">sqlite3_value_frombind</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_int</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_int64</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_nochange</a> </li>
@@ -1739,6 +1757,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfignockptonclose">SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigresetdatabase">SQLITE_DBCONFIG_RESET_DATABASE</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigtriggereqp">SQLITE_DBCONFIG_TRIGGER_EQP</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigwritableschema">SQLITE_DBCONFIG_WRITABLE_SCHEMA</a> </li>
 <li> <a href="dbpage.html">sqlite_dbpage</a> </li>
 <li> <a href="dbpage.html">SQLITE_DBPAGE virtual table</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html">SQLITE_DBSTATUS options</a> </li>
@@ -1886,6 +1905,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_abort.html">SQLITE_FULL</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_FUNCTION</a> </li>
 <li> <a href="compile.html#have_isnan">SQLITE_HAVE_ISNAN</a> </li>
+<li> <a href="compile.html#have_zlib">SQLITE_HAVE_ZLIB</a> </li>
 <li> <a href="c3ref/c_deny.html">SQLITE_IGNORE</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_EQ</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> </li>
@@ -2228,7 +2248,6 @@ Other Documentation Indexes:
 <li> <a href="compile.html#use_alloca">SQLITE_USE_ALLOCA</a> </li>
 <li> <a href="compile.html#use_fcntl_trace">SQLITE_USE_FCNTL_TRACE</a> </li>
 <li> <a href="compile.html#use_uri">SQLITE_USE_URI</a> </li>
-<li> <a href="compile.html#use_zlib">SQLITE_USE_ZLIB</a> </li>
 <li> <a href="c3ref/c_any.html">SQLITE_UTF16</a> </li>
 <li> <a href="c3ref/c_any.html">SQLITE_UTF16_ALIGNED</a> </li>
 <li> <a href="c3ref/c_any.html">SQLITE_UTF16BE</a> </li>
@@ -2277,6 +2296,7 @@ Other Documentation Indexes:
 <li> <a href="tclsqlite.html">TCL Interface</a> </li>
 <li> <a href="tclsqlite.html#authorizer">TCL interface authorizer method</a> </li>
 <li> <a href="tclsqlite.html#backup">TCL interface backup method</a> </li>
+<li> <a href="tclsqlite.html#bind_fallback">TCL interface bind_fallback method</a> </li>
 <li> <a href="tclsqlite.html#busy">TCL interface busy method</a> </li>
 <li> <a href="tclsqlite.html#cache">TCL interface cache method</a> </li>
 <li> <a href="tclsqlite.html#changes">TCL interface changes method</a> </li>
@@ -2388,6 +2408,7 @@ Other Documentation Indexes:
 <li> <a href="tclsqlite.html#unlock_notify">unlock_notify method</a> </li>
 <li> <a href="c3ref/value.html">unprotected sqlite3_value</a> </li>
 <li> <a href="lang_update.html">UPDATE</a> </li>
+<li> <a href="cli.html#arinsup">--update option</a> </li>
 <li> <a href="syntax/update-stmt.html">update-stmt</a> </li>
 <li> <a href="syntax/update-stmt.html">update-stmt syntax diagram</a> </li>
 <li> <a href="syntax/update-stmt-limited.html">update-stmt-limited</a> </li>
@@ -2396,6 +2417,7 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#upper">upper() SQL function</a> </li>
 <li> <a href="lang_UPSERT.html">UPSERT</a> </li>
 <li> <a href="lang_UPSERT.html">upsert clause</a> </li>
+<li> <a href="lang_UPSERT.html#parseambig">UPSERT parsing ambiguity</a> </li>
 <li> <a href="syntax/upsert-clause.html">upsert-clause</a> </li>
 <li> <a href="syntax/upsert-clause.html">upsert-clause syntax diagram</a> </li>
 <li> <a href="uri.html">URI</a> </li>
@@ -2404,7 +2426,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/open.html#urifilenamesinsqlite3open">URI filenames in sqlite3_open()</a> </li>
 <li> <a href="uri.html#coreqp">URI query parameters</a> </li>
 <li> <a href="fileformat2.html#usable_size">usable size</a> </li>
-<li> <a href="windowfunctions.html#user_defined_aggregate_window_functions">user-defined window functions</a> </li>
+<li> <a href="windowfunctions.html#udfwinfunc">user-defined window functions</a> </li>
 <li> <a href="pragma.html#pragma_user_version">user_version pragma</a> </li>
 <li> <a href="whentouse.html#website">using SQLite for websites</a> </li>
 <li> <a href="backup.html">Using the SQLite Online Backup API</a> </li>
@@ -2495,6 +2517,7 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_27_0.html">Version 3.27.0</a> </li>
 <li> <a href="releaselog/3_27_1.html">Version 3.27.1</a> </li>
 <li> <a href="releaselog/3_27_2.html">Version 3.27.2</a> </li>
+<li> <a href="releaselog/3_28_0.html">Version 3.28.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0.0</a> </li>
 <li> <a href="releaselog/3_3_1.html">Version 3.3.1</a> </li>
@@ -2676,6 +2699,7 @@ Other Documentation Indexes:
 <li> <a href="withoutrowid.html#wtu">when to use WITHOUT ROWID</a> </li>
 <li> <a href="lang_select.html#whereclause">WHERE clause</a> </li>
 <li> <a href="malloc.html#win32heap">Win32 native memory allocator</a> </li>
+<li> <a href="windowfunctions.html#wchaining">window chaining</a> </li>
 <li> <a href="windowfunctions.html">window function</a> </li>
 <li> <a href="syntax/window-defn.html">window-defn</a> </li>
 <li> <a href="syntax/window-defn.html">window-defn syntax diagram</a> </li>

@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_DBCONFIG_DEFENSIVE SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_QPSG SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_MAX SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE SQLITE_DBCONFIG_RESET_DATABASE SQLITE_DBCONFIG_TRIGGER_EQP -->
+<!-- keywords: SQLITE_DBCONFIG_DEFENSIVE SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_QPSG SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_MAX SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE SQLITE_DBCONFIG_RESET_DATABASE SQLITE_DBCONFIG_TRIGGER_EQP SQLITE_DBCONFIG_WRITABLE_SCHEMA -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Database Connection Configuration Options</h2>
@@ -108,7 +108,8 @@ return false;
 #define SQLITE_DBCONFIG_TRIGGER_EQP           1008 /* int int* */
 #define SQLITE_DBCONFIG_RESET_DATABASE        1009 /* int int* */
 #define SQLITE_DBCONFIG_DEFENSIVE             1010 /* int int* */
-#define SQLITE_DBCONFIG_MAX                   1010 /* Largest DBCONFIG */
+#define SQLITE_DBCONFIG_WRITABLE_SCHEMA       1011 /* int int* */
+#define SQLITE_DBCONFIG_MAX                   1011 /* Largest DBCONFIG */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -173,8 +174,8 @@ which case the trigger setting is not reported back. </dd></p>
 <p><a name="sqlitedbconfigenablefts3tokenizer"></a>
 
 <dt>SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</dt>
-<dd> This option is used to enable or disable the two-argument
-version of the <a href="../fts3.html#f3tknzr">fts3_tokenizer()</a> function which is part of the
+<dd> This option is used to enable or disable the
+<a href="../fts3.html#f3tknzr">fts3_tokenizer()</a> function which is part of the
 <a href="../fts3.html">FTS3</a> full-text search engine extension.
 There should be two additional arguments.
 The first argument is an integer which is 0 to disable fts3_tokenizer() or
@@ -292,6 +293,18 @@ features include but are not limited to the following:
 <li> Writes to the <a href="../dbpage.html">sqlite_dbpage</a> virtual table.
 <li> Direct writes to <a href="../vtab.html#xshadowname">shadow tables</a>.
 </ul>
+</dd></p>
+
+<p><a name="sqlitedbconfigwritableschema"></a>
+ <dt>SQLITE_DBCONFIG_WRITABLE_SCHEMA</dt>
+<dd>The SQLITE_DBCONFIG_WRITABLE_SCHEMA option activates or deactivates the
+"writable_schema" flag. This has the same effect and is logically equivalent
+to setting <a href="../pragma.html#pragma_writable_schema">PRAGMA writable_schema=ON</a> or <a href="../pragma.html#pragma_writable_schema">PRAGMA writable_schema=OFF</a>.
+The first argument to this setting is an integer which is 0 to disable
+the writable_schema, positive to enable writable_schema, or negative to
+leave the setting unchanged. The second parameter is a pointer to an
+integer into which is written 0 or 1 to indicate whether the writable_schema
+is enabled or disabled following this call.
 </dd>
 </dl>
 </p><p>See also lists of

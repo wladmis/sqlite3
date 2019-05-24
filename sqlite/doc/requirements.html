@@ -1982,6 +1982,10 @@ comments in the source code.
 <dd><p>A negative value for the zeroblob results in a zero-length BLOB.
 <i>(source: <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>, checked-by: th3/req1/bind01.test, matrix: <a href='matrix/c3ref/bind_blob.html#R-09849-00220-60139-37223-30218-05088-34235-14106'>context</a>, <a href='matrix/matrix_dbind_blob.html#R-09849-00220-60139-37223-30218-05088-34235-14106'>detail</a>)</i></p></dd>
 
+<dt><b>R-09852-65504-40226-40766-33115-12371-61032-02749</b></dt>
+<dd><p><img src="images/syntax/frame-spec.gif"><br>
+<i>(source: <a href="syntax/frame-spec.html">syntax/frame-spec.html</a>, matrix: <a href='matrix/syntax/frame-spec.html#R-09852-65504-40226-40766-33115-12371-61032-02749'>context</a>, <a href='matrix/matrix_dframe_spec.html#R-09852-65504-40226-40766-33115-12371-61032-02749'>detail</a>)</i></p></dd>
+
 <dt><b>R-09866-00585-18081-22279-50210-42819-02133-03966</b></dt>
 <dd><p>sqlite> EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t2, t1 WHERE t1.a=1 AND t1.b>2; QUERY PLAN |--SEARCH TABLE t1 USING INDEX i2 (a=? AND b>?) `--SCAN TABLE t2
 <i>(source: <a href="eqp.html">eqp.html</a>, matrix: <a href='matrix/eqp.html#R-09866-00585-18081-22279-50210-42819-02133-03966'>context</a>, <a href='matrix/matrix_deqp.html#R-09866-00585-18081-22279-50210-42819-02133-03966'>detail</a>)</i></p></dd>
@@ -2593,10 +2597,6 @@ comments in the source code.
 <dt><b>R-13345-31830-42625-35192-25815-10226-10074-63536</b></dt>
 <dd><p>The escape character followed by a percent symbol (%), underscore (_), or a second instance of the escape character itself matches a literal percent symbol, underscore, or a single escape character, respectively.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test, matrix: <a href='matrix/lang_expr.html#R-13345-31830-42625-35192-25815-10226-10074-63536'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-13345-31830-42625-35192-25815-10226-10074-63536'>detail</a>)</i></p></dd>
-
-<dt><b>R-13380-27850-48182-47987-05437-06690-53655-55495</b></dt>
-<dd><p>This option is used to enable or disable the two-argument version of the fts3_tokenizer() function which is part of the FTS3 full-text search engine extension.
-<i>(source: <a href="c3ref/c_dbconfig_defensive.html">c3ref/c_dbconfig_defensive.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_defensive.html#R-13380-27850-48182-47987-05437-06690-53655-55495'>context</a>, <a href='matrix/matrix_dc_dbconfig_defensive.html#R-13380-27850-48182-47987-05437-06690-53655-55495'>detail</a>)</i></p></dd>
 
 <dt><b>R-13381-51663-43618-16606-57611-35526-29566-64189</b></dt>
 <dd><p>PRAGMA pragma_list; This pragma returns a list of PRAGMA commands known to the database connection.
@@ -4126,10 +4126,6 @@ comments in the source code.
 <dd><p>The "INSERT INTO table DEFAULT VALUES" form of the INSERT statement is not supported.
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-21148-64834-51953-28586-58289-58298-04009-03354'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-21148-64834-51953-28586-58289-58298-04009-03354'>detail</a>)</i></p></dd>
 
-<dt><b>R-21163-49507-12056-09057-16164-04333-10527-15472</b></dt>
-<dd><p><img src="images/syntax/window-defn.gif"><br>
-<i>(source: <a href="syntax/window-defn.html">syntax/window-defn.html</a>, matrix: <a href='matrix/syntax/window-defn.html#R-21163-49507-12056-09057-16164-04333-10527-15472'>context</a>, <a href='matrix/matrix_dwindow_defn.html#R-21163-49507-12056-09057-16164-04333-10527-15472'>detail</a>)</i></p></dd>
-
 <dt><b>R-21171-34919-23602-58467-34631-37001-49601-29313</b></dt>
 <dd><p>The eParentWithin and rParentScore values are copies of the eWithin and rScore values from the containing subtree of the current row.
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-21171-34919-23602-58467-34631-37001-49601-29313'>context</a>, <a href='matrix/matrix_drtree.html#R-21171-34919-23602-58467-34631-37001-49601-29313'>detail</a>)</i></p></dd>
@@ -5090,6 +5086,10 @@ comments in the source code.
 <dd><p>If the SQLITE_FCNTL_PRAGMA file control returns SQLITE_OK, then the parser assumes that the VFS has handled the PRAGMA itself and the parser generates a no-op prepared statement if result string is NULL, or that returns a copy of the result string if the string is non-NULL.
 <i>(source: <a href="c3ref/c_fcntl_begin_atomic_write.html">c3ref/c_fcntl_begin_atomic_write.html</a>, checked-by: tcl/multiplex4.test, th3/cov1/pragma24.test, matrix: <a href='matrix/c3ref/c_fcntl_begin_atomic_write.html#R-26188-08449-06969-05333-36262-60871-22176-39475'>context</a>, <a href='matrix/matrix_dc_fcntl_begin_atomic_write.html#R-26188-08449-06969-05333-36262-60871-22176-39475'>detail</a>)</i></p></dd>
 
+<dt><b>R-26196-02570-33266-26547-23836-43946-29062-31083</b></dt>
+<dd><p>The destructor is called to dispose of the BLOB or string even if the call to the bind API fails, except the destructor is not called if the third parameter is a NULL pointer or the fourth parameter is negative.
+<i>(source: <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>, matrix: <a href='matrix/c3ref/bind_blob.html#R-26196-02570-33266-26547-23836-43946-29062-31083'>context</a>, <a href='matrix/matrix_dbind_blob.html#R-26196-02570-33266-26547-23836-43946-29062-31083'>detail</a>)</i></p></dd>
+
 <dt><b>R-26226-51609-37600-59924-62338-40225-61693-64519</b></dt>
 <dd><p>When the legacy_file_format pragma is issued with no argument, it returns the setting of the flag.
 <i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/req1/pragma22.test, matrix: <a href='matrix/pragma.html#R-26226-51609-37600-59924-62338-40225-61693-64519'>context</a>, <a href='matrix/matrix_dpragma.html#R-26226-51609-37600-59924-62338-40225-61693-64519'>detail</a>)</i></p></dd>
@@ -5774,6 +5774,10 @@ comments in the source code.
 <dd><p>The usual algorithm is to give the newly created row a ROWID that is one larger than the largest ROWID in the table prior to the insert.
 <i>(source: <a href="autoinc.html">autoinc.html</a>, checked-by: src/vdbe.c, th3/req1/autoinc01.test, matrix: <a href='matrix/autoinc.html#R-29538-34987-07238-64188-64158-06889-50248-62239'>context</a>, <a href='matrix/matrix_dautoinc.html#R-29538-34987-07238-64188-64158-06889-50248-62239'>detail</a>)</i></p></dd>
 
+<dt><b>R-29565-52740-53863-51242-23520-28931-17220-09831</b></dt>
+<dd><p>The sqlite3_stmt_isexplain(S) interface returns 1 if the prepared statement S is an EXPLAIN statement, or 2 if the statement S is an EXPLAIN QUERY PLAN.
+<i>(source: <a href="c3ref/stmt_isexplain.html">c3ref/stmt_isexplain.html</a>, matrix: <a href='matrix/c3ref/stmt_isexplain.html#R-29565-52740-53863-51242-23520-28931-17220-09831'>context</a>, <a href='matrix/matrix_dstmt_isexplain.html#R-29565-52740-53863-51242-23520-28931-17220-09831'>detail</a>)</i></p></dd>
+
 <dt><b>R-29575-14878-05474-20512-63309-33241-31866-62624</b></dt>
 <dd><p>Each call to either sqlite3_trace() or sqlite3_trace_v2() overrides (cancels) any prior calls to sqlite3_trace() or sqlite3_trace_v2().
 <i>(source: <a href="c3ref/trace_v2.html">c3ref/trace_v2.html</a>, matrix: <a href='matrix/c3ref/trace_v2.html#R-29575-14878-05474-20512-63309-33241-31866-62624'>context</a>, <a href='matrix/matrix_dtrace_v2.html#R-29575-14878-05474-20512-63309-33241-31866-62624'>detail</a>)</i></p></dd>
@@ -6009,10 +6013,6 @@ comments in the source code.
 <dt><b>R-30323-21917-40561-21411-57538-63013-10240-64875</b></dt>
 <dd><p>Each foreign key constraint in SQLite is classified as either immediate or deferred.
 <i>(source: <a href="foreignkeys.html">foreignkeys.html</a>, checked-by: src/build.c, src/fkey.c, src/sqliteInt.h, tcl/e_fkey.test, th3/req1/foreignkeys12.test, matrix: <a href='matrix/foreignkeys.html#R-30323-21917-40561-21411-57538-63013-10240-64875'>context</a>, <a href='matrix/matrix_dforeignkeys.html#R-30323-21917-40561-21411-57538-63013-10240-64875'>detail</a>)</i></p></dd>
-
-<dt><b>R-30326-06845-64615-54981-43603-53973-26447-14350</b></dt>
-<dd><p>The destructor is called to dispose of the BLOB or string even if the call to bind API fails.
-<i>(source: <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>, checked-by: th3/req1/bind01.test, matrix: <a href='matrix/c3ref/bind_blob.html#R-30326-06845-64615-54981-43603-53973-26447-14350'>context</a>, <a href='matrix/matrix_dbind_blob.html#R-30326-06845-64615-54981-43603-53973-26447-14350'>detail</a>)</i></p></dd>
 
 <dt><b>R-30347-18702-41681-51017-11561-03801-56644-21815</b></dt>
 <dd><p>Casting a REAL or INTEGER value to NUMERIC is a no-op, even if a real value could be losslessly converted to an integer.
@@ -6769,6 +6769,10 @@ comments in the source code.
 <dt><b>R-34407-33329-56662-13063-42233-50984-46328-08443</b></dt>
 <dd><p>The sqlite3_vsnprintf() routine is a varargs version of sqlite3_snprintf().
 <i>(source: <a href="c3ref/mprintf.html">c3ref/mprintf.html</a>, checked-by: th3/req1/malloc01.test, matrix: <a href='matrix/c3ref/mprintf.html#R-34407-33329-56662-13063-42233-50984-46328-08443'>context</a>, <a href='matrix/matrix_dmprintf.html#R-34407-33329-56662-13063-42233-50984-46328-08443'>detail</a>)</i></p></dd>
+
+<dt><b>R-34454-51576-24754-10071-63096-27780-03136-30256</b></dt>
+<dd><p><img src="images/syntax/window-defn.gif"><br>
+<i>(source: <a href="syntax/window-defn.html">syntax/window-defn.html</a>, matrix: <a href='matrix/syntax/window-defn.html#R-34454-51576-24754-10071-63096-27780-03136-30256'>context</a>, <a href='matrix/matrix_dwindow_defn.html#R-34454-51576-24754-10071-63096-27780-03136-30256'>detail</a>)</i></p></dd>
 
 <dt><b>R-34456-00884-53550-63882-43324-33974-40030-43057</b></dt>
 <dd><p>The first form of this pragma queries the current journaling mode for database.
@@ -8010,10 +8014,6 @@ comments in the source code.
 <dd><p>For each affected row, the named columns are set to the values found by evaluating the corresponding scalar expressions.
 <i>(source: <a href="lang_update.html">lang_update.html</a>, checked-by: tcl/e_update.test, matrix: <a href='matrix/lang_update.html#R-40598-36595-56877-54174-64761-50948-11892-46483'>context</a>, <a href='matrix/matrix_dlang_update.html#R-40598-36595-56877-54174-64761-50948-11892-46483'>detail</a>)</i></p></dd>
 
-<dt><b>R-40600-37137-30781-03682-41893-11893-42232-20909</b></dt>
-<dd><p><img src="images/syntax/frame-spec.gif"><br>
-<i>(source: <a href="syntax/frame-spec.html">syntax/frame-spec.html</a>, matrix: <a href='matrix/syntax/frame-spec.html#R-40600-37137-30781-03682-41893-11893-42232-20909'>context</a>, <a href='matrix/matrix_dframe_spec.html#R-40600-37137-30781-03682-41893-11893-42232-20909'>detail</a>)</i></p></dd>
-
 <dt><b>R-40602-24566-60725-06279-09295-25327-26293-64572</b></dt>
 <dd><p>The schema-names 'main' and 'temp' refer to the main database and the database used for temporary tables.
 <i>(source: <a href="lang_attach.html">lang_attach.html</a>, checked-by: th3/req1/attach01.test, matrix: <a href='matrix/lang_attach.html#R-40602-24566-60725-06279-09295-25327-26293-64572'>context</a>, <a href='matrix/matrix_dlang_attach.html#R-40602-24566-60725-06279-09295-25327-26293-64572'>detail</a>)</i></p></dd>
@@ -8866,6 +8866,10 @@ comments in the source code.
 <dd><p>SQLite will never invoke SQLITE_FCNTL_COMMIT_ATOMIC_WRITE without a prior successful call to SQLITE_FCNTL_BEGIN_ATOMIC_WRITE.
 <i>(source: <a href="c3ref/c_fcntl_begin_atomic_write.html">c3ref/c_fcntl_begin_atomic_write.html</a>, matrix: <a href='matrix/c3ref/c_fcntl_begin_atomic_write.html#R-44462-37635-62099-13453-38487-62317-50080-33351'>context</a>, <a href='matrix/matrix_dc_fcntl_begin_atomic_write.html#R-44462-37635-62099-13453-38487-62317-50080-33351'>detail</a>)</i></p></dd>
 
+<dt><b>R-44487-57903-51219-53037-61864-06803-55060-36082</b></dt>
+<dd><p>The sqlite3_stmt_isexplain(S) interface returns 0 if S is an ordinary statement or a NULL pointer.
+<i>(source: <a href="c3ref/stmt_isexplain.html">c3ref/stmt_isexplain.html</a>, matrix: <a href='matrix/c3ref/stmt_isexplain.html#R-44487-57903-51219-53037-61864-06803-55060-36082'>context</a>, <a href='matrix/matrix_dstmt_isexplain.html#R-44487-57903-51219-53037-61864-06803-55060-36082'>detail</a>)</i></p></dd>
+
 <dt><b>R-44492-58344-41928-11727-58799-16717-41714-60827</b></dt>
 <dd><p>The purpose of the likely(X) function is to provide a hint to the query planner that the argument X is a boolean value that is usually true.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: th3/cov1/where42.test, matrix: <a href='matrix/lang_corefunc.html#R-44492-58344-41928-11727-58799-16717-41714-60827'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-44492-58344-41928-11727-58799-16717-41714-60827'>detail</a>)</i></p></dd>
@@ -9649,6 +9653,10 @@ comments in the source code.
 <dt><b>R-48245-15045-20041-46563-30518-58270-45669-62749</b></dt>
 <dd><p>A filename that is not a well-formed URI is interpreted as an ordinary filename.
 <i>(source: <a href="uri.html">uri.html</a>, matrix: <a href='matrix/uri.html#R-48245-15045-20041-46563-30518-58270-45669-62749'>context</a>, <a href='matrix/matrix_duri.html#R-48245-15045-20041-46563-30518-58270-45669-62749'>detail</a>)</i></p></dd>
+
+<dt><b>R-48254-42943-07993-04131-52492-34370-46050-41806</b></dt>
+<dd><p>This option is used to enable or disable the fts3_tokenizer() function which is part of the FTS3 full-text search engine extension.
+<i>(source: <a href="c3ref/c_dbconfig_defensive.html">c3ref/c_dbconfig_defensive.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_defensive.html#R-48254-42943-07993-04131-52492-34370-46050-41806'>context</a>, <a href='matrix/matrix_dc_dbconfig_defensive.html#R-48254-42943-07993-04131-52492-34370-46050-41806'>detail</a>)</i></p></dd>
 
 <dt><b>R-48270-44282-22791-02682-41212-30485-35514-10094</b></dt>
 <dd><p>Foreign key ON DELETE and ON UPDATE clauses are used to configure actions that take place when deleting rows from the parent table (ON DELETE), or modifying the parent key values of existing rows (ON UPDATE).
