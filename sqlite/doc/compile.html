@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -172,7 +172,10 @@ options for SQLite.  But the following set of compile-time options is
 one configuration that is always fully tested.
 
 </p><ol>
-<li><p><b><a href="compile.html#threadsafe">SQLITE_THREADSAFE=0</a></b>.
+<li><p><b><a href="compile.html#dqs">SQLITE_DQS=0</a></b>.
+This setting disables the <a href="quirks.html#dblquote">double-quoted string literal</a> misfeature.
+
+</p></li><li><p><b><a href="compile.html#threadsafe">SQLITE_THREADSAFE=0</a></b>.
 Setting -DSQLITE_THREADSAFE=0 causes all of the mutex and thread-safety logic
 in SQLite to be omitted.  This is the single compile-time option that makes
 the most difference in optimizing the performance of SQLite.
@@ -481,6 +484,26 @@ some design situations, every little bit helps.
   <a href="c3ref/stmt.html">prepared statement</a> will launch to assist it with a query.  If not specified,
   the default maximum is 0.
   The value set here cannot be more than <a href="compile.html#max_worker_threads">SQLITE_MAX_WORKER_THREADS</a>.
+</p></blockquote><a name="dqs"></a>
+<p><b>SQLITE_DQS=<i>N</i></b></p><blockquote><p>
+  This macro determines the default values for
+  <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdqsddl">SQLITE_DBCONFIG_DQS_DDL</a> and <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdqsdml">SQLITE_DBCONFIG_DQS_DML</a>, which
+  in turn how SQLite handles each <a href="quirks.html#dblquote">double-quoted string literal</a>.
+  The "DQS" name stands for 
+  "<u>D</u>ouble-<u>Q</u>uoted <u>S</u>tring".
+  The <i>N</i> argument should be an integer 0, 1, 2, or 3.
+  <blockquote><table border=1 cellpadding="0" cellspacing="0">
+  <tr><th rowspan="2">SQLITE_DQS<th colspan="2">Double-Quoted Strings Allowed
+      <th rowspan="2">Remarks
+  <tr><th>In DDL<th>In DML
+  <tr><td>3<td>yes<td>yes<td>default
+  <tr><td>2<td>yes<td>no<td>&nbsp;
+  <tr><td>1<td>no<td>yes<td>&nbsp;
+  <tr><td>0<td>no<td>no<td>recommended
+  </table></blockquote>
+  <p>The recommended setting is 0, meaning that double-quoted
+  strings are disallowed in all contexts.  However, the default
+  setting is 3 for maximum compatibility with legacy applications.
 </p></blockquote><a name="extra_durable"></a>
 <p><b>SQLITE_EXTRA_DURABLE</b></p><blockquote><p>
   The SQLITE_EXTRA_DURABLE compile-time option that used to cause the default
@@ -1479,6 +1502,10 @@ The SQLITE_OMIT_* compile-time options are mostly unsupported.
 </p></blockquote><a name="omit_builtin_test"></a>
 <p><b>SQLITE_OMIT_BUILTIN_TEST</b></p><blockquote><p>
   This compile-time option has been renamed to <a href="compile.html#untestable">SQLITE_UNTESTABLE</a>.
+</p></blockquote><a name="omit_case_sensitive_like_pragma"></a>
+<p><b>SQLITE_OMIT_CASE_SENSITIVE_LIKE_PRAGMA</b></p><blockquote><p>
+  This compile-time option disables the <a href="pragma.html#pragma_case_sensitive_like">PRAGMA case_sensitive_like</a>
+  command.
 </p></blockquote><a name="omit_cast"></a>
 <p><b>SQLITE_OMIT_CAST</b></p><blockquote><p>
   This option causes SQLite to omit support for the CAST operator.

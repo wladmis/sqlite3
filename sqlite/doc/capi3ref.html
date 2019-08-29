@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -306,11 +306,14 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_CREATE_VIEW","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_CREATE_VTABLE","s":0},
 {"u":"#sqlitedbconfigdefensive","x":"SQLITE_DBCONFIG_DEFENSIVE","s":0},
+{"u":"#sqlitedbconfigdqsddl","x":"SQLITE_DBCONFIG_DQS_DDL","s":0},
+{"u":"#sqlitedbconfigdqsdml","x":"SQLITE_DBCONFIG_DQS_DML","s":0},
 {"u":"#sqlitedbconfigenablefkey","x":"SQLITE_DBCONFIG_ENABLE_FKEY","s":0},
 {"u":"#sqlitedbconfigenablefts3tokenizer","x":"SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER","s":0},
 {"u":"#sqlitedbconfigenableloadextension","x":"SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION","s":0},
 {"u":"#sqlitedbconfigenableqpsg","x":"SQLITE_DBCONFIG_ENABLE_QPSG","s":0},
 {"u":"#sqlitedbconfigenabletrigger","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
+{"u":"#sqlitedbconfiglegacyaltertable","x":"SQLITE_DBCONFIG_LEGACY_ALTER_TABLE","s":0},
 {"u":"#sqlitedbconfiglookaside","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
 {"u":"#sqlitedbconfigmaindbname","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
 {"u":"#SQLITE_DBCONFIG_DEFENSIVE","x":"SQLITE_DBCONFIG_MAX","s":0},
@@ -610,6 +613,7 @@ var listitems23 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PRNG_RESTORE","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PRNG_SAVE","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_RESERVE","s":0},
+{"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_RESULT_INTREAL","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_SCRATCHMALLOC","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_SORTER_MMAP","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_VDBE_COVERAGE","s":0},
@@ -1912,8 +1916,14 @@ or failure of the xOpen call.</p>
 The flags argument to xAccess() may be <a href="#SQLITE_ACCESS_EXISTS">SQLITE_ACCESS_EXISTS</a>
 to test for the existence of a file, or <a href="#SQLITE_ACCESS_EXISTS">SQLITE_ACCESS_READWRITE</a> to
 test whether a file is readable and writable, or <a href="#SQLITE_ACCESS_EXISTS">SQLITE_ACCESS_READ</a>
-to test whether a file is at least readable.   The file can be a
-directory.</p>
+to test whether a file is at least readable.  The SQLITE_ACCESS_READ
+flag is never actually used and is not implemented in the built-in
+VFSes of SQLite.  The file is named by the second argument and can be a
+directory. The xAccess method returns <a href="#SQLITE_ABORT">SQLITE_OK</a> on success or some
+non-zero error code if there is an I/O error or if the name of
+the file given in the second argument is illegal.  If SQLITE_OK
+is returned, then non-zero or zero is written into *pResOut to indicate
+whether or not the file is accessible.</p>
 
 <p>SQLite will always allocate at least mxPathname+1 bytes for the
 output buffer xFullPathname.  The exact size of the output buffer
@@ -5313,7 +5323,10 @@ compile-time option is not set, then the default maximum is 1073741824.
 #define SQLITE_DBCONFIG_RESET_DATABASE        1009 /* int int* */
 #define SQLITE_DBCONFIG_DEFENSIVE             1010 /* int int* */
 #define SQLITE_DBCONFIG_WRITABLE_SCHEMA       1011 /* int int* */
-#define SQLITE_DBCONFIG_MAX                   1011 /* Largest DBCONFIG */
+#define SQLITE_DBCONFIG_LEGACY_ALTER_TABLE    1012 /* int int* */
+#define SQLITE_DBCONFIG_DQS_DML               1013 /* int int* */
+#define SQLITE_DBCONFIG_DQS_DDL               1014 /* int int* */
+#define SQLITE_DBCONFIG_MAX                   1014 /* Largest DBCONFIG */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5494,6 +5507,7 @@ deliberately corrupt the database file are disabled.  The disabled
 features include but are not limited to the following:
 <ul>
 <li> The <a href="pragma.html#pragma_writable_schema">PRAGMA writable_schema=ON</a> statement.
+<li> The <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=OFF</a> statement.
 <li> Writes to the <a href="dbpage.html">sqlite_dbpage</a> virtual table.
 <li> Direct writes to <a href="vtab.html#xshadowname">shadow tables</a>.
 </ul>
@@ -5509,6 +5523,37 @@ the writable_schema, positive to enable writable_schema, or negative to
 leave the setting unchanged. The second parameter is a pointer to an
 integer into which is written 0 or 1 to indicate whether the writable_schema
 is enabled or disabled following this call.
+</dd></p>
+
+<p><a name="sqlitedbconfiglegacyaltertable"></a>
+
+<dt>SQLITE_DBCONFIG_LEGACY_ALTER_TABLE</dt>
+<dd>The SQLITE_DBCONFIG_LEGACY_ALTER_TABLE option activates or deactivates
+the legacy behavior of the <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME</a> command such it
+behaves as it did prior to <a href="releaselog/3_24_0.html">version 3.24.0</a> (2018-06-04).  See the
+"Compatibility Notice" on the <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME documentation</a> for
+additional information. This feature can also be turned on and off
+using the <a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table</a> statement.
+</dd></p>
+
+<p><a name="sqlitedbconfigdqsdml"></a>
+
+<dt>SQLITE_DBCONFIG_DQS_DML</td>
+<dd>The SQLITE_DBCONFIG_DQS_DML option activates or deactivates
+the legacy <a href="quirks.html#dblquote">double-quoted string literal</a> misfeature for DML statement
+only, that is DELETE, INSERT, SELECT, and UPDATE statements. The
+default value of this setting is determined by the <a href="compile.html#dqs">-DSQLITE_DQS</a>
+compile-time option.
+</dd></p>
+
+<p><a name="sqlitedbconfigdqsddl"></a>
+
+<dt>SQLITE_DBCONFIG_DQS_DDL</td>
+<dd>The SQLITE_DBCONFIG_DQS option activates or deactivates
+the legacy <a href="quirks.html#dblquote">double-quoted string literal</a> misfeature for DDL statements,
+such as CREATE TABLE and CREATE INDEX. The
+default value of this setting is determined by the <a href="compile.html#dqs">-DSQLITE_DQS</a>
+compile-time option.
 </dd>
 </dl>
 </p><hr><a name="SQLITE_DENY"></a>
@@ -6228,9 +6273,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.28.0"
-#define SQLITE_VERSION_NUMBER 3028000
-#define SQLITE_SOURCE_ID      "2019-04-16 19:49:53 884b4b7e502b4e991677b53971277adfaf0a04a284f8e483e2553d0f83156b50"
+#define SQLITE_VERSION        "3.29.0"
+#define SQLITE_VERSION_NUMBER 3029000
+#define SQLITE_SOURCE_ID      "2019-07-10 17:32:03 fc82b73eaac8b36950e527f12c4b5dc1e147e6f4ad2217ae43ad82882a88bfa6"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -6426,7 +6471,8 @@ cares about the difference.)
 #define SQLITE_TESTCTRL_SORTER_MMAP             24
 #define SQLITE_TESTCTRL_IMPOSTER                25
 #define SQLITE_TESTCTRL_PARSER_COVERAGE         26
-#define SQLITE_TESTCTRL_LAST                    26  /* Largest TESTCTRL */
+#define SQLITE_TESTCTRL_RESULT_INTREAL          27
+#define SQLITE_TESTCTRL_LAST                    27  /* Largest TESTCTRL */
 </pre></blockquote>
 <p>
 These constants are the valid operation code parameters used

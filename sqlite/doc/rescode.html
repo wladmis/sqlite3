@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -1380,7 +1380,9 @@ in numeric order.
   The SQLITE_IOERR_SHMSIZE error code is an <a href="rescode.html#pve">extended error code</a>
   for <a href="rescode.html#ioerr">SQLITE_IOERR</a> indicating an I/O error
   within the xShmMap method on the <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object
-  while trying to resize an existing shared memory segment.
+  while trying to enlarge a <a href="walformat.html#shm">"shm" file</a> as part of
+  <a href="wal.html">WAL mode</a> transaction processing.  This error may indicate that
+  the underlying filesystem volume is out of space.
 
 
 <!--------------------------------------------------------------->

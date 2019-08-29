@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -211,15 +211,22 @@ the special ON CONFLICT clause shown above.
 <p>The syntax that occurs in between the "ON CONFLICT" and "DO" keywords
 is called the "conflict target".  The conflict target specifies a specific
 uniqueness constraint that will trigger the upsert.  The conflict target
-is required for DO UPDATE upserts, but is optional for DO NOTHING.
-A DO NOTHING upsert without a conflict target works the same as an
-<a href="lang_conflict.html">INSERT OR IGNORE</a>.
+is required for DO UPDATE upserts, but is optional for DO NOTHING.  When
+the conflict target is omitted, the upsert behavior is triggered by a
+violation of any uniqueness constraint on the table of the INSERT.
 
 <p>If the insert operation would cause the uniqueness constraint identified
 by the conflict-target clause to fail, then the insert is omitted and
 either the DO NOTHING or DO UPDATE operation is performed instead.
 In the case of a multi-row insert, this decision is made separately
 for each row of the insert.
+
+<p>The special UPSERT processing happens only for uniqueness constraint on
+the table that is receiving the INSERT. A "uniqueness constraint"
+is an explicit UNIQUE or PRIMARY KEY constraint within
+the CREATE TABLE statement, or a <a href="lang_createindex.html#uniqueidx">unique index</a>.
+UPSERT does not intervene for failed NOT NULL or foreign key constraints
+or for constraints that are implemented using triggers.
 
 <p>Column names in the expressions of a DO UPDATE refer to the original
 unchanged value of the column, before the attempted INSERT.  To use the

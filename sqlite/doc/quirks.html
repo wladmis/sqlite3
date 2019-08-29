@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -190,7 +190,7 @@ SQLite is very flexible with regard to datatypes.
 </p><p>
 Some commentators say that SQLite is "weakly typed" and that other
 SQL databases are "strongly typed".  We consider these terms to be
-inaccurate and purgative.  We prefer to say that SQLite is "flexibly typed"
+inaccurate and pejorative.  We prefer to say that SQLite is "flexibly typed"
 and that other SQL databases are "rigidly typed".
 
 </p><p>
@@ -210,7 +210,7 @@ SQLite stores the actual string value in the column.
 
 </p><p>
 Similarly, SQLite allows you to store a 2000-character string into a
-column of type VARCHAR(50).  Other SQL implementions would either throw
+column of type VARCHAR(50).  Other SQL implementations would either throw
 an error or truncate the string.  SQLite stores the entire 2000-character
 string with no loss of information and without complaint.
 
@@ -369,32 +369,53 @@ library.
 </p><h1 id="double_quoted_string_literals_are_accepted"><span>8. </span>Double-quoted String Literals Are Accepted</h1>
 
 <p>
-The SQL standard says that one should use double-quotes around identifiers
-and single-quotes around string literals.
+The SQL standard requires double-quotes around identifiers
+and single-quotes around string literals.  For example:
 </p><ul>
 <li> <tt>"this is a legal SQL column name"</tt>
 </li><li> <tt>'this is an SQL string literal'</tt>
 </li></ul>
 <p>
 SQLite accepts both of the above.  But, in an effort to be compatible
-with MySQL 3.x (which was very popular when SQLite was first being
-designed) SQLite will also use content contained in double-quotes as a s
-tring literal if the content does not match any valid identifier.
+with MySQL 3.x (which was one of the most widely used RDBMSes
+when SQLite was first being designed) SQLite will also interpret
+a double-quotes string as
+string literal if it does not match any valid identifier.
 </p><p>
-An unfortunate side-effect of this is that a misspelled double-quoted
+This misfeature means that a misspelled double-quoted
 identifier will be interpreted as a string literal, rather than generating
 an error.
-Another problem is that this behavior allows developers who are new to
-the SQL language to continue using double-quoted string literals when they
+It also lures developers who are new to the SQL language into
+bad habit of using double-quoted string literals when they
 really need to learn to use the correct single-quoted string literal form.
 </p><p>
 In hindsight, we should not have tried to make SQLite accept MySQL 3.x
 syntax, and should have never allowed double-quoted string literals.
-However, we continue to support that capability to avoid breaking legacy
-applications.
+However, there are countless applications that make use of
+double-quoted string literals and so we continue to support
+that capability to avoid breaking legacy.
 </p><p>
-Update: As of SQLite 3.27.0 (2019-02-07) the use of a double-quoted
+As of SQLite 3.27.0 (2019-02-07) the use of a double-quoted
 string literal causes a warning message to be sent to the <a href="errlog.html">error log</a>.
+</p><p>
+As of SQLite 3.29.0 (2019-07-10) the use of double-quoted
+string literals can be disabled at run-time using the
+<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdqsddl">SQLITE_DBCONFIG_DQS_DDL</a> and <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdqsdml">SQLITE_DBCONFIG_DQS_DML</a> actions
+to <a href="c3ref/db_config.html">sqlite3_db_config()</a>.  The default settings can be altered
+at compile-time using the <a href="compile.html#dqs">-DSQLITE_DQS=<i>N</i></a> compile-time
+option.  Application developers are encouraged to compile using
+-DSQLITE_DQS=0 in order to disable the double-quoted string literal
+misfeature by default.  If that is not possible, then disable
+double-quoted string literals for individual database connections
+using C-code like this:
+</p><blockquote><pre>
+sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DDL, 0, (void*)0);
+sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DML, 0, (void*)0);
+</pre></blockquote>
+<p>Or, if double-quoted string literals are disabled by default, but need
+to be selectively enabled for some historical database connections,
+that can be done using the same C-code as shown above except with the
+third parameter changed from 0 to 1.
 
 </p><h1 id="keywords_can_often_be_used_as_identifiers"><span>9. </span>Keywords Can Often Be Used As Identifiers</h1>
 

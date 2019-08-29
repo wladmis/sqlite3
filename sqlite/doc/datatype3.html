@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -452,6 +452,8 @@ REAL, or NUMERIC) but expressions do no necessarily have an affinity.
   has an affinity that is the same as a column with a declared
   type of "<i>type</i>".
 
+  </p></li><li><p>A COLLATE operator has the same affinity as its left-hand side operand.
+
   </p></li><li><p>Otherwise, an expression has no affinity.
 </p></li></ul>
 
@@ -671,13 +673,29 @@ as "40&gt;a".
 
 </p><h1 id="operators"><span>5. </span>Operators</h1>
 
-<p>All mathematical operators (+, -, *, /, %, &lt;&lt;, &gt;&gt;,
-&amp;, and |)
-cast both operands to the NUMERIC storage class prior to being carried out.
-The cast is carried through even if it is lossy and irreversible.
+<p>Mathematical operators (+, -, *, /, %, &lt;&lt;, &gt;&gt;,
+&amp;, and |) interpret both operands as if they were numbers.
+STRING or BLOB operands automatically convert into REAL or INTEGER values.
+If the STRING or BLOB looks like a real number (if it has a decimal point
+or an exponent) or if the value is outside the range that can be represented
+as a 64-bit signed integer, then it converts to REAL.  Otherwise the operand
+converts to INTEGER.
+The implied type conversion of mathematical operands is slightly different
+from <a href="lang_expr.html#castexpr">CAST to NUMERIC</a> in that string and BLOB values that
+look like real numbers but have no fractional part are kept as REAL
+instead of being converted into INTEGER as they would be for <a href="lang_expr.html#castexpr">CAST to NUMERIC</a>.
+The conversion from STRING or BLOB into REAL or INTEGER is performed
+even if it is lossy and irreversible.
+Some mathematical operators (%, &lt;&lt;, &gt;&gt;, &amp;, and |) expect
+INTEGER operands.  For those operators, REAL operands are converted into INTEGER
+in the same way as a <a href="lang_expr.html#castexpr">CAST to INTEGER</a>.
+The &lt;&lt;, &gt;&gt;, &amp;, and | operators always return an INTEGER (or NULL)
+result, but the % operator returns either INTEGER or REAL (or NULL)
+depending on the type of its operands.
 A NULL operand on a mathematical operator yields a NULL result.
 An operand on a mathematical operator that does not look in any way
 numeric and is not NULL is converted to 0 or 0.0.
+Division by zero gives a result of NULL.
 </p>
 
 <h1 id="sorting_grouping_and_compound_selects"><span>6. </span>Sorting, Grouping and Compound SELECTs</h1>
@@ -753,7 +771,8 @@ left operand.</p></li>
 <li><p>If either operand is a column, then the collating function of
 that column is used with precedence to the left operand.
 For the purposes of the previous sentence, a column name
-preceded by one or more unary "+" operators is still considered a column name.
+preceded by one or more unary "+" operators and/or CAST operators
+is still considered a column name.
 </p></li>
 
 <li><p>Otherwise, the BINARY collating function is used for comparison.

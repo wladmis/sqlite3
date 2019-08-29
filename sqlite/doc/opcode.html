@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.28.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=884b4b7e502b4'>884b4b7e502b4</a> dated 2019-04-16.
+ version 3.29.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=fc82b73eaac8b'>fc82b73eaac8b</a> dated 2019-07-10.
 
 
 
@@ -422,15 +422,15 @@ opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/711ef421b3bb3db3b2476067b2dc3c71ef5844d9b1a723026578f89f6da621e8">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/aaa36d1ac7d55baf007e9c03ee7c826834a51dfe7a56ba4c386318695dd87c99">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.28.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=884b4b7e502b4'>884b4b7e502b4</a> dated 2019-04-16.
+ version 3.29.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=fc82b73eaac8b'>fc82b73eaac8b</a> dated 2019-07-10.
 
 <a name="codes"></a>
 
@@ -1873,8 +1873,9 @@ inserted as part of some other set).</td></tr>
 <tr><td valign="top" align="center">
 <a name="Savepoint"></a>Savepoint
 <td>Open, release or rollback the savepoint named by parameter P4, depending
-on the value of P1. To open a new savepoint, P1==0. To release (commit) an
-existing savepoint, P1==1, or to rollback an existing savepoint P1==2.</td></tr>
+on the value of P1. To open a new savepoint set P1==0 (SAVEPOINT_BEGIN).
+To release (commit) an existing savepoint set P1==1 (SAVEPOINT_RELEASE).
+To rollback an existing savepoint set P1==2 (SAVEPOINT_ROLLBACK).</td></tr>
 <tr><td valign="top" align="center">
 <a name="SCopy"></a>SCopy
 <td>Make a shallow copy of register P1 into register P2.</p>

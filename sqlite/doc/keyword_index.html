@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -124,6 +124,7 @@ Other Documentation Indexes:
 <li> <a href="lang_altertable.html#altertabaddcol">ALTER TABLE ADD COLUMN</a> </li>
 <li> <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME</a> </li>
 <li> <a href="lang_altertable.html#altertabmvcol">ALTER TABLE RENAME COLUMN</a> </li>
+<li> <a href="lang_altertable.html#altertabrename">ALTER TABLE RENAME documentation</a> </li>
 <li> <a href="syntax/alter-table-stmt.html">alter-table-stmt</a> </li>
 <li> <a href="syntax/alter-table-stmt.html">alter-table-stmt syntax diagram</a> </li>
 <li> <a href="amalgamation.html">amalgamation</a> </li>
@@ -455,6 +456,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#disable_fts4_deferred">-DSQLITE_DISABLE_FTS4_DEFERRED</a> </li>
 <li> <a href="compile.html#disable_intrinsic">-DSQLITE_DISABLE_INTRINSIC</a> </li>
 <li> <a href="compile.html#disable_lfs">-DSQLITE_DISABLE_LFS</a> </li>
+<li> <a href="compile.html#dqs">-DSQLITE_DQS</a> </li>
 <li> <a href="compile.html#enable_8_3_names">-DSQLITE_ENABLE_8_3_NAMES</a> </li>
 <li> <a href="compile.html#enable_api_armor">-DSQLITE_ENABLE_API_ARMOR</a> </li>
 <li> <a href="compile.html#enable_atomic_write">-DSQLITE_ENABLE_ATOMIC_WRITE</a> </li>
@@ -522,6 +524,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#omit_blob_literal">-DSQLITE_OMIT_BLOB_LITERAL</a> </li>
 <li> <a href="compile.html#omit_btreecount">-DSQLITE_OMIT_BTREECOUNT</a> </li>
 <li> <a href="compile.html#omit_builtin_test">-DSQLITE_OMIT_BUILTIN_TEST</a> </li>
+<li> <a href="compile.html#omit_case_sensitive_like_pragma">-DSQLITE_OMIT_CASE_SENSITIVE_LIKE_PRAGMA</a> </li>
 <li> <a href="compile.html#omit_cast">-DSQLITE_OMIT_CAST</a> </li>
 <li> <a href="compile.html#omit_check">-DSQLITE_OMIT_CHECK</a> </li>
 <li> <a href="compile.html#omit_compileoption_diags">-DSQLITE_OMIT_COMPILEOPTION_DIAGS</a> </li>
@@ -608,6 +611,7 @@ Other Documentation Indexes:
 <li> <a href="lang_expr.html#like">ESCAPE</a> </li>
 <li> <a href="tclsqlite.html#eval">eval method</a> </li>
 <li> <a href="windowfunctions.html#wexcls">exclude clause</a> </li>
+<li> <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> </li>
 <li> <a href="tclsqlite.html#exists">exists method</a> </li>
 <li> <a href="lang_expr.html#exists_op">EXISTS operator</a> </li>
 <li> <a href="c3ref/experimental.html">experimental</a> </li>
@@ -1005,6 +1009,7 @@ Other Documentation Indexes:
 <li> <a href="windowfunctions.html#ptxn">partition</a> </li>
 <li> <a href="sessionintro.html#changeset">patchset</a> </li>
 <li> <a href="sitemap.html">permuted index</a> </li>
+<li> <a href="pragma.html#pragma_journal_mode">persistent journal mode</a> </li>
 <li> <a href="loadext.html#persist">persistent loadable extensions</a> </li>
 <li> <a href="fts3.html#phrase">phrase queries</a> </li>
 <li> <a href="bindptr.html#ptrleak">pointer leak</a> </li>
@@ -1146,9 +1151,10 @@ Other Documentation Indexes:
 <li> <a href="pragma.html#pragma_read_uncommitted">read_uncommitted pragma</a> </li>
 <li> <a href="fts3.html#*fts4rebuidcmd">"rebuild" command</a> </li>
 <li> <a href="locrsf.html">recommended by the US Library of Congress</a> </li>
-<li> <a href="compile.html#rcmd">recommended compile-time options</a> </li>
+<li> <a href="compile.html#rcmd">recommended compile-time option</a> </li>
 <li> <a href="locrsf.html">recommended storage format</a> </li>
 <li> <a href="fileformat2.html#record_format">record format</a> </li>
+<li> <a href="cli.html#recover">.recover dot-command</a> </li>
 <li> <a href="walformat.html#recovery">recovery</a> </li>
 <li> <a href="lang_with.html#recursivecte">recursive common table expression</a> </li>
 <li> <a href="lang_with.html#recursivecte">recursive query</a> </li>
@@ -1231,6 +1237,7 @@ Other Documentation Indexes:
 <li> <a href="sharedcache.html">shared cache</a> </li>
 <li> <a href="sharedcache.html">shared cache mode</a> </li>
 <li> <a href="vfs.html#shim">shims</a> </li>
+<li> <a href="walformat.html#shm">"shm" file</a> </li>
 <li> <a href="shortnames.html">short filenames</a> </li>
 <li> <a href="pragma.html#pragma_short_column_names">short_column_names pragma</a> </li>
 <li> <a href="pragma.html#pragma_shrink_memory">shrink_memory pragma</a> </li>
@@ -1270,6 +1277,7 @@ Other Documentation Indexes:
 <li> <a href="sqlar.html">SQLite Archive format</a> </li>
 <li> <a href="affcase1.html#smaller">SQLite Archive smaller than ZIP</a> </li>
 <li> <a href="consortium.html">SQLite Consortium</a> </li>
+<li> <a href="fileformat2.html">SQLite database file format</a> </li>
 <li> <a href="loadext.html">SQLite extension</a> </li>
 <li> <a href="lang_keywords.html">SQLite Keywords</a> </li>
 <li> <a href="optoverview.html">SQLite query planner</a> </li>
@@ -1746,11 +1754,14 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_VIEW</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_VTABLE</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdqsddl">SQLITE_DBCONFIG_DQS_DDL</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdqsdml">SQLITE_DBCONFIG_DQS_DML</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefkey">SQLITE_DBCONFIG_ENABLE_FKEY</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenablefts3tokenizer">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableloadextension">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenableqpsg">SQLITE_DBCONFIG_ENABLE_QPSG</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigenabletrigger">SQLITE_DBCONFIG_ENABLE_TRIGGER</a> </li>
+<li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglegacyaltertable">SQLITE_DBCONFIG_LEGACY_ALTER_TABLE</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglookaside">SQLITE_DBCONFIG_LOOKASIDE</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigmaindbname">SQLITE_DBCONFIG_MAINDBNAME</a> </li>
 <li> <a href="c3ref/c_dbconfig_defensive.html">SQLITE_DBCONFIG_MAX</a> </li>
@@ -1807,6 +1818,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#disable_intrinsic">SQLITE_DISABLE_INTRINSIC</a> </li>
 <li> <a href="compile.html#disable_lfs">SQLITE_DISABLE_LFS</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_DONE</a> </li>
+<li> <a href="compile.html#dqs">SQLITE_DQS</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_DROP_INDEX</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_DROP_TABLE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_DROP_TEMP_INDEX</a> </li>
@@ -2061,6 +2073,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#omit_blob_literal">SQLITE_OMIT_BLOB_LITERAL</a> </li>
 <li> <a href="compile.html#omit_btreecount">SQLITE_OMIT_BTREECOUNT</a> </li>
 <li> <a href="compile.html#omit_builtin_test">SQLITE_OMIT_BUILTIN_TEST</a> </li>
+<li> <a href="compile.html#omit_case_sensitive_like_pragma">SQLITE_OMIT_CASE_SENSITIVE_LIKE_PRAGMA</a> </li>
 <li> <a href="compile.html#omit_cast">SQLITE_OMIT_CAST</a> </li>
 <li> <a href="compile.html#omit_check">SQLITE_OMIT_CHECK</a> </li>
 <li> <a href="compile.html#omit_compileoption_diags">SQLITE_OMIT_COMPILEOPTION_DIAGS</a> </li>
@@ -2228,6 +2241,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_PRNG_RESTORE</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_PRNG_SAVE</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_RESERVE</a> </li>
+<li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_RESULT_INTREAL</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_SCRATCHMALLOC</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_SORTER_MMAP</a> </li>
 <li> <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_VDBE_COVERAGE</a> </li>
@@ -2518,6 +2532,7 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_27_1.html">Version 3.27.1</a> </li>
 <li> <a href="releaselog/3_27_2.html">Version 3.27.2</a> </li>
 <li> <a href="releaselog/3_28_0.html">Version 3.28.0</a> </li>
+<li> <a href="releaselog/3_29_0.html">Version 3.29.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0.0</a> </li>
 <li> <a href="releaselog/3_3_1.html">Version 3.3.1</a> </li>
@@ -2685,10 +2700,11 @@ Other Documentation Indexes:
 <li> <a href="fileformat2.html#walread">WAL read algorithm</a> </li>
 <li> <a href="fileformat2.html#walreset">WAL reset</a> </li>
 <li> <a href="wal.html#noshm">WAL without shared memory</a> </li>
-<li> <a href="walformat.html">wal-index</a> </li>
-<li> <a href="walformat.html">WAL-index File Format</a> </li>
-<li> <a href="walformat.html">WAL-index format</a> </li>
+<li> <a href="walformat.html#shm">wal-index</a> </li>
+<li> <a href="walformat.html#walidxfmt">WAL-index File Format</a> </li>
+<li> <a href="walformat.html#walidxfmt">WAL-index format</a> </li>
 <li> <a href="walformat.html#recovery">WAL-mode crash recovery</a> </li>
+<li> <a href="walformat.html">WAL-mode File Format</a> </li>
 <li> <a href="walformat.html#locks">WAL-mode locks</a> </li>
 <li> <a href="wal.html#busy">WAL-mode read blocking</a> </li>
 <li> <a href="pragma.html#pragma_wal_autocheckpoint">wal_autocheckpoint pragma</a> </li>
@@ -2698,6 +2714,7 @@ Other Documentation Indexes:
 <li> <a href="affcase1.html">What If OpenOffice Used SQLite</a> </li>
 <li> <a href="withoutrowid.html#wtu">when to use WITHOUT ROWID</a> </li>
 <li> <a href="lang_select.html#whereclause">WHERE clause</a> </li>
+<li> <a href="lang_altertable.html#altertableishard">why ALTER TABLE is so difficult</a> </li>
 <li> <a href="malloc.html#win32heap">Win32 native memory allocator</a> </li>
 <li> <a href="windowfunctions.html#wchaining">window chaining</a> </li>
 <li> <a href="windowfunctions.html">window function</a> </li>

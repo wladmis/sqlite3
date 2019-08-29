@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -104,16 +104,18 @@ Table Of Contents
 <div id="toc_sub"><div class="fancy-toc1"><a href="#introduction">1. Introduction</a></div>
 <div class="fancy-toc2"><a href="#edits">1.1. Edits</a></div>
 <div class="fancy-toc1"><a href="#a_few_reasons_why_sqlite_does_not_use_git">2. A Few Reasons Why SQLite Does Not Use Git</a></div>
-<div class="fancy-toc2"><a href="#git_makes_it_difficult_to_find_successors_descendents_of_a_check_in">2.1. Git makes it difficult to find successors (descendents)
+<div class="fancy-toc2"><a href="#git_does_not_provide_good_situational_awareness">2.1. Git does not provide good situational awareness</a></div>
+<div class="fancy-toc2"><a href="#git_makes_it_difficult_to_find_successors_descendents_of_a_check_in">2.2. Git makes it difficult to find successors (descendents)
 of a check-in</a></div>
-<div class="fancy-toc2"><a href="#the_mental_model_for_git_is_needlessly_complex">2.2. The mental model for Git is needlessly complex</a></div>
-<div class="fancy-toc2"><a href="#git_does_not_track_historical_branch_names">2.3. Git does not track historical branch names</a></div>
-<div class="fancy-toc2"><a href="#git_requires_more_administrative_support">2.4. Git requires more administrative support</a></div>
-<div class="fancy-toc2"><a href="#git_provides_a_poor_user_experience">2.5. Git provides a poor user experience</a></div>
+<div class="fancy-toc2"><a href="#the_mental_model_for_git_is_needlessly_complex">2.3. The mental model for Git is needlessly complex</a></div>
+<div class="fancy-toc2"><a href="#git_does_not_track_historical_branch_names">2.4. Git does not track historical branch names</a></div>
+<div class="fancy-toc2"><a href="#git_requires_more_administrative_support">2.5. Git requires more administrative support</a></div>
+<div class="fancy-toc2"><a href="#git_provides_a_poor_user_experience">2.6. Git provides a poor user experience</a></div>
 <div class="fancy-toc1"><a href="#a_git_user_s_guide_to_accessing_sqlite_source_code">3. A Git-User's Guide To Accessing SQLite Source Code</a></div>
-<div class="fancy-toc2"><a href="#github_mirrors">3.1. GitHub Mirrors</a></div>
+<div class="fancy-toc2"><a href="#the_official_github_mirror">3.1. The Official GitHub Mirror</a></div>
 <div class="fancy-toc2"><a href="#web_access">3.2. Web Access</a></div>
 <div class="fancy-toc2"><a href="#fossil_access">3.3. Fossil Access</a></div>
+<div class="fancy-toc2"><a href="#verifying_source_code_integrity">3.4. Verifying Source Code Integrity</a></div>
 <div class="fancy-toc1"><a href="#see_also">4. See Also</a></div>
 </div>
 </div>
@@ -146,7 +148,7 @@ version control system that was specifically designed
 and written to support SQLite.
 
 </p><p>
-People sometimes ask why SQLite does not use the
+People often wonder why SQLite does not use the
 <a href="https://git-scm.org">Git</a> version control system like everybody
 else.
 This article attempts to answer that question.  Also,
@@ -158,7 +160,18 @@ about how they can easily access the SQLite source code.
 This article is <u>not</u> a comparison between Fossil
 and Git.  See
 <a href="https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki">https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki</a>
-for a comparison of the two systems.
+for one comparison of the two systems.  There are others as
+well.
+
+</p><p>
+This article is <u>not</u> advocating that you switch your projects
+away from Git.  You can use whatever version control system you want.
+If you are perfectly happy with Git, then by all means keep using
+Git.  But, if you are wondering if there isn't something better,
+then maybe try to understand the perspectives presented below.
+Use the insights thus obtained to find or write a different and
+better version control system, or to just make
+improvements to Git itself.
 
 </p><h2 id="edits"><span>1.1. </span>Edits</h2>
 
@@ -172,21 +185,48 @@ and
 <a href="https://lobste.rs/s/slcntl/why_sqlite_does_not_use_git">Lobsters</a>.
 The complete edit history can be seen at
 <a href="https://sqlite.org/docsrc/finfo/pages/whynotgit.in">https://sqlite.org/docsrc/finfo/pages/whynotgit.in</a>.
-
+(Usage hint: Click on any two nodes of the graph for a diff.)
 
 </p><h1 id="a_few_reasons_why_sqlite_does_not_use_git"><span>2. </span>A Few Reasons Why SQLite Does Not Use Git</h1>
 
+<h2 id="git_does_not_provide_good_situational_awareness"><span>2.1. </span>Git does not provide good situational awareness</h2>
+
 <p>
-One could summarize the reason why SQLite does not use Git in
-a single sentence:  The lead SQLite developer finds Git to be
-unpalatable.  If you like Git and want to use it, that's great.
-I do not like Git and would rather use something that I think
-is better.
+When I want to see what has been happening on SQLite (or any of
+about a dozen other projects that I work on) I visit the
+<a href="https://sqlite.org/src/timeline">timeline</a> and in a single
+screen I can see a quick summary of all the latest changes,
+on all branches.
+In a few clicks, I can drill down to see as much detail as I
+want.  I can even do this from a phone.
 
 </p><p>
-The following are a few of the reasons why I do not like Git:
+GitHub and GitLab offer nothing comparable.  The closest I have
+found is the <a href="https://github.com/sqlite/sqlite/network">network</a>,
+which is slow to render (unless it is already cached), does not 
+offer nearly as much details, and scarcely works on mobile.
+The <a href="https://github.com/sqlite/sqlite/commits/master">commits</a> view
+of GitHub provides more detail, renders quickly,
+and works on mobile, but only shows a single branch at a time,
+so I cannot easily know if I've seen all of the recent changes.
+And even if GitHub/GitLab did offer better interfaces, both are
+third-party services.  They are not a core part of Git.  Hence,
+using them introduces yet another dependency into the project.
 
-</p><h2 id="git_makes_it_difficult_to_find_successors_descendents_of_a_check_in"><span>2.1. </span>Git makes it difficult to find successors (descendents)
+</p><p>
+I am told that Git users commonly install third-party graphical
+viewers for Git, many of which do a better job of showing recent 
+activity on the project.  That is great, but these are still
+more third-party applications that must be installed and
+managed separately.  Many are platform-specific.  (One of the
+better ones, <a href="https://gitup.co/">GitUp</a>, only works on Mac, for
+example.)  All require that you first sync your local repository
+then bring up their graphical interface on your desktop.  And
+even with all that, I still cannot see what I typically want to 
+see without multiple clicks.  Checking on project status from
+a phone while away from the office is not an option.
+
+</p><h2 id="git_makes_it_difficult_to_find_successors_descendents_of_a_check_in"><span>2.2. </span>Git makes it difficult to find successors (descendents)
 of a check-in</h2>
 
 <p>
@@ -240,7 +280,7 @@ and tools and using the right commands.  But it is not easy to do,
 and so it rarely gets done.  Consequently, developers have less awareness
 of what is happening in the code.
 
-</p><h2 id="the_mental_model_for_git_is_needlessly_complex"><span>2.2. </span>The mental model for Git is needlessly complex</h2>
+</p><h2 id="the_mental_model_for_git_is_needlessly_complex"><span>2.3. </span>The mental model for Git is needlessly complex</h2>
 
 <p>
 The complexity of Git
@@ -254,7 +294,7 @@ needs to keep all of the following in mind:
 </li><li> The actual remote head
 </li></ol>
 <p>
-Git contains commands (or options on commands) for moving and
+Git commands (and/or options on commands) for moving and
 comparing content between all of these locations. 
 
 </p><p>In contrast,
@@ -273,7 +313,7 @@ the server with a single command....
 I never get this peace of mind with git.
 </i></blockquote>
 
-<h2 id="git_does_not_track_historical_branch_names"><span>2.3. </span>Git does not track historical branch names</h2>
+<h2 id="git_does_not_track_historical_branch_names"><span>2.4. </span>Git does not track historical branch names</h2>
 
 <p>
 Git keeps the complete DAG of the check-in sequence.  But branch
@@ -283,11 +323,14 @@ This makes review of historical
 branches tedious.
 
 </p><p>
-As an example, consider display of a single historical
-branch of SQLite as rendered by GitHub and by Fossil:
+As an example, suppose someone (perhaps a customer) asks you:
+"What ever became of that 'prefer-coroutine-sort-subquery' branch
+from two years ago?"
+You might try to answer the query by consulting the history in
+your version control system, thusly:
 
 </p><ul>
-<li><b>GitHub:</b> <a href="https://github.com/mackyle/sqlite/commits/prefer-coroutine-sort-subquery">https://github.com/mackyle/sqlite/commits/prefer-coroutine-sort-subquery</a>
+<li><b>GitHub:</b> <a href="https://github.com/sqlite/sqlite/commits/prefer-coroutine-sort-subquery">https://github.com/sqlite/sqlite/commits/prefer-coroutine-sort-subquery</a>
 </li><li><b>Fossil:</b> <a href="https://sqlite.org/src/timeline?r=prefer-coroutine-sort-subquery">https://sqlite.org/src/timeline?r=prefer-coroutine-sort-subquery</a>
 </li></ul>
 
@@ -306,18 +349,16 @@ branch names across syncs.  And even if those other tools are better,
 the fact that it is necessary to go to a third-party tool to get the information
 desired does not speak well of the core system.
 
-</p><h2 id="git_requires_more_administrative_support"><span>2.4. </span>Git requires more administrative support</h2>
+</p><h2 id="git_requires_more_administrative_support"><span>2.5. </span>Git requires more administrative support</h2>
 
 <p>
 Git is complex software.
 One needs an installer of some kind to put Git on a developer
 workstation, or to upgrade to a newer version of Git.
-Setting up a Git server is non-trivial.  One could use GitHub,
-but that introduces another third-party dependency and a
-centralized service, which mitigate the key advantage of Git
-which is that it is "distributed".  There are various free
-alternatives to GitHub, such as GitLab, but those too have
-a lot of dependencies and require a lot of server setup.
+Setting up a Git server is non-trivial, and so most users
+have to use a third-party service such as GitHub or GitLab,
+and thus introduce additional (unnecessary) dependencies
+into the project.
 
 </p><p>
 In contrast, Fossil is a single standalone binary which is
@@ -332,7 +373,7 @@ Less administration means that programmers spend more time working
 on the software (SQLite in this case) and less time fussing with
 the version control system.
 
-</p><h2 id="git_provides_a_poor_user_experience"><span>2.5. </span>Git provides a poor user experience</h2>
+</p><h2 id="git_provides_a_poor_user_experience"><span>2.6. </span>Git provides a poor user experience</h2>
 
 <p>The following <a href="https://xkcd.com/1597/">https://xkcd.com/1597/</a> cartoon is an
 exaggeration, yet hits close to home:
@@ -351,8 +392,6 @@ parody site that generates
 A good version control system should provide the developer with
 assistance, not frustration.  Git has gotten better in this
 regard over the past decade, but it still has a long way to go.
-And so, the developers of SQLite plan to continue using a
-different version control system for now.
 
 <a name="getthecode"></a>
 </p><h1 id="a_git_user_s_guide_to_accessing_sqlite_source_code"><span>3. </span>A Git-User's Guide To Accessing SQLite Source Code</h1>
@@ -361,16 +400,29 @@ different version control system for now.
 If you are a devoted Git user, you can still easily access SQLite.  
 This section gives some hints on how to do so.
 
-</p><h2 id="github_mirrors"><span>3.1. </span>GitHub Mirrors</h2>
+</p><h2 id="the_official_github_mirror"><span>3.1. </span>The Official GitHub Mirror</h2>
 
 <p>
-There is a mirror of the SQLite source tree on GitHub at
-<a href="https://github.com/mackyle/sqlite">https://github.com/mackyle/sqlite</a>.  This mirror is maintained
-by user "mackyle" who is unaffiliated with, and unknown to,
-the official SQLite development team.  We do not know mackyle,
-but we observe that he does a terrific job of keeping his mirror
-current, and so if you want to access the SQLite source code on
-GitHub, his mirror is the recommended source.
+As of 2019-03-20, there is now an 
+<a href="https://github.com/sqlite/sqlite">official Git mirror</a> of the
+SQLite sources on GitHub.
+
+</p><p>The mirror is an incremental export of the 
+<a href="https://sqlite.org/src/timeline">canonical Fossil repository</a> for
+SQLite.  A cron-job updates the GitHub repository once an hour.
+This is a one-way, read-only code mirror.  No pull requests or 
+changes are accepted via GitHub.  The GitHub repository merely copies
+the content from the Fossil repository.  All changes are input via
+Fossil.
+
+</p><p>
+The hashes that identify check-ins and files on the Git mirror are
+different from the hashes in Fossil.  There are many reasons for
+this, chief among them that Fossil uses a SHA3-256 hash whereas
+Git uses a SHA1 hash.  During export, the original Fossil hash for
+each check-in is added as a footer to check-in comments.  To avoid
+confusion, always use the original Fossil hash, not the Git hash,
+when referring to SQLite check-ins.
 
 </p><h2 id="web_access"><span>3.2. </span>Web Access</h2>
 
@@ -464,6 +516,20 @@ Additional documentation on Fossil can be found at
 Do not be afraid to explore and experiment.
 Without a log-in you won't be able to
 push back any changes you make, so you cannot damage the project.
+
+</p><h2 id="verifying_source_code_integrity"><span>3.4. </span>Verifying Source Code Integrity</h2>
+
+<p>
+If you need to verify that the SQLite source code that you have is
+authentic and has not been modified in any way (perhaps by an adversary)
+that can be done using a few simple command-line tools.  At the root 
+of the SQLite source tree is a file named "manifest".  The manifest 
+file contains the name of every other file in the source tree together 
+with either a SHA1 or SHA3-256 hash for that file.  (SHA1 is used for
+older files and SHA3-256 for newer files.)  You can write a
+script to extract these hashes and verify them against the source code 
+files.  The hash name for the check-in is just the SHA3-256 hash of the
+"manifest" file itself.
 
 </p><h1 id="see_also"><span>4. </span>See Also</h1>
 

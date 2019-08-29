@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -253,7 +253,8 @@ cannot use this feature.
 </style>
 <table id='listtab34' width='100%'></table>
 <script>
-var listitems34 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
+var listitems34 = [{"u":"pragma.html#pragma_locking_mode","x":"EXCLUSIVE locking mode","s":0},
+{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
 {"u":"pragma.html#pragma_auto_vacuum","x":"auto_vacuum","s":0},
 {"u":"pragma.html#pragma_automatic_index","x":"automatic_index","s":0},
 {"u":"pragma.html#pragma_busy_timeout","x":"busy_timeout","s":0},
@@ -272,6 +273,7 @@ var listitems34 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_defer_foreign_keys","x":"defer_foreign_keys","s":0},
 {"u":"pragma.html#pragma_empty_result_callbacks","x":"empty_result_callbacks","s":3},
 {"u":"pragma.html#pragma_encoding","x":"encoding","s":0},
+{"u":"pragma.html#pragma_locking_mode","x":"exclusive locking mode","s":0},
 {"u":"pragma.html#pragma_foreign_key_check","x":"foreign_key_check","s":0},
 {"u":"pragma.html#pragma_foreign_key_list","x":"foreign_key_list","s":0},
 {"u":"pragma.html#pragma_foreign_keys","x":"foreign_keys","s":0},
@@ -297,6 +299,7 @@ var listitems34 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_page_count","x":"page_count","s":0},
 {"u":"pragma.html#pragma_page_size","x":"page_size","s":0},
 {"u":"pragma.html#pragma_parser_trace","x":"parser_trace","s":4},
+{"u":"pragma.html#pragma_journal_mode","x":"persistent journal mode","s":0},
 {"u":"pragma.html#pragma_pragma_list","x":"pragma_list","s":4},
 {"u":"pragma.html#pragma_query_only","x":"query_only","s":0},
 {"u":"pragma.html#pragma_quick_check","x":"quick_check","s":0},
@@ -480,19 +483,32 @@ for use in application programs.</ol></p>
 
     <p>If the argument N is positive then the suggested cache size is set 
     to N. If the argument N is negative, then the
-    number of cache pages is adjusted to use approximately abs(N*1024) bytes
-    of memory.
-    <i>Backwards compatibility note:</i>
+    number of cache pages is adjusted to be a number of pages that would
+    use approximately abs(N*1024) bytes of memory based on the current
+    page size.  SQLite remembers the number of pages in the page cache,
+    not the amount of memory used.  So if you set the cache size using
+    a negative number and subsequently change the page size (using the
+    <a href="pragma.html#pragma_page_size">PRAGMA page_size</a> command) then the maximum amount of cache
+    memory will go up or down in proportion to the change in page size.
+
+    <p><i>Backwards compatibility note:</i>
     The behavior of cache_size with a negative N
-    was different in prior to <a href="releaselog/3_7_10.html">version 3.7.10</a> (2012-01-16).  In
-    version 3.7.9 and earlier, the number of pages in the cache was set
+    was different prior to <a href="releaselog/3_7_10.html">version 3.7.10</a> (2012-01-16).  In
+    earlier versions, the number of pages in the cache was set
     to the absolute value of N.</p>
 
     <p>When you change the cache size using the cache_size pragma, the
     change only endures for the current session.  The cache size reverts
     to the default value when the database is closed and reopened.</p>
 
-
+    <p>The default page cache implemention does not allocate
+    the full amount of cache memory all at once.  Cache memory
+    is allocated in smaller chunks on an as-needed basis.  The page_cache
+    setting is a (suggested) upper bound on the amount of memory that the
+    cache can use, not the amount of memory it will use all of the time.
+    This is the behavior of the default page cache implementation, but an
+    <a href="c3ref/pcache_methods2.html">application defined page cache</a> is free
+    to behave differently if it wants.
 <a name="pragma_cache_spill"></a>
 <h _id=pragma_cache_spill style="display:none"> PRAGMA cache_spill</h><hr>
     <p><b>PRAGMA cache_spill;
@@ -1038,7 +1054,15 @@ for use in application programs.</ol></p>
     If the application crashes
     in the middle of a transaction when the OFF journaling mode is
     set, then the database file will very likely
-    <a href="howtocorrupt.html#cfgerr">go corrupt</a>.</p>
+    <a href="howtocorrupt.html#cfgerr">go corrupt</a>. Without a journal, there is no way for
+    a statement to unwind partially completed operations following
+    a constraint error.  This might also leave the database in a corrupted
+    state.  For example, if a duplicate entry causes a 
+    <a href="lang_createindex.html">CREATE UNIQUE INDEX</a> statement to fail half-way through,
+    it will leave behind a partially created, and hence corrupt, index.
+    Because OFF journaling
+    mode allows the database file to be corrupted using ordinary SQL,
+    it is disabled when <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfigdefensive">SQLITE_DBCONFIG_DEFENSIVE</a> is enabled.</p>
 
     <p>Note that the journal_mode for an <a href="inmemorydb.html">in-memory database</a>
     is either MEMORY or OFF and can not be changed to a different value.
@@ -1119,6 +1143,9 @@ for use in application programs.</ol></p>
     this flag is turned on temporarily while the <a href="vtab.html#xrename">sqlite3_module.xRename</a>
     method is being run.  The value of this flag is restore after the 
     <a href="vtab.html#xrename">sqlite3_module.xRename</a> method finishes.
+    <p>The legacy alter table behavior can also be toggled on and off
+    using the <a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglegacyaltertable">SQLITE_DBCONFIG_LEGACY_ALTER_TABLE</a> option to the
+    <a href="c3ref/db_config.html">sqlite3_db_config()</a> interface.
 <a name="pragma_legacy_file_format"></a>
 <h _id=pragma_legacy_file_format style="display:none"> PRAGMA legacy_file_format</h><hr>
    <p><b>PRAGMA legacy_file_format;

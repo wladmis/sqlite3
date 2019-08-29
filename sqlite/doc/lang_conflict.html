@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -156,7 +156,11 @@ it end the transaction.
 For example, if an UPDATE
 statement encountered a constraint violation on the 100th row that
 it attempts to update, then the first 99 row changes are preserved
-but changes to rows 100 and beyond never occur.</p></dd>
+but changes to rows 100 and beyond never occur.</p>
+
+<p>The FAIL behavior only works for uniqueness, NOT NULL, and CHECK 
+constraints.  A <a href="foreignkeys.html">foreign key constraint</a> violation causes an ABORT.
+</p></dd>
 
 <dt><b>IGNORE</b></dt>
 <dd><p> When an applicable constraint violation occurs, 
@@ -165,8 +169,12 @@ the constraint violation and continues processing subsequent rows
 of the SQL statement as if nothing went wrong.
 Other rows before and after the row that
 contained the constraint violation are inserted or updated
-normally. No error is returned when the IGNORE conflict resolution
-algorithm is used.</p></dd>
+normally. No error is returned for uniqueness, NOT NULL, and
+UNIQUE constraint errors when the IGNORE conflict resolution
+algorithm is used.  However, the IGNORE conflict resolution
+algorithm works like ABORT for <a href="foreignkeys.html">foreign key constraint</a> errors.
+</p>
+</dd>
 
 <dt><b>REPLACE</b></dt>
 <dd><p> When a <a href="lang_createtable.html#uniqueconst">UNIQUE</a> or <a href="lang_createtable.html#primkeyconst">PRIMARY KEY</a> constraint violation occurs, 
@@ -178,8 +186,8 @@ If a <a href="lang_createtable.html#notnullconst">NOT NULL</a> constraint violat
 resolution replaces the NULL value with
 the default value for that column, or if the column has no default
 value, then the ABORT algorithm is used.
-If a <a href="lang_createtable.html#ckconst">CHECK</a> constraint violation occurs, the REPLACE conflict resolution
-algorithm always works like ABORT.</p>
+If a <a href="lang_createtable.html#ckconst">CHECK constraint</a> or <a href="foreignkeys.html">foreign key constraint</a> violation occurs, 
+the REPLACE conflict resolution algorithm works like ABORT.</p>
 
 <p>When the REPLACE conflict resolution strategy deletes rows in order to
 satisfy a constraint, <a href="lang_createtrigger.html">delete triggers</a> fire if and only if

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -180,7 +180,7 @@ a rollback journal.  Advantages include:</p>
     mode to change the page size.
 </li><li><s>It is not possible to open <a href="wal.html#readonly">read-only WAL databases</a>.
     The opening process must have write privileges for "<tt>-shm</tt>"
-    <a href="walformat.html">wal-index</a> shared memory file associated with the database, if that
+    <a href="walformat.html#shm">wal-index</a> shared memory file associated with the database, if that
     file exists, or else write access on the directory containing
     the database file if the "<tt>-shm</tt>" file does not exist.</s>
     Beginning with <a href="releaselog/3_22_0.html">version 3.22.0</a> (2018-01-22), a read-only 
@@ -591,7 +591,7 @@ than the page cache.
 
 <h1 id="implementation_of_shared_memory_for_the_wal_index"><span>7. </span>Implementation Of Shared-Memory For The WAL-Index</h1>
 
-<p>The <a href="walformat.html">wal-index</a> is implemented using an ordinary file that is
+<p>The <a href="walformat.html#shm">wal-index</a> is implemented using an ordinary file that is
 mmapped for robustness.  Early (pre-release) implementations of WAL mode
 stored the wal-index in volatile shared-memory, such as files created in
 /dev/shm on Linux or /tmp on other unix systems.  The problem
@@ -704,7 +704,7 @@ the third connection will get an <a href="rescode.html#busy">SQLITE_BUSY</a> err
 <h1 id="backwards_compatibility"><span>10. </span>Backwards Compatibility</h1>
 
 <p>The database file format is unchanged for WAL mode.  However, the
-WAL file and the <a href="walformat.html">wal-index</a> are new concepts and so older versions of 
+WAL file and the <a href="walformat.html#shm">wal-index</a> are new concepts and so older versions of 
 SQLite will not know
 how to recover a crashed SQLite database that was operating in WAL mode
 when the crash occurred.

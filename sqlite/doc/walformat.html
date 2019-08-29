@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -102,7 +102,11 @@ WAL-mode File Format
 Table Of Contents
 </a>
 <div id="toc_sub"><div class="fancy-toc1"><a href="#files_on_disk">1. Files On Disk</a></div>
-<div class="fancy-toc2"><a href="#variations">1.1. Variations</a></div>
+<div class="fancy-toc2"><a href="#the_main_database_file">1.1. The Main Database File</a></div>
+<div class="fancy-toc2"><a href="#the_write_ahead_log_or_wal_file">1.2. The Write-Ahead-Log or "-wal" File</a></div>
+<div class="fancy-toc2"><a href="#the_wal_index_or_shm_file">1.3. The Wal-Index or "-shm" file</a></div>
+<div class="fancy-toc2"><a href="#file_lifecycles">1.4. File Lifecycles</a></div>
+<div class="fancy-toc2"><a href="#variations">1.5. Variations</a></div>
 <div class="fancy-toc1"><a href="#the_wal_index_file_format">2. The WAL-Index File Format</a></div>
 <div class="fancy-toc2"><a href="#the_wal_index_header">2.1. The WAL-Index Header</a></div>
 <div class="fancy-toc3"><a href="#the_mxframe_field">2.1.1. The mxFrame field</a></div>
@@ -159,6 +163,8 @@ by three separate files:
 </li><li> The wal-index file, usually named "X-shm".
 </li></ol>
 
+<h2 id="the_main_database_file"><span>1.1. </span>The Main Database File</h2>
+
 <p>The format of the main database file is as described in the
 <a href="fileformat2.html">file format</a> document.  The <a href="fileformat2.html#vnums">file format version numbers</a> at offsets
 18 and 19 into the main database must both be 2 to indicate that the
@@ -167,7 +173,8 @@ name allowed by the underlying filesystem.  No special file suffixes
 are required, though ".db", ".sqlite", and ".sqlite3" seem to be
 popular choices.
 
-</p><p>The write-ahead log or "wal" file is a roll-forward journal
+</p><h2 id="the_write_ahead_log_or_wal_file"><span>1.2. </span>The Write-Ahead-Log or "-wal" File</h2>
+<p>The write-ahead log or "wal" file is a roll-forward journal
 that records transactions that have been committed but not yet applied
 to the main database.  Details on the format of the wal file are
 describe in the <a href="fileformat2.html#walformat">WAL format</a> subsection of the main <a href="fileformat2.html">file format</a>
@@ -177,7 +184,10 @@ on 8+3 filesystems, such names are not allowed, and in that case
 the file suffix is changed to ".WAL".  But as 8+3 filesystems are
 increasingly rare, that exceptional case can usually be ignored.
 
-</p><p>The wal-index file or "shm" file is not actually used as a file.
+<a name="shm"></a>
+
+</p><h2 id="the_wal_index_or_shm_file"><span>1.3. </span>The Wal-Index or "-shm" file</h2>
+<p>The wal-index file or "shm" file is not actually used as a file.
 Rather, individual database clients mmap the shm file and use it
 as shared memory for coordinating access to the database and as a cache
 for quickly locating frame within the wal file.  The name
@@ -196,8 +206,16 @@ it in cache memory, SQLite would use that mechanism to avoid any
 unnecessary disk I/O associated with the shm file.  However, no such
 mechanism exists in standard posix.
 
-</p><p>When a WAL mode database is in active use, all three of the above
-files exist.
+</p><p>Because the shm is only used to coordinate access between concurrent
+clients, the shm file is omitted if <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a>
+is set, as an optimization.  When <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> is set,
+SQLite uses heap memory in place of the memory-mapped shm file.
+
+</p><h2 id="file_lifecycles"><span>1.4. </span>File Lifecycles</h2>
+
+<p>When a WAL mode database is in active use, all three of the above
+files usually exist.  Except, the Wal-Index file is omitted if
+<a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> is set.
 
 </p><p>If the last client using the database shuts down cleanly by
 calling <a href="c3ref/close.html">sqlite3_close()</a>, then a <a href="wal.html#ckpt">checkpoint</a> is run automatically
@@ -212,10 +230,10 @@ then the final cleanup operation does not occur and the
 shm and wal files may still exist on disk even when the database is
 not in use.
 
-</p><h2 id="variations"><span>1.1. </span>Variations</h2>
+</p><h2 id="variations"><span>1.5. </span>Variations</h2>
 
-<p>When <a href="pragma.html#pragma_locking_mode">PRAGMA locking_mode=EXCLUSIVE</a> is set, only a
-single client is allowed to have the database open at one time.  Since
+<p>When <a href="pragma.html#pragma_locking_mode">PRAGMA locking_mode=EXCLUSIVE</a> (exclusive locking mode) is set,
+only a single client is allowed to have the database open at one time.  Since
 only a single client can use the database, the shm file is omitted.
 The single client uses a buffer in heap memory as a substitute for the
 memory-mapped shm file.
@@ -226,6 +244,8 @@ then at shutdown a checkpoint is still run, but the shm file and wal
 file are not deleted.
 This allows subsequent read-only clients to connect to and read the
 database.
+
+<a name="walidxfmt"></a>
 
 </p><h1 id="the_wal_index_file_format"><span>2. </span>The WAL-Index File Format</h1>
 

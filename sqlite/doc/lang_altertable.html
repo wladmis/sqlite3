@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -237,7 +237,9 @@ in order to carry the rename operation forward into triggers and
 views that reference the renamed table.  This is considered an
 improvement. Applications that depend on the older (and
 arguably buggy) behavior can use the
-<a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table=ON</a> statement to make ALTER TABLE RENAME
+<a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table=ON</a> statement or the
+<a href="c3ref/c_dbconfig_defensive.html#sqlitedbconfiglegacyaltertable">SQLITE_DBCONFIG_LEGACY_ALTER_TABLE</a> configuration parameter
+on <a href="c3ref/db_config.html">sqlite3_db_config()</a> interface to make ALTER TABLE RENAME
 behave as it did prior to version 3.25.0.
 </blockquote>
 
@@ -344,7 +346,7 @@ If foreign key constraints are enabled, disable them using <a href="pragma.html#
 Start a transaction.
 
 <li><p>
-Remember the format of all indexes and triggers associated with table X.
+Remember the format of all indexes, triggers, and views associated with table X.
 This information will be needed in step 8 below.  One way to do this is
 to run a query like the following:
 SELECT type, sql FROM sqlite_master WHERE tbl_name='X'.
@@ -365,10 +367,11 @@ Drop the old table X:  <a href="lang_droptable.html">DROP TABLE X</a>.
 Change the name of new_X to X using: ALTER TABLE new_X RENAME TO X.
 
 <li><p>
-Use <a href="lang_createindex.html">CREATE INDEX</a> and <a href="lang_createtrigger.html">CREATE TRIGGER</a> to reconstruct indexes and triggers
-associated with table X.  Perhaps use the old format of the triggers and
-indexes saved from step 3 above as a guide, making changes as appropriate
-for the alteration.
+Use <a href="lang_createindex.html">CREATE INDEX</a>, <a href="lang_createtrigger.html">CREATE TRIGGER</a>, and <a href="lang_createview.html">CREATE VIEW</a>
+to reconstruct indexes, triggers, and views
+associated with table X.  Perhaps use the old format of the triggers,
+indexes, and views saved from step 3 above as a guide, making changes
+as appropriate for the alteration.
 
 <li><p>If any views refer to table X in a way that is affected by the
 schema change, then drop those views using <a href="lang_dropview.html">DROP VIEW</a> and recreate them
@@ -487,6 +490,55 @@ schema changes did not damage the database.
 <p>If some future version of SQLite adds new ALTER TABLE capabilities, 
 those capabilities will very likely use one of the two procedures
 outlined above.
+
+<a name="altertableishard"></a>
+
+<h3>Why ALTER TABLE is such a problem for SQLite</h3>
+
+<p>Most SQL database engines store the schema already parsed into
+various system tables.  On those database engines, ALTER TABLE merely 
+has to make modifications to the corresponding system tables.
+
+<p>SQLite is different in that it stores the schema
+in the <a href="fileformat2.html#sqlite_master">sqlite_master</a> table as the original text of the CREATE
+statements that define the schema.  Hence ALTER TABLE needs
+to revise the text of the CREATE statement.  Doing
+so can be tricky for certain "creative" schema designs.
+
+<p>The SQLite approach of storing the schema as text has advantages
+for an embedded relational database.  For one, it means that the
+schema takes up less space in the database file.  This is important
+since a common SQLite usage pattern is to have many small,
+separate database files instead of putting everything in one
+big global database file, which is the usual approach for client/server
+database engines.
+Since the schema is duplicated in each separate database file, it is
+important to keep the schema representation compact.
+
+<p>Storing the schema as text rather than as parsed tables also
+give flexibility to the implementation.  Since the internal parse
+of the schema is regenerated each time the database is opened, the
+internal representation of the schema can change from one release
+to the next.  This is important, as sometimes new features require
+enhancements to the internal schema representation.  Changing the
+internal schema representation would be much more difficult if the
+schema representation was exposed in the database file.  So, in other
+words, storing the schema as text helps maintain backwards 
+compatibility, and helps ensure that older database files can be
+read and written by newer versions of SQLite.
+
+<p>Storing the schema a text also makes the 
+<a href="fileformat2.html">SQLite database file format</a> easier to define, document, and 
+understand. This helps make SQLite database files a
+<a href="locrsf.html">recommended storage format</a> for long-term archiving of data.
+
+<p>The downside of storing schema a text is that it can make
+the schema tricky to modify.  And for that reason, the ALTER TABLE
+support in SQLite has traditionally lagged behind other SQL
+database engines that store their schemas as parsed system tables
+that are easier to modify.
+
+
 
 
 

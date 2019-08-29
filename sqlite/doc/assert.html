@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -194,15 +194,17 @@ turns out to be wrong.  Since the code that follows ALWAYS(X) or NEVER(X)
 is untested, it should be something very simple, like a "return" statement,
 that is easily verified by inspection.
 
-</p><p>The <a href="https://golang.org">Go programming language</a> omits assert().
-The Go developers
-<a href="https://golang.org/doc/faq#assertions">recognize this is contentious</a>.
-Disallowing assert() is essentially telling developers that they are
-not allowed to do run-time verification of invariants.
-It is as if the developers of
-Go do not want coders to prove the software is correct.
-The SQLite developers believe that the lack of assert() disqualifies
-Go as a language for serious development work.
+</p><p>
+Because assert() can be and is commonly misused, some programming language
+theorists and designers look upon it with disfavor.
+For example, the designers of the <a href="https://golang.org">Go programming language</a> 
+intentionally <a href="https://golang.org/doc/faq#assertions">omit a built-in assert()</a>.
+They feel that the harm caused by misuse of assert()
+outweighs the benefits of including it as a language built-in.
+The SQLite developers disagree.  In fact, the original purpose of this
+article is to push back against the common notion that assert() is harmful.
+In our experience, SQLite would be much more difficult to develop, test,
+and maintain without assert().
 
 </p><h2 id="different_behaviors_according_to_build_type"><span>1.2. </span>Different Behaviors According To Build Type</h2>
 

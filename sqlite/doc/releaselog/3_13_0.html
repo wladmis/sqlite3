@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -129,14 +129,6 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.3.1 (2014-02-11):</b></p>
-
-<li>Fix a bug (ticket <a href="http://www.sqlite.org/src/info/4c86b126f2">4c86b126f2</a>)
-    that causes rows to go missing on some queries with OR clauses and
-    IS NOT NULL operators in the WHERE clause, when the <a href="../compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>
-    or <a href="../compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> compile-time options are used.
-<li>Fix a harmless compiler warning that was causing problems for VS2013.
-
 <p><b>Bug fixes backported into patch release 3.8.3 (2014-02-03):</b></p>
 
 <li>Added support for <a href="../lang_with.html">common table expressions</a> and the <a href="../lang_with.html">WITH clause</a>.
@@ -162,6 +154,34 @@ return false;
     considers dangerous.  (Ex: sprintf).
 <li>Bug fix: In the <a href="../cli.html">command-line shell</a> CSV import feature, do not end a field
     when an escaped double-quote occurs at the end of a CRLN line.
+
+<p><b>Bug fixes backported into patch release 3.8.2 (2013-12-06):</b></p>
+
+<li>Changed the defined behavior for the <a href="../lang_expr.html#castexpr">CAST expression</a> when floating point values
+    greater than  +9223372036854775807 are cast into into integers so that the
+    result is the largest possible integer, +9223372036854775807, instead of
+    the smallest possible integer, -9223372036854775808.  After this change, 
+    CAST(9223372036854775809.0 as INT) yields +9223372036854775807 instead
+    of -9223372036854775808.
+    <b><big>&larr;</big>&nbsp;Potentially Incompatible Change!</b>
+<li>Added support for <a href="../withoutrowid.html">WITHOUT ROWID</a> tables.
+<li>Added the <a href="../optoverview.html#skipscan">skip-scan optimization</a> to the query planner.
+<li>Extended the <a href="../vtab.html">virtual table</a> interface, and in particular the
+    <a href="../c3ref/index_info.html">sqlite3_index_info</a> object to allow a virtual table to report its estimate
+    on the number of rows that will be returned by a query.
+<li>Update the <a href="../rtree.html">R-Tree extension</a> to make use of the enhanced virtual table
+    interface.
+<li>Add the <a href="../compile.html#enable_explain_comments">SQLITE_ENABLE_EXPLAIN_COMMENTS</a> compile-time option.
+<li>Enhanced the comments that are inserted into <a href="../lang_explain.html">EXPLAIN</a> output when the
+    <a href="../compile.html#enable_explain_comments">SQLITE_ENABLE_EXPLAIN_COMMENTS</a> compile-time option is enabled.
+<li>Performance enhancements in the VDBE, especially to the OP_Column opcode.
+<li>Factor constant subexpressions in inner loops out to the initialization code
+    in prepared statements.
+<li>Enhanced the ".explain" output formatting of the <a href="../cli.html">command-line shell</a>
+    so that loops are indented to better show the structure of the program.
+<li>Enhanced the ".timer" feature of the <a href="../cli.html">command-line shell</a> so that it
+    shows wall-clock time in addition to system and user times.
+
 
 </ol></p>
 

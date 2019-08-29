@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -114,23 +114,24 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#csv_export">9. CSV Export</a></div>
 <div class="fancy-toc2"><a href="#_export_to_excel_">9.1.  Export to Excel </a></div>
 <div class="fancy-toc1"><a href="#converting_an_entire_database_to_an_ascii_text_file">10. Converting An Entire Database To An ASCII Text File</a></div>
-<div class="fancy-toc1"><a href="#loading_extensions">11. Loading Extensions</a></div>
-<div class="fancy-toc1"><a href="#cryptographic_hashes_of_database_content">12. Cryptographic Hashes Of Database Content</a></div>
-<div class="fancy-toc1"><a href="#database_content_self_tests">13. Database Content Self-Tests</a></div>
-<div class="fancy-toc1"><a href="#sqlite_archive_support">14. SQLite Archive Support</a></div>
-<div class="fancy-toc2"><a href="#_sqlite_archive_create_command_">14.1.  SQLite Archive Create Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlite_archive_extract_command_">14.2.  SQLite Archive Extract Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlite_archive_list_command_">14.3.  SQLite Archive List Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlite_archive_insert_and_update_commands_">14.4.  SQLite Archive Insert And Update Commands </a></div>
-<div class="fancy-toc2"><a href="#_operations_on_zip_archives_">14.5.  Operations On ZIP Archives </a></div>
-<div class="fancy-toc2"><a href="#_sql_used_to_implement_sqlite_archive_operations_">14.6.  SQL Used To Implement SQLite Archive Operations </a></div>
-<div class="fancy-toc1"><a href="#sql_parameters">15. SQL Parameters</a></div>
-<div class="fancy-toc1"><a href="#index_recommendations_sqlite_expert_">16. Index Recommendations (SQLite Expert)</a></div>
-<div class="fancy-toc1"><a href="#other_dot_commands">17. Other Dot Commands</a></div>
-<div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">18. Using sqlite3 in a shell script</a></div>
-<div class="fancy-toc1"><a href="#ending_shell_commands">19. Ending shell commands</a></div>
-<div class="fancy-toc1"><a href="#compiling_the_sqlite3_program_from_sources">20. Compiling the sqlite3 program from sources</a></div>
-<div class="fancy-toc2"><a href="#_do_it_yourself_builds_">20.1.  Do-It-Yourself Builds </a></div>
+<div class="fancy-toc1"><a href="#recover_data_from_a_corrupted_database">11. Recover Data From a Corrupted Database</a></div>
+<div class="fancy-toc1"><a href="#loading_extensions">12. Loading Extensions</a></div>
+<div class="fancy-toc1"><a href="#cryptographic_hashes_of_database_content">13. Cryptographic Hashes Of Database Content</a></div>
+<div class="fancy-toc1"><a href="#database_content_self_tests">14. Database Content Self-Tests</a></div>
+<div class="fancy-toc1"><a href="#sqlite_archive_support">15. SQLite Archive Support</a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_create_command_">15.1.  SQLite Archive Create Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_extract_command_">15.2.  SQLite Archive Extract Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_list_command_">15.3.  SQLite Archive List Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_insert_and_update_commands_">15.4.  SQLite Archive Insert And Update Commands </a></div>
+<div class="fancy-toc2"><a href="#_operations_on_zip_archives_">15.5.  Operations On ZIP Archives </a></div>
+<div class="fancy-toc2"><a href="#_sql_used_to_implement_sqlite_archive_operations_">15.6.  SQL Used To Implement SQLite Archive Operations </a></div>
+<div class="fancy-toc1"><a href="#sql_parameters">16. SQL Parameters</a></div>
+<div class="fancy-toc1"><a href="#index_recommendations_sqlite_expert_">17. Index Recommendations (SQLite Expert)</a></div>
+<div class="fancy-toc1"><a href="#other_dot_commands">18. Other Dot Commands</a></div>
+<div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">19. Using sqlite3 in a shell script</a></div>
+<div class="fancy-toc1"><a href="#ending_shell_commands">20. Ending shell commands</a></div>
+<div class="fancy-toc1"><a href="#compiling_the_sqlite3_program_from_sources">21. Compiling the sqlite3 program from sources</a></div>
+<div class="fancy-toc2"><a href="#_do_it_yourself_builds_">21.1.  Do-It-Yourself Builds </a></div>
 </div>
 </div>
 <script>
@@ -875,9 +876,77 @@ into other popular SQL database engines.  Like this:</p>
 $ <b>sqlite3 ex1 .dump | psql ex2</b>
 </pre></div>
 
+<a name="recover"></a>
+
+<h1 id="recover_data_from_a_corrupted_database"><span>11. </span>Recover Data From a Corrupted Database</h1>
+
+<p>Like the ".dump" command, ".recover" attempts to convert the entire 
+contents of a database file to text. The difference is that instead of
+reading data using the normal SQL database interface, ".recover"
+attempts to reassemble the database based on data extracted directly from 
+as many database pages as possible. If the database is corrupt, ".recover"
+is usually able to recover data from all uncorrupted parts of the database,
+whereas ".dump" stops when the first sign of corruption is encountered.
+
+</p><p>If the ".recover" command recovers one or more rows that it cannot 
+attribute to any database table, the output script creates a "lost_and_found"
+table to store the orphaned rows. The schema of the lost_and_found
+table is as follows:
+
+</p><div class="codeblock"><pre>CREATE TABLE lost_and_found(
+    rootpgno INTEGER,             -- root page of tree pgno is a part of
+    pgno INTEGER,                 -- page number row was found on
+    nfield INTEGER,               -- number of fields in row
+    id INTEGER,                   -- value of rowid field, or NULL
+    c0, c1, c2, c3...             -- columns for fields of row
+);
+</pre></div>
+
+<p>The "lost_and_found" table contains one row for each orphaned row recovered
+from the database. Additionally, there is one row for each recovered index
+entry that cannot be attributed to any SQL index. This is because, in an
+SQLite database, the same format is used to store SQL index entries and
+WITHOUT ROWID table entries.
+
+</p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
+  <tr style="text-align:left"><th style="width:15ex">Column</th><th>Contents
+  </th></tr><tr style="text-align:left;background-color:#DDDDDD"><td>rootpgno</td><td> Even though it may not be possible to attribute the 
+      row to a specific database table, it may be part of a tree structure
+      within the database file. In this case, the root page number of that
+      tree structure is stored in this column. Or, if the page the row was
+      found on is not part of a tree structure, this column stores a copy of
+      the value in column "pgno" - the page number of the page the row was
+      found on. In many, although not all, cases, all rows in the
+      lost_and_found table with the same value in this column belong to the
+      same table.
+
+  </td></tr><tr style="text-align:left"><td>pgno</td><td> The page number of the page on which this row was found.
+
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>nfield</td><td> The number of fields in this row.
+
+  </td></tr><tr style="text-align:left"><td>id</td><td> If the row comes from a WITHOUT ROWID table, this column 
+      contains NULL. Otherwise, it contains the 64-bit integer rowid value for
+      the row.
+
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>c0,&nbsp;c1,&nbspc2...</td><td> The values for each column of the row
+      are stored in these columns. The ".recover" command creates the
+      lost_and_found table with as many columns as required by the longest
+      orphaned row.
+</td></tr></table>
+
+<p>If the recovered database schema already contains a table named
+"lost_and_found", the ".recover" command uses the name "lost_and_found0". If
+the name "lost_and_found0" is also already taken, "lost_and_found1", and so
+on. The default name "lost_and_found" may be overridden by invoking ".recover"
+with the --lost-and-found switch. For example, to have the output script call
+the table "orphaned_rows":
+
+</p><div class="codeblock"><pre>sqlite&gt; .recover --lost-and-found orphaned_rows
+</pre></div>
+
 <a name="dotload"></a>
 
-<h1 id="loading_extensions"><span>11. </span>Loading Extensions</h1>
+<h1 id="loading_extensions"><span>12. </span>Loading Extensions</h1>
 
 <p>You can add new custom <a href="c3ref/create_function.html">application-defined SQL functions</a>,
 <a href="datatype3.html#collation">collating sequences</a>, <a href="vtab.html">virtual tables</a>, and <a href="vfs.html">VFSes</a> to the command-line
@@ -903,9 +972,10 @@ subdirectory of the SQLite source tree.  You can use these extensions
 as-is, or as a basis for creating your own custom extensions to address
 your own particular needs.
 
+
 <a name="sha3sum"></a>
 
-</p><h1 id="cryptographic_hashes_of_database_content"><span>12. </span>Cryptographic Hashes Of Database Content</h1>
+</p><h1 id="cryptographic_hashes_of_database_content"><span>13. </span>Cryptographic Hashes Of Database Content</h1>
 
 <p>The ".sha3sum" dot-command computes a
 <a href="https://en.wikipedia.org/wiki/SHA-3">SHA3</a> hash of the <em>content</em>
@@ -930,7 +1000,7 @@ that is included with the command-line shell.
 
 <a name="selftest"></a>
 
-</p><h1 id="database_content_self_tests"><span>13. </span>Database Content Self-Tests</h1>
+</p><h1 id="database_content_self_tests"><span>14. </span>Database Content Self-Tests</h1>
 
 <p>The ".selftest" command attempts to verify that a database is
 intact and is not corrupt.  
@@ -964,7 +1034,7 @@ refer to tables that are not constant.
 
 <a name="sqlar"></a>
 
-</p><h1 id="sqlite_archive_support"><span>14. </span>SQLite Archive Support</h1>
+</p><h1 id="sqlite_archive_support"><span>15. </span>SQLite Archive Support</h1>
 
 <p>The ".archive" dot-command and the "-A" command-line option
 provide built-in support for the 
@@ -1034,14 +1104,14 @@ next, and any remaining words are considered command arguments. For example:
 .ar cCf dir1 new_archive.db file1 file2 file3
 </pre></div>
 
-<h2 id="_sqlite_archive_create_command_"><span>14.1. </span> SQLite Archive Create Command </h2>
+<h2 id="_sqlite_archive_create_command_"><span>15.1. </span> SQLite Archive Create Command </h2>
 
 <p>Create a new archive, overwriting any existing archive (either in the current
 "main" db or in the file specified by a --file option). Each argument following
 the options is a file to add to the archive. Directories are imported
 recursively. See above for examples.
 
-</p><h2 id="_sqlite_archive_extract_command_"><span>14.2. </span> SQLite Archive Extract Command </h2>
+</p><h2 id="_sqlite_archive_extract_command_"><span>15.2. </span> SQLite Archive Extract Command </h2>
 
 <p>Extract files from the archive (either to the current working directory or
 to the directory specified by a --directory option). If there are no arguments
@@ -1058,7 +1128,7 @@ specified files are not part of the archive.
 .ar fCx ar.db dir1 file1
 </pre></div>
 
-<h2 id="_sqlite_archive_list_command_"><span>14.3. </span> SQLite Archive List Command </h2>
+<h2 id="_sqlite_archive_list_command_"><span>15.3. </span> SQLite Archive List Command </h2>
 
 <p>List the contents of the archive. If no arguments are specified, then all
 files are listed. Otherwise, only those specified as arguments are. Currently,
@@ -1071,7 +1141,7 @@ change in the future.
 
 <a name="arinsup"></a>
 
-<h2 id="_sqlite_archive_insert_and_update_commands_"><span>14.4. </span> SQLite Archive Insert And Update Commands </h2>
+<h2 id="_sqlite_archive_insert_and_update_commands_"><span>15.4. </span> SQLite Archive Insert And Update Commands </h2>
 
 <p> The --update and --insert commands work like --create command, except that 
 they do not delete the current archive before commencing. New versions of
@@ -1087,7 +1157,7 @@ is currently in the archive.
 the --update option was supported but that option worked like --insert in that
 it always reinserted every file regardless of whether or not it had changed.
 
-</p><h2 id="_operations_on_zip_archives_"><span>14.5. </span> Operations On ZIP Archives </h2>
+</p><h2 id="_operations_on_zip_archives_"><span>15.5. </span> Operations On ZIP Archives </h2>
 
 <p>If FILE is a ZIP archive rather than an SQLite Archive, the ".archive"
 command and the "-A" command-line option still work.  This is accomplished
@@ -1102,7 +1172,7 @@ differing only in output formatting:
   </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>zip -r archive2.zip dir</td><td>sqlite3 -Acf archive2.zip dir
 </td></tr></table>
 
-<h2 id="_sql_used_to_implement_sqlite_archive_operations_"><span>14.6. </span> SQL Used To Implement SQLite Archive Operations </h2>
+<h2 id="_sql_used_to_implement_sqlite_archive_operations_"><span>15.6. </span> SQL Used To Implement SQLite Archive Operations </h2>
 
 <p>The various SQLite Archive Archive commands are implemented using SQL statements.
 Application developers can easily add SQLite Archive Archive reading and writing
@@ -1150,7 +1220,7 @@ command is used.
 
 <a name="param"></a>
 
-<h1 id="sql_parameters"><span>15. </span>SQL Parameters</h1>
+<h1 id="sql_parameters"><span>16. </span>SQL Parameters</h1>
 
 <p>SQLite allows <a href="lang_expr.html#varparam">bound parameters</a> to appear in an SQL statement anywhere
 that a literal value is allowed.  The values for these parameters are set
@@ -1195,7 +1265,7 @@ a hint for how to implement it yourself.
 
 <a name="expert"></a>
 
-</p><h1 id="index_recommendations_sqlite_expert_"><span>16. </span>Index Recommendations (SQLite Expert)</h1>
+</p><h1 id="index_recommendations_sqlite_expert_"><span>17. </span>Index Recommendations (SQLite Expert)</h1>
 
 <p><b>Note: This command is experimental. It may be removed or the 
 interface modified in incompatible ways at some point in the future.
@@ -1268,7 +1338,7 @@ SQLite expert extension</a> code.
 
 <a name="dotother"></a>
 
-</p><h1 id="other_dot_commands"><span>17. </span>Other Dot Commands</h1>
+</p><h1 id="other_dot_commands"><span>18. </span>Other Dot Commands</h1>
 
 <p>There are many other dot-commands available in the command-line
 shell.  See the ".help" command for a complete list for any particular
@@ -1276,7 +1346,7 @@ version and build of SQLite.
 
 <a name="insh"></a>
 
-</p><h1 id="using_sqlite3_in_a_shell_script"><span>18. </span>Using sqlite3 in a shell script</h1>
+</p><h1 id="using_sqlite3_in_a_shell_script"><span>19. </span>Using sqlite3 in a shell script</h1>
 
 <p>
 One way to use sqlite3 in a shell script is to use "echo" or
@@ -1301,7 +1371,7 @@ $
 
 <a name="endsh"></a>
 
-<h1 id="ending_shell_commands"><span>19. </span>Ending shell commands</h1>
+<h1 id="ending_shell_commands"><span>20. </span>Ending shell commands</h1>
 
 <p>
 SQLite commands are normally terminated by a semicolon.  In the shell 
@@ -1314,7 +1384,7 @@ to that function.</p>
 
 <a name="compiling"></a>
 
-<h1 id="compiling_the_sqlite3_program_from_sources"><span>20. </span>Compiling the sqlite3 program from sources</h1>
+<h1 id="compiling_the_sqlite3_program_from_sources"><span>21. </span>Compiling the sqlite3 program from sources</h1>
 
 <p>
 To compile the command-line shell on unix systems and on Windows with MinGW,
@@ -1350,7 +1420,7 @@ of the source tree and compile this way:
 </p><div class="codeblock"><pre>nmake /f Makefile.msc USE_ZLIB=1
 </pre></div>
 
-<h2 id="_do_it_yourself_builds_"><span>20.1. </span> Do-It-Yourself Builds </h2>
+<h2 id="_do_it_yourself_builds_"><span>21.1. </span> Do-It-Yourself Builds </h2>
 
 <p>
 The source code to the sqlite3 command line interface is in a single

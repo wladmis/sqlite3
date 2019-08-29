@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_DBCONFIG_DEFENSIVE SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_QPSG SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_MAX SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE SQLITE_DBCONFIG_RESET_DATABASE SQLITE_DBCONFIG_TRIGGER_EQP SQLITE_DBCONFIG_WRITABLE_SCHEMA -->
+<!-- keywords: SQLITE_DBCONFIG_DEFENSIVE SQLITE_DBCONFIG_DQS_DDL SQLITE_DBCONFIG_DQS_DML SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_QPSG SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LEGACY_ALTER_TABLE SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_MAX SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE SQLITE_DBCONFIG_RESET_DATABASE SQLITE_DBCONFIG_TRIGGER_EQP SQLITE_DBCONFIG_WRITABLE_SCHEMA -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Database Connection Configuration Options</h2>
@@ -109,7 +109,10 @@ return false;
 #define SQLITE_DBCONFIG_RESET_DATABASE        1009 /* int int* */
 #define SQLITE_DBCONFIG_DEFENSIVE             1010 /* int int* */
 #define SQLITE_DBCONFIG_WRITABLE_SCHEMA       1011 /* int int* */
-#define SQLITE_DBCONFIG_MAX                   1011 /* Largest DBCONFIG */
+#define SQLITE_DBCONFIG_LEGACY_ALTER_TABLE    1012 /* int int* */
+#define SQLITE_DBCONFIG_DQS_DML               1013 /* int int* */
+#define SQLITE_DBCONFIG_DQS_DDL               1014 /* int int* */
+#define SQLITE_DBCONFIG_MAX                   1014 /* Largest DBCONFIG */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -290,6 +293,7 @@ deliberately corrupt the database file are disabled.  The disabled
 features include but are not limited to the following:
 <ul>
 <li> The <a href="../pragma.html#pragma_writable_schema">PRAGMA writable_schema=ON</a> statement.
+<li> The <a href="../pragma.html#pragma_journal_mode">PRAGMA journal_mode=OFF</a> statement.
 <li> Writes to the <a href="../dbpage.html">sqlite_dbpage</a> virtual table.
 <li> Direct writes to <a href="../vtab.html#xshadowname">shadow tables</a>.
 </ul>
@@ -305,6 +309,37 @@ the writable_schema, positive to enable writable_schema, or negative to
 leave the setting unchanged. The second parameter is a pointer to an
 integer into which is written 0 or 1 to indicate whether the writable_schema
 is enabled or disabled following this call.
+</dd></p>
+
+<p><a name="sqlitedbconfiglegacyaltertable"></a>
+
+<dt>SQLITE_DBCONFIG_LEGACY_ALTER_TABLE</dt>
+<dd>The SQLITE_DBCONFIG_LEGACY_ALTER_TABLE option activates or deactivates
+the legacy behavior of the <a href="../lang_altertable.html#altertabrename">ALTER TABLE RENAME</a> command such it
+behaves as it did prior to <a href="../releaselog/3_24_0.html">version 3.24.0</a> (2018-06-04).  See the
+"Compatibility Notice" on the <a href="../lang_altertable.html#altertabrename">ALTER TABLE RENAME documentation</a> for
+additional information. This feature can also be turned on and off
+using the <a href="../pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table</a> statement.
+</dd></p>
+
+<p><a name="sqlitedbconfigdqsdml"></a>
+
+<dt>SQLITE_DBCONFIG_DQS_DML</td>
+<dd>The SQLITE_DBCONFIG_DQS_DML option activates or deactivates
+the legacy <a href="../quirks.html#dblquote">double-quoted string literal</a> misfeature for DML statement
+only, that is DELETE, INSERT, SELECT, and UPDATE statements. The
+default value of this setting is determined by the <a href="../compile.html#dqs">-DSQLITE_DQS</a>
+compile-time option.
+</dd></p>
+
+<p><a name="sqlitedbconfigdqsddl"></a>
+
+<dt>SQLITE_DBCONFIG_DQS_DDL</td>
+<dd>The SQLITE_DBCONFIG_DQS option activates or deactivates
+the legacy <a href="../quirks.html#dblquote">double-quoted string literal</a> misfeature for DDL statements,
+such as CREATE TABLE and CREATE INDEX. The
+default value of this setting is determined by the <a href="../compile.html#dqs">-DSQLITE_DQS</a>
+compile-time option.
 </dd>
 </dl>
 </p><p>See also lists of
