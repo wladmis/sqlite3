@@ -1,8 +1,20 @@
-diff --git a/configure b/configure
-index c73b820..9d23aa7 100755
---- a/configure
-+++ b/configure
-@@ -10303,7 +10303,7 @@ done
+From 9b3b5be0b94689cf07b1254da17232fa28ad4712 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Tue, 3 Sep 2019 21:20:51 +0300
+Subject: [PATCH 1/6] FEDORA no-malloc-usable-size
+
+See https://bugzilla.redhat.com/show_bug.cgi?id=801981
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
+---
+ sqlite/configure    | 2 +-
+ sqlite/configure.ac | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sqlite/configure b/sqlite/configure
+index a8b12149..e160f5be 100755
+--- a/sqlite/configure
++++ b/sqlite/configure
+@@ -10284,7 +10284,7 @@ done
  #########
  # Figure out whether or not we have these functions
  #
@@ -11,11 +23,11 @@ index c73b820..9d23aa7 100755
  do :
    as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
  ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
-diff --git a/configure.ac b/configure.ac
-index 6a11888..d9f910e 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -109,7 +109,7 @@ AC_CHECK_HEADERS([sys/types.h stdlib.h stdint.h inttypes.h malloc.h])
+diff --git a/sqlite/configure.ac b/sqlite/configure.ac
+index 9cf87adc..13ca0ede 100644
+--- a/sqlite/configure.ac
++++ b/sqlite/configure.ac
+@@ -108,7 +108,7 @@ AC_CHECK_HEADERS([sys/types.h stdlib.h stdint.h inttypes.h malloc.h])
  #########
  # Figure out whether or not we have these functions
  #
@@ -24,3 +36,6 @@ index 6a11888..d9f910e 100644
  
  #########
  # By default, we use the amalgamation (this may be changed below...)
+-- 
+2.21.0
+

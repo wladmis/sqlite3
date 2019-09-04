@@ -1,2 +1,2 @@
-copy: *.patch
+copy: patches/*.patch
 tar: sqlite name=sqlite-@version@

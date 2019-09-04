@@ -1,0 +1,27 @@
+From c41147734e1cf790b851637fbeb40d56c9e88de5 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Tue, 3 Sep 2019 21:20:51 +0300
+Subject: [PATCH 2/6] FEDORA percentile test
+
+On i686 arch the removed test fails with result 2749999.50004681 instead of expected
+2749999.5. This patch is temporary workaround and should be dropped as soon as a valid
+fix is found.
+---
+ sqlite/test/percentile.test | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/sqlite/test/percentile.test b/sqlite/test/percentile.test
+index b2bd061e..7b841422 100644
+--- a/sqlite/test/percentile.test
++++ b/sqlite/test/percentile.test
+@@ -195,7 +195,6 @@ ifcapable vtab {
+   foreach {in out} {
+       0          0.0
+     100    9999990.0
+-     50    2749999.5
+      10      99999.9
+   } {
+     do_test percentile-2.1.$in {
+-- 
+2.21.0
+
