@@ -1,7 +1,7 @@
-From 9b3b5be0b94689cf07b1254da17232fa28ad4712 Mon Sep 17 00:00:00 2001
+From 8f0dcbdc7a64678d345330db536b1276e66a680e Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:51 +0300
-Subject: [PATCH 1/6] FEDORA no-malloc-usable-size
+Subject: [PATCH 1/5] FEDORA no-malloc-usable-size
 
 See https://bugzilla.redhat.com/show_bug.cgi?id=801981
 https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
@@ -11,7 +11,7 @@ https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sqlite/configure b/sqlite/configure
-index a8b12149..e160f5be 100755
+index d2806c20..9e777141 100755
 --- a/sqlite/configure
 +++ b/sqlite/configure
 @@ -10284,7 +10284,7 @@ done
