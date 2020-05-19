@@ -1,17 +1,17 @@
-From 1d845b5b3ac11f0bd8c630da45e321fd3c761640 Mon Sep 17 00:00:00 2001
+From cd11606ba389c905a8fcd9bf2317b2f7392ec560 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:51 +0300
-Subject: [PATCH 4/5] ALT tcl
+Subject: [PATCH 4/9] ALT: TEA Policy
 
 ---
  sqlite/Makefile.in | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/sqlite/Makefile.in b/sqlite/Makefile.in
-index cadc2eda..bdb981e5 100644
+index e4b824365..b2d066ea7 100644
 --- a/sqlite/Makefile.in
 +++ b/sqlite/Makefile.in
-@@ -1422,12 +1422,12 @@ install:	sqlite3$(TEXE) lib_install sqlite3.h sqlite3.pc ${HAVE_TCL:1=tcl_instal
+@@ -1418,12 +1418,12 @@ install:	sqlite3$(TEXE) lib_install sqlite3.h sqlite3.pc ${HAVE_TCL:1=tcl_instal
  	$(INSTALL) -m 0644 sqlite3.pc $(DESTDIR)$(pkgconfigdir)
  
  pkgIndex.tcl:
@@ -28,5 +28,5 @@ index cadc2eda..bdb981e5 100644
  clean:
  	rm -f *.lo *.la *.o sqlite3$(TEXE) libsqlite3.la
 -- 
-2.21.0
+2.25.4
 

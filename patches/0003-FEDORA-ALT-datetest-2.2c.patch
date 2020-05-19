@@ -1,7 +1,7 @@
-From 8f3496e481e01e09c108ad7d44a8502ad07fe6fe Mon Sep 17 00:00:00 2001
+From 214d0df3884b012083a8731276e11aea63c04002 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:52 +0300
-Subject: [PATCH 3/5] FEDORA ALT datetest 2.2c
+Subject: [PATCH 3/9] FEDORA ALT: datetest 2.2c
 
 Patch from Fedora: Disable test date-2.2c on i586
 The test always failing and seems no one cares.
@@ -10,7 +10,7 @@ The test always failing and seems no one cares.
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/sqlite/test/date.test b/sqlite/test/date.test
-index f002334d..966b1ce7 100644
+index f002334d1..966b1ce79 100644
 --- a/sqlite/test/date.test
 +++ b/sqlite/test/date.test
 @@ -76,10 +76,12 @@ datetest 2.1c datetime(0,'unixepochx') NULL
@@ -31,5 +31,5 @@ index f002334d..966b1ce7 100644
  datetest 2.3 {date('2003-10-22','weekday 0')} 2003-10-26
  datetest 2.4 {date('2003-10-22','weekday 1')} 2003-10-27
 -- 
-2.21.0
+2.25.4
 
