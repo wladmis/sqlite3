@@ -1,7 +1,7 @@
-From a667e00941fa0191830ad87d30b481e361b0fa16 Mon Sep 17 00:00:00 2001
+From e4720367e15000fee346abadd285169859217ca9 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:51 +0300
-Subject: [PATCH 2/9] FEDORA: percentile test
+Subject: [PATCH 2/5] FEDORA: percentile test
 
 On i686 arch the removed test fails with result 2749999.50004681 instead of expected
 2749999.5. This patch is temporary workaround and should be dropped as soon as a valid

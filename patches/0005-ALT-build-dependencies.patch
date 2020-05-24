@@ -1,17 +1,17 @@
-From e3b010273d894c83dca10fa98f8b4739b220413e Mon Sep 17 00:00:00 2001
+From 774ebbae2bd263f5537f6242e57899e0c267cdbf Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:52 +0300
-Subject: [PATCH 5/9] ALT: build dependencies
+Subject: [PATCH 5/5] ALT: build dependencies
 
 ---
  sqlite/Makefile.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sqlite/Makefile.in b/sqlite/Makefile.in
-index b2d066ea7..5e214e9fa 100644
+index 54119b0e5..3df7c60f6 100644
 --- a/sqlite/Makefile.in
 +++ b/sqlite/Makefile.in
-@@ -1152,7 +1152,7 @@ userauth.lo:	$(TOP)/ext/userauth/userauth.c $(HDR) $(EXTHDR)
+@@ -1163,7 +1163,7 @@ userauth.lo:	$(TOP)/ext/userauth/userauth.c $(HDR) $(EXTHDR)
  sqlite3session.lo:	$(TOP)/ext/session/sqlite3session.c $(HDR) $(EXTHDR)
  	$(LTCOMPILE) -DSQLITE_CORE -c $(TOP)/ext/session/sqlite3session.c
  
