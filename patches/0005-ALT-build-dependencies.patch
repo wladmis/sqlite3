@@ -1,7 +1,7 @@
-From 774ebbae2bd263f5537f6242e57899e0c267cdbf Mon Sep 17 00:00:00 2001
+From a9923e82e1d08ccbc0674fe761f4bf6b07a50f50 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:52 +0300
-Subject: [PATCH 5/5] ALT: build dependencies
+Subject: [PATCH 5/6] ALT: build dependencies
 
 ---
  sqlite/Makefile.in | 2 +-
