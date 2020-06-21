@@ -1,7 +1,7 @@
-From 63230a153c6c4d704c690f1371190098f169768c Mon Sep 17 00:00:00 2001
+From 375f6a3d94e3107aab67030348dd30a155b5c9c6 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:51 +0300
-Subject: [PATCH 4/6] ALT: TEA Policy
+Subject: [PATCH 4/5] ALT: TEA Policy
 
 ---
  sqlite/Makefile.in | 6 +++---
