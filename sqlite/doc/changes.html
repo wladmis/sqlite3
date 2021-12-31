@@ -104,6 +104,20 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_37_1"></a>
+<h3>2021-12-30 (3.37.1)</h3><p><ol class='lessindent'>
+<li> Fix a bug introduced by the <a href="lang_upsert.html">UPSERT</a> enhancements of <a href="#version_3_35_0">version 3.35.0</a> that
+     can cause incorrect byte-code to be generated for some obscure but valid
+     SQL, possibly resulting in a NULL-pointer dereference.
+<li> Fix an OOB read that can occur in <a href="fts5.html">FTS5</a> when reading corrupt database files.
+<li> Improved robustness of the --safe option in the <a href="cli.html">CLI</a>.
+<li> Other minor fixes to assert() statements and test cases.
+
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: 2021-12-30 15:30:28 378629bf2ea546f73eee84063c5358439a12f7300e433f18c9e1bddd948dea62
+<li>SHA3-256 for sqlite3.c: 915afb3f29c2d217ea0c283326a9df7d505e6c73b40236f0b33ded91f812d174
+
+</ol></p>
 <a name="version_3_37_0"></a>
 <h3>2021-11-27 (3.37.0)</h3><p><ol class='lessindent'>
 <li> <a href="stricttables.html">STRICT tables</a> provide a prescriptive style of data type management,
