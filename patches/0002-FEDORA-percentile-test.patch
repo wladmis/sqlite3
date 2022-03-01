@@ -1,4 +1,4 @@
-From 197bd4e905cdb9dbb63bde98a779e93a32525a28 Mon Sep 17 00:00:00 2001
+From 0610a6259b56df04465ece1fd22e580c32439bdb Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:51 +0300
 Subject: [PATCH] FEDORA: percentile test
@@ -23,5 +23,5 @@ index b2bd061e8..7b841422c 100644
    } {
      do_test percentile-2.1.$in {
 -- 
-2.29.3
+2.33.0
 

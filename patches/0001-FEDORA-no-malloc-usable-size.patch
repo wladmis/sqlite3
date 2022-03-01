@@ -1,4 +1,4 @@
-From 8b1ef156f1d339abcb50706eb272996b9011250a Mon Sep 17 00:00:00 2001
+From 441704555889802f5c3e8df4a07405182223e4fc Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 3 Sep 2019 21:20:51 +0300
 Subject: [PATCH] FEDORA: no-malloc-usable-size
@@ -11,10 +11,10 @@ https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sqlite/configure b/sqlite/configure
-index 5df138630..01d65c94e 100755
+index abb182d5e..07c6aa83a 100755
 --- a/sqlite/configure
 +++ b/sqlite/configure
-@@ -10287,7 +10287,7 @@ done
+@@ -10288,7 +10288,7 @@ done
  #########
  # Figure out whether or not we have these functions
  #
@@ -24,7 +24,7 @@ index 5df138630..01d65c94e 100755
    as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
  ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
 diff --git a/sqlite/configure.ac b/sqlite/configure.ac
-index 70664dd41..e156c2575 100644
+index cc805a00d..d5fced529 100644
 --- a/sqlite/configure.ac
 +++ b/sqlite/configure.ac
 @@ -108,7 +108,7 @@ AC_CHECK_HEADERS([sys/types.h stdlib.h stdint.h inttypes.h malloc.h])
@@ -37,5 +37,5 @@ index 70664dd41..e156c2575 100644
  #########
  # By default, we use the amalgamation (this may be changed below...)
 -- 
-2.29.3
+2.33.0
 
