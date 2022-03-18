@@ -1,7 +1,7 @@
 %def_disable static
 
 Name: sqlite3
-Version: 3.38.0
+Version: 3.38.1
 Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: ALT-Public-Domain
@@ -14,6 +14,7 @@ Patch1: 0001-FEDORA-no-malloc-usable-size.patch
 Patch2: 0002-FEDORA-percentile-test.patch
 Patch3: 0003-FEDORA-ALT-datetest-2.2c.patch
 Patch4: 0004-ALT-TEA-Policy.patch
+Patch5: 0005-UPSTREAM-Only-run-atof1.test-on-x86_64-machines.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -140,6 +141,7 @@ make all sqlite3_analyzer sqldiff
 
 %check
 sed -Ei 's@-DSQLITE_ENABLE_FTS[34](\s|$)@@g' Makefile
+export LD_LIBRARY_PATH=%buildroot%_libdir
 %make test
 
 %install
@@ -197,8 +199,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
-* Tue Mar 01 2022 Vladimir D. Seleznev <vseleznv@altlinux.org> 3.38.0-alt1
-- 3.38.0.
+* Fri Mar 18 2022 Vladimir D. Seleznev <vseleznv@altlinux.org> 3.38.1-alt1
+- 3.38.1.
+- Backported patch to fix atof1 test from upstream.
 
 * Wed Oct 20 2021 Alexander Danilov  <admsasha@altlinux.org> 3.36.0-alt2
 - Fixes:
