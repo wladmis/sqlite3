@@ -104,6 +104,22 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_38_2"></a>
+<h3>2022-03-26 (3.38.2)</h3><p><ol class='lessindent'>
+<li> Fix another user-discovered problem with the new Bloom filter optimization
+     that might cause an incorrect answer when doing a LEFT JOIN with a WHERE
+     clause constraint that says that one of the columns on the right table of
+     the LEFT JOIN is NULL. See
+     <a href='https://sqlite.org/forum/forumpost/031e262a89b6a9d2'>forum thread 031e262a89b6a9d2</a>.
+<li> Other minor patches.  See the
+     <a href='https://sqlite.org/src/timeline?from=branch-3.38&to=version-3.38.1'>timeline</a> for
+     details.
+
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: 2022-03-26 13:51:10 d33c709cc0af66bc5b6dc6216eba9f1f0b40960b9ae83694c986fbf4c1d6f08f
+<li>SHA3-256 for sqlite3.c: 0fbac6b6999f894184899431fb77b9792324c61246b2a010d736694ccaa6d613
+
+</ol></p>
 <a name="version_3_38_1"></a>
 <h3>2022-03-12 (3.38.1)</h3><p><ol class='lessindent'>
 <li> Fix problems with the new Bloom filter optimization that might cause

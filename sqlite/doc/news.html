@@ -94,7 +94,12 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2022_03_12"></a><h3>2022-03-12 - <a href="releaselog/3_38_1.html">Version 3.38.1</a></h3><blockquote>
+<a name="2022_03_26"></a><h3>2022-03-26 - <a href="releaselog/3_38_2.html">Version 3.38.2</a></h3><blockquote>
+Version 3.38.2 fixes another bug in the new Bloom filter
+optimization that might cause incorrect answers for a
+LEFT JOIN that has an IS NULL constraint on the right-hand
+table.
+</blockquote><hr width="50%"><a name="2022_03_12"></a><h3>2022-03-12 - <a href="releaselog/3_38_1.html">Version 3.38.1</a></h3><blockquote>
 Version 3.38.1 fixes a pair of bugs in the Bloom filter
 optimization that was introduced in version 3.38.0.  These
 bugs might cause incorrect answers for some obscure queries.
